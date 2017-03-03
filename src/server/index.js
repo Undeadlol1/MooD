@@ -1,6 +1,5 @@
 import path from "path"
 import express from "express"
-// import passport from "passport"
 import bodyParser from 'body-parser'
 import session from "express-session"
 import cookieParser from 'cookie-parser'
@@ -30,4 +29,4 @@ app.get('/test', function(req, res) {
 });
 app.use('/auth', authorization)
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Server apistening on port ${port}!`))
