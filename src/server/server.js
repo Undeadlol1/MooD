@@ -6,10 +6,12 @@ import cookieParser from 'cookie-parser'
 import {passport, router as authorization} from "./middlewares/auth"
 
 const port = 3000,
-      app = express()
+      app = express(),
+      publicUrl = path.resolve(__dirname, 'public')
 
 // middlewares
-app.use(express.static(path.resolve(__dirname, 'public')))
+app.use(express.static(publicUrl))
+app.use(express.static(path.resolve(__dirname, '../../dist')))
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
@@ -22,11 +24,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // routes
-app.get('/test', function(req, res) {
-  console.log('this must be working');
-  console.log(req.user);
-  res.end();
-});
 app.use('/auth', authorization)
+app.get('/*', function(req, res) {
+  res.sendFile(publicUrl + '/index.html');
+});
 
 app.listen(port, () => console.log(`Server apistening on port ${port}!`))

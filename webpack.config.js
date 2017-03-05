@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
     name: 'server',
@@ -8,18 +9,26 @@ module.exports = {
         __filename: true,
         __dirname: true
     },
-    entry  : './src/server/index.js',
+    entry  : {
+        browser: './src/browser/app.jsx',
+        server: './src/server/server.js',
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('development')
+        })
+    ],
     watch: true,
     devtool: 'source-map',
     output : {
         path     : 'dist',
-        filename : 'server.js',
+        filename : '[name].js',
         publicPath: '' // github issue
         // publicPath: __dirname + '/public/'
     },
     module : {
         loaders: [ { 
-                test   : /.js$/,
+                test   : /.jsx?$/,
                 loader : 'babel-loader' 
             } 
         ]

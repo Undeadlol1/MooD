@@ -45,7 +45,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new TwitterStrategy({
     consumerKey: "L9moQHoGeNq7Gz25RRmuBNeg3",
     consumerSecret: "D15EvlV55IfCsGnsydRi5I9QAISzkYykKOO0rCqnowDfiUmwGZ",
-    callbackURL: "http://localhost:3000/login/twitter/callback"
+    callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
       // console.log('login callback is called!');
