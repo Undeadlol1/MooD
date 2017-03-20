@@ -1,45 +1,55 @@
-import express from "express"
-import passport from "passport"
-import { Strategy as TwitterStrategy } from "passport-twitter"
 import { Strategy as VKontakteStrategy } from "passport-vkontakte"
+import { Strategy as TwitterStrategy } from "passport-twitter"
+import { User } from '../data/models'
+import passport from "passport"
+import express from "express"
+import selectn from 'selectn'
 
-const router = express.Router();
+/**
+ * abstract user creation with different social media
+ * 
+ * @param {String} provider service name
+ * @param {String} userId service's user id
+ * @param {String} display_name user's public name
+ * @param {String} image user's image url
+ * @returns {Promise}
+ */
+function findOrCreateUser(provider, userId, display_name, image) { // TODO add username
+  return  User.findOrCreate({
+            raw: true,    
+            where: {[provider]: userId}, 
+            defaults: {image, display_name} // TODO make image migration
+          })
+            // TODO add callbacks
+}
 
 /* VK AUTH */
 passport.use(new VKontakteStrategy(
   {
-    clientID:     '5202075', // VK.com docs call it 'API ID', 'app_id', 'api_id', 'client_id' or 'apiId'
+    clientID:     '5202075',
     clientSecret: 'QjVr1JLVAXfVmZDJ6ws9',
-    // callbackURL:  "http://localhost:3000/auth/vkontakte/callback"
     callbackURL:  "http://127.0.0.1:3000/auth/vkontakte/callback"
   },
-  function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) {
-    // console.log(accessToken, refreshToken, params, profile);
-
-    // Now that we have user's `profile` as seen by VK, we can
-    // use it to find corresponding database records on our side.
-    // Also we have user's `params` that contains email address (if set in 
-    // scope), token lifetime, etc.
-    // Here, we have a hypothetical `User` class which does what it says.
-      done(null, profile);
-    // User.findOrCreate({ vkontakteId: profile.id })
-    //     .then(function (user) { done(null, user); })
-    //     .catch(done);
+  function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) { 
+    // NOTE: params contain addition requested info    
+      User.findOrCreate({
+        where: {vk_id: profile.id}, 
+        defaults: {
+          username: profile.username, // TODO this
+          display_name: profile.displayName,
+          // email: params.email,
+          image: selectn('photos[0].value', profile), // TODO make image migration
+        }, 
+        // raw: true
+      })
+      .then(function (result) {
+        const user = result[0]
+        done(null, user); 
+      })
+      // .spread(user => done(null, user.get({plain: true})))
+      .catch(done);
   }
 ));
-
-// User session support for our hypothetical `user` objects.
-passport.serializeUser(function(user, done) {
-    done(null, user); // redneck bullshit
-    // done(null, user.id); // proper version
-});
-
-passport.deserializeUser(function(id, done) {
-    done(null, id) // this was added, this is not right
-    // User.findById(id)
-    //     .then(function (user) { done(null, user); })
-    //     .catch(done);
-});
 
 /* TWITTER AUTH */
 passport.use(new TwitterStrategy({
@@ -48,29 +58,52 @@ passport.use(new TwitterStrategy({
     callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
-      // console.log('login callback is called!');
-      // console.log(profile);
-      done(null, profile);
-    // User.findOrCreate(..., function(err, user) {
-    //   if (err) { return done(err); }
-    //   done(null, user);
-    // });
+    User.findOrCreate({
+      where: {twitter_id: profile.id}, 
+      defaults: {
+        username: profile.username,
+        display_name: profile.username,
+        image: selectn('photos[0].value', profile), // TODO make image migration
+      }, 
+      raw: true
+    })
+    .then(function (result) {
+      done(null, result[0]); 
+    })
+    .catch(done);
   }
 ));
 
+// User session support for our hypothetical `user` objects.
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+    User
+    .findById(id)
+    .then((user) => {
+      done(null, (selectn('dataValues', user)))
+    })
+    .catch(done);
+});
+
 // routes
+const router = express.Router(); // TODO refactor without "const"?
 router
   .get('/twitter', passport.authenticate('twitter'))
   .get('/twitter/callback',
      passport.authenticate('twitter', { successRedirect: '/',
-                                        failureRedirect: '/failed-login' }))
-  .get('/vkontakte', passport.authenticate('vkontakte'))
+                                        failureRedirect: '/failed-login' })) // TODO implement failure login route
+                                        // TODO maybe add { failureFlash: true } ?
+  .get('/vkontakte', passport.authenticate('vkontakte')) // , {scope: ['email']}
   .get('/vkontakte/callback',
     passport.authenticate('vkontakte', { successRedirect: '/',
                                           failureRedirect: '/failed-login' }))
   .get('/logout', function(req, res){
     req.logout();
-    res.redirect('/');
-  });
+    res.end();
+  })
 
-export {router, passport}
+export {passport}
+export default router

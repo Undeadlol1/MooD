@@ -1,8 +1,10 @@
 var path = require('path');
 
+var base = './src/server/data'
+
 module.exports = {
-  'config': path.resolve('./src/server/sequilize', 'config.json'),
-  'migrations-path': path.resolve('./src/server/sequilize', 'migrations'),
-  'models-path': path.resolve('./src/server/sequilize', 'models'),
-  'seeders-path': path.resolve('./src/server/sequilize', 'seeders')
+  'config': path.resolve(base, 'config.json'),
+  'migrations-path': path.resolve(base, 'migrations'),
+  'models-path': path.resolve(base, 'models'),
+  'seeders-path': path.resolve(base, 'seeders')
 }

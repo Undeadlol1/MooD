@@ -1,24 +1,63 @@
-import React from 'react';
+// DEPENDENCIES
+import { Router, Route, browserHistory, IndexRoute } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux' // TODO is it even used?
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import IndexPage from './pages/IndexPage.jsx';
-import SecondPage from './pages/SecondPage.jsx';
-import { Router, Route, Link, browserHistory } from 'react-router'
+import { createStore, applyMiddleware } from 'redux';
+import { Provider as ReduxProvider } from 'react-redux';
+import rootReducer from './redux/reducers/RootReducer'
+import thunk from 'redux-thunk' // TODO is it even used?
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import injectTapEventPlugin from 'react-tap-event-plugin'; // material-ui
+injectTapEventPlugin(); // material-ui // TODO reorganize polyfills
+import promise from 'es6-promise'; // isomorphic-fetch dependency
+promise.polyfill() // isomorphic-fetch dependency // TODO reorganize polyfills
+import 'isomorphic-fetch'
 
-class Hello extends React.Component {
+import ReduxToastr from 'react-redux-toastr'
+
+// PAGES
+import Layout from 'pages/layout/Layout';
+import IndexPage from 'pages/IndexPage';
+import LoginPage from 'pages/LoginPage';
+import MoodPage from 'pages/MoodPage';
+import NotFound from 'pages/NotFound';
+
+// STYLES
+import './styles.scss'
+import 'react-redux-toastr/src/styles/index.scss';
+
+// const store = createStore(rootReducer, initialState, applyMiddleware(thunk)) // thunk, promise,
+const store = createStore(rootReducer, applyMiddleware(thunk)) // thunk, promise,
+const history = syncHistoryWithStore(browserHistory, store) // for react-router-redux to work
+
+class App extends Component {
   render() {
-    return  <div>
-                <h1>Привет, Сабинка!</h1>
-                <h2>Ты самая лучшая! 😍 </h2>
-                <Router history={browserHistory}>
-                  <Route path="/" component={IndexPage} />
-                  <Route path="second" component={SecondPage} />
-                    {/*<Route path="users" component={Users}>
-                      <Route path="/user/:userId" component={User}/>
-                    </Route>*/}
-                    {/*<Route path="*" component={NoMatch}/>*/}
-                </Router>
-            </div>
+    return  <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+                <ReduxProvider store={store}>
+                  <div>
+                    <Router history={history}>
+                      <Route path="/" component={Layout}>
+                        <IndexRoute component={IndexPage} />
+                        <Route path="login" component={LoginPage} />
+                        <Route path="mood/(:moodSlug)" component={MoodPage} />
+                        <Route path="*" component={NotFound }/>                    
+                      </Route>
+                    </Router>
+                    <ReduxToastr
+                      timeOut={4000}
+                      newestOnTop={false}
+                      preventDuplicates={true}
+                      position="top-left"
+                      transitionIn="fadeIn"
+                      transitionOut="fadeOut"
+                      progressBar />
+                  </div>
+                </ReduxProvider>
+              </MuiThemeProvider>
   }
 }
  
-ReactDOM.render(<Hello/>, document.getElementById('react-root'));
+ReactDOM.render(<App />, document.getElementById('react-root'));

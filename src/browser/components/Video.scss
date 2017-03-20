@@ -1,0 +1,19 @@
+.Video {
+	height: 100vh;
+	overflow: hidden;
+	position: initial;
+	h1 {
+		color: white;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+}
+.Video__decision {
+	top: 50%;
+	width: 100%;
+	z-index: 2223;
+	display: block;
+	position: fixed;
+}
