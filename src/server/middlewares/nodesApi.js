@@ -1,6 +1,6 @@
 import express from "express"
 import selectn from "selectn"
-import { Node, Mood, Decision } from '../data/models'
+import { Node, Mood, Decision, User } from '../data/models'
 import { mustLogin } from './permissions'
 import slugify from 'slug'
 import { assignIn as extend } from 'lodash'
@@ -22,13 +22,26 @@ router
       .then(MoodId => { // TODO add comments
         body.MoodId = MoodId
         body.UserId = user.id
-        console.log('MoodId insert!', MoodId);
         return Node.create(body)
         // extend(body, { MoodId, UserId: user.id })
       })
-      // .then(({ dataValues: node }) => res.json(node))    
-      .then(({ dataValues: node }) => console.log('nodeinsert after node', node))    
-      .catch(error => Boom.internal(error))  
+      .then(node  => User // rework entire thing into async function because of "node" variable
+                      .findAll()
+                      .each(user => {
+                        console.log(user.dataValues);
+                        return Decision.create({
+                                  UserId: user.get('id'),
+                                  NodeId: node.get('id'),
+                                  // nextViewAt: null // i need to do something about it
+                                })
+                      }) // todo rework into serDecision
+      )
+      // .then(result => res.json(result))
+      .then(result => res.end())              
+      .catch(error => {
+        console.error(error);
+        res.boom.internal(error)
+      })  
   })
 
   .get('/:moodSlug', function({ params }, res) {

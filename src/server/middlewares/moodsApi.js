@@ -16,7 +16,7 @@ router
   })
 
   .post('/', mustLogin, function({user: { id: UserId }, body: { name }}, res) {
-    Mood.create({ UserId, name, slug: slugify(body.name) }) // TODO move this in model definition?
+    Mood.create({ UserId, name, slug: slugify(name) }) // TODO move this in model definition?
         .then(result => res.end())
         .catch(error => res.boom.invalid(error))
   })

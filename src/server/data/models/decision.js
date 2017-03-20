@@ -7,14 +7,20 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER
     },
     nextViewAt: {
-      allowNull: false,
-      type: DataTypes.DATE
+      allowNull: true,
+      type: DataTypes.DATE,
+      // defaultValue: null
     },
     NodeId: {
       allowNull: false,
-      type: DataTypes.STRING,
-      unique: true
+      type: DataTypes.INTEGER,
+      // unique: 'compositeIndex'
     },
+    UserId: {
+      allowNull: false,      
+      type: DataTypes.INTEGER,
+      // unique: 'compositeIndex'
+    }
   }, {
     classMethods: {
       associate: function(models) {

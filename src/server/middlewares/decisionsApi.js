@@ -6,6 +6,7 @@ import { assignIn as extend } from 'lodash'
 
 const router = express.Router(); // TODO refactor without "const"?
 
+// TODO rework into asyng functions
 // TODO add comments
 
 router
