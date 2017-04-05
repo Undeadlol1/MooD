@@ -1,6 +1,28 @@
+const decisionStructure = {
+								rating: '',
+								UserId: '',
+								NodeId: '',
+								MoodId: '',
+								NodeRating: '',
+								nextViewAt: '',
+							}
+
+const nodeStructure = 	{
+							id: '',
+							url: '',
+							UserId: '',
+							MoodId: '',
+							rating: '',
+							type: '',
+							provider: '',
+							contentId: '',
+							Decision: decisionStructure
+						}
 const initialState = 	{
-							loading: true,
 							error: '',
+							loading: true,
+							dialogIsOpen: false,
+							...nodeStructure
 						}
 						
 export default (state = initialState, {type, payload}) => {
@@ -8,24 +30,19 @@ export default (state = initialState, {type, payload}) => {
 
 	switch(type) {
 		case 'RECIEVE_NODE':
-			newState = Object.assign({}, state, payload, {
+			newState = Object.assign({}, state, payload || initialState, {
 				loading: false
 			})
+			// if (!payload) newState = Object.assign({}, state, initialState)
 			break
-		case 'INSERT_NODE_SUCCESS':
-			// newState = Object.assign({}, state, {
-			// 	moods: [...state.moods, payload.mood],
-			// 	loading: false
-			// })
+		case 'TOGGLE_DIALOG':
+			newState = Object.assign({}, state, {
+				dialogIsOpen: !state.dialogIsOpen
+			})
 			break
-		// case 'RECIEVE_MOOD_CONTENT':
-		// 	newState = Object.assign({}, state, {
-		// 		mood: action.mood,
-		// 		content: action.content,
-		// 		// decision: action.decision,
-		// 		loading: false
-		// 	})
-		// 	break
+		case 'UNLOAD_NODE':
+			newState = Object.assign({}, state, nodeStructure)
+			break
 	}
 
 	return newState

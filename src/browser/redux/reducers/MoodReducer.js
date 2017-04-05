@@ -1,67 +1,57 @@
 import { handleActions } from 'redux-actions'
 import { toastr } from 'react-redux-toastr'
-import { recieveMood, recieveMoods, fetchingInProgress
-, fetchingError } from '../actions/MoodActions'
+import { recieveMood, recieveMoods, fetchingInProgress, fetchingError } from '../actions/MoodActions'
+import { Map, List } from 'immutable'
 
-const initialState = 	{
-							moods: [],
-							Nodes: [],
+const emptyMoodStructure = {
+	id: '',
+	name: '',
+	slug: '',
+	Nodes: List() // TODO do i need this?
+}
+
+const initialState = 	Map({
+							...emptyMoodStructure,
+							moods: List(),
+							searchedMoods: Map({
+								moods: List(),
+								totalPages: 0,
+								currentPage: 0,
+							}), // TODO rework this
+							Nodes: List(),
+							totalPages: 0,
+							currentPage: 0,
 							loading: false,
-							// mood: {},
-							// error: '',
-							// moodName: '', // do i use this?
-						}
-
-// export default handleActions({
-//   [recieveMood]: (state, action) => ({
-//     // counter: state.counter + action.payload
-//   }),
-
-//   [recieveMoods]: (state, action) => ({
-//     // counter: state.counter - action.payload
-//   }),
-
-//   [fetchingInProgress]: (state, action) => ({
-//     // counter: state.counter + action.payload
-//   })
-// }, initialState);
+						})
 
 export default (state = initialState, {type, payload}) => {
-	let newState = state
-// console.log('payload', payload);
 	switch(type) {
 		case 'RECIEVE_MOODS':
-			newState = Object.assign({}, state, {
-				moods: payload,
-				loading: false
-			})
-			break
+		// ... payload? or something else?
+			return state.merge({
+						...payload,
+						loading: false,
+					})
 		case 'RECIEVE_MOOD':
-			newState = Object.assign({}, state,
-			{ ...payload },
-			{ loading: false })
-			break
+			return state.merge({
+						...payload,
+						loading: false
+					})
 		case 'INSERT_MOOD_SUCCES':
-			newState = Object.assign({}, state, {
-				moods: [...state.moods, payload.mood],
-				loading: false
-			})
-			break
+			return state.merge({
+						moods: [...state.get('moods'), payload.mood], // TODO rework this with immutable array method
+						loading: false
+					})
 		case 'FETCHING_IN_PROGRESS':
-			newState = Object.assign({}, state, {
-				loading: true
-			})
-			break
-		// case 'FETCHING_ERROR': // TODO add this
-		// case 'RECIEVE_MOOD_CONTENT':
-		// 	newState = Object.assign({}, state, {
-		// 		mood: action.mood,
-		// 		content: action.content,
-		// 		// decision: action.decision,
-		// 		loading: false
-		// 	})
-		// 	break
+			return state.set('loading', true)
+		case 'RECIEVE_SEARCH_RESULT':
+			return state.merge({
+						loading: false,
+						searchedMoods: payload,
+					})
+		case 'UNLOAD_MOOD':
+			return state.merge(emptyMoodStructure)
+		default:
+			return state
 	}
-	// console.log('newState', newState);
-	return newState
 }

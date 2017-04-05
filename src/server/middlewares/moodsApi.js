@@ -1,70 +1,78 @@
+import { Mood, Node, Decision } from '../data/models'
+import { mustLogin } from './permissions'
 import sequelize from 'sequelize'
 import express from "express"
 import selectn from "selectn"
-import { Mood, Node, Decision } from '../data/models'
-import { mustLogin } from './permissions'
 import slugify from 'slug'
 
 // routes
 const router = express.Router(); // TODO refactor without "const"?
+const limit = 12
+
 router
-
-  .get('/', function(req, res) {
-    Mood.findAll({ limit: 5 })
-        .then(result => res.json(result))
-        .catch(error => res.boom.invalid(error))
-  })
-
-  .post('/', mustLogin, function({user: { id: UserId }, body: { name }}, res) {
-    Mood.create({ UserId, name, slug: slugify(name) }) // TODO move this in model definition?
-        .then(result => res.end())
-        .catch(error => res.boom.invalid(error))
-  })
-
-  .get('/:slug', function(req, res) {
-    // console.log(`.get('/:slug'`);
-    Mood.findOne({
-      where: { slug: req.params.slug},
-      // raw: true,
-      // include: [{ // TODO abasctract this to Mood method?
-      //   model: Node, // TODO add selectors (limit, sort)
-      //   as: 'Nodes',
-      //   limit: 5,
-      //   include: [{
-      //     model: Decision,
-      //     as: 'Decision',
-      //     where: {
-      //       nextViewAt: {
-      //         $lt: new Date()
-      //     },
-      //     required: false, // incase there are zero decisions
-      //   }]
-      // }]
-    })
-    .then(result => {
-      // console.log(JSON.stringify(result));
-      // console.log(result.toJSON())
-      // console.log(result.dataValues.Nodes);
-      // console.log('mood id!!!', result.dataValues.id);
-      // console.log(result.dataValues);
-      // result.dataValues.Nodes.map(node => console.log(node.dataValues.Decision.dataValues))
-      res.json(result)
-    })
-    // .then(result => res.json(result.dataValues))
-    .catch(error => {
-      console.error(error);
+  // get all moods for index page
+  .get('/:page?', async (req, res) => { // TODO make sure pagination works right
+    try {
+      const page = req.params.page
+      const offset = page ? limit * (page -1) : 0
+      const totalMoods = await Mood.count()
+      const totalPages = Math.round(totalMoods / limit) 
+      const moods = await Mood.findAll({
+        limit,
+        offset,
+        include: [{ model: Node, limit: 1 }] // for preview image
+      })
+      res.json({ moods, totalPages })
+    }
+    catch (error) {
+      console.log(error);
       res.boom.internal(error)
-    })
+    }
   })
   
-  // .get('/:slug/content', function(req, res) {
-  //   Mood.findAll({ where: {} })
-  //     .then(result => {
-  //       // console.log('mood contentn result', result)
-  //       result.getNodes().then(moodNodes => {
-  //         console.log('moodNodes', moodNodes);
-  //       })
-  //     })
-  // })
+  .get('/search/:name/:page?', async (req, res) => { // TODO make sure pagination works right
+    try {
+      const { page, name } = req.params
+      if (!name) return res.boom.badRequest('invalid query')
+      const offset = page ? limit * (page -1) : 0
+      const where = {
+                      name: { $like: '%' + name + '%' }
+                    }
+      const totalMoods = await Mood.count({ where })
+      const totalPages = Math.round(totalMoods / limit) 
+      const moods = await Mood.findAll({
+        limit,
+        offset,
+        where,
+        include: [{ model: Node, limit: 1 }] // for preview image
+      }) || []
+      res.json({ moods, totalPages })
+    }
+    catch (error) {
+      console.log(error);
+      res.boom.internal(error)
+    }
+  })
+
+  // create mood
+  .post('/', mustLogin, async ({user: { id: UserId }, body: { name }}, res) => {
+    try {
+      const slug = slugify(name)
+      await Mood.create({ UserId, name, slug }) // TODO move this in model definition?
+      // res.redirect('/mood' + slug)
+      res.json(slug)
+    } catch (error) {
+      console.log(error)
+      res.boom.internal(error)
+    }
+  })
+
+  // get single mood by slug
+  .get('/mood/:slug', function({ params }, res) {
+    Mood
+    .findOne({ where: { slug: params.slug} })
+    .then(result => res.json(result))
+    .catch(error => res.boom.internal(error))
+  })
 
 export default router

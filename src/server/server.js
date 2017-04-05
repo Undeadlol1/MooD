@@ -14,12 +14,16 @@ import { mustLogin } from './middlewares/permissions'
 import authorization, { passport } from './middlewares/auth'
 import 'source-map-support/register' // do we actually need this?
 import morgan from 'morgan'
+import { buildSchema } from 'graphql'
+import graphqlHTTP from 'express-graphql'
+import { graphqlExpress } from 'graphql-server-express';
+import schema from './graphql/schema'
+
 
 const port = 3000,
       app = express(),
       publicUrl = path.resolve('./dist', 'public'), // TODO: or use server/public?
       cookieExpires = 100 * 60 * 24 * 100 // 100 days
-
 
 // development only middlewares
 if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic applues all dev specific middlewares
@@ -31,8 +35,7 @@ if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic
 app.use(express.static(publicUrl))
 app.use(cookieParser())
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true})) // TODO or bodyParser() ??
-// app.use(bodyParser()) // TODO or bodyParser() ??
+app.use(bodyParser.urlencoded({ extended: true }))
 // app.use(session({
 //   // resave: true,
 //   // saveUninitialized: true,
@@ -50,7 +53,7 @@ app.use(passport.session())
 app.use(morgan('dev')) // logger
 app.use(boom()) // provides res.boom. erros dispatching
 
-// routes
+// REST API
 app.use('/auth', authorization)
 app.use('/api/moods', moodsApi)
 app.use('/api/nodes', nodesApi)
@@ -58,6 +61,35 @@ app.use('/api/decisions', decisionsApi)
 app.get('/current_user', function(req, res) {
   res.json(req.user ? req.user : {})
 })
+
+// GRAPHQL
+app.use('/graphql', graphqlExpress({ schema }));
+// Construct a schema, using GraphQL schema language
+// var schema = buildSchema(`
+//   type Query {
+//     hello: String
+//   }
+// `);
+
+// // The root provides a resolver function for each API endpoint
+// var rootValue = {
+//   hello: () => {
+//     return 'Hello world!';
+//   },
+// };
+
+// app.use('/graphql', graphqlHTTP({
+//   schema,
+//   rootValue, // TODO implement this // or not? read the docs
+//   graphiql: true,
+//   formatError: error => ({
+//     message: error.message,
+//     locations: error.locations,
+//     stack: error.stack
+//   })
+// }));
+
+// HTML PAGES
 app.get('/*', function(req, res) {
   console.log('user is logged in: ', req.isAuthenticated()); 
   res.sendFile(path.join(publicUrl, '/index.html'));

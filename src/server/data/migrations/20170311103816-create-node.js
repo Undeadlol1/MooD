@@ -13,10 +13,35 @@ module.exports = {
         type: Sequelize.STRING
       },
       contentId: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: 'compositeIndex'
       },
-      provider: Sequelize.STRING,
+      provider: {
+        type: Sequelize.STRING,
+        unique: 'compositeIndex'        
+      },
       type: Sequelize.STRING,
+      rating: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+      },
+      UserId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        // references: {
+        //   model: 'users',
+        //   key: 'id'
+        // }
+      },
+      MoodId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        // references: {
+        //   model: 'moods',
+        //   key: 'id'
+        // }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

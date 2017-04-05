@@ -12,10 +12,12 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import injectTapEventPlugin from 'react-tap-event-plugin'; // material-ui
 injectTapEventPlugin(); // material-ui // TODO reorganize polyfills
-import promise from 'es6-promise'; // isomorphic-fetch dependency
-promise.polyfill() // isomorphic-fetch dependency // TODO reorganize polyfills
+// import promise from 'es6-promise'; // isomorphic-fetch dependency
+// promise.polyfill() // isomorphic-fetch dependency // TODO reorganize polyfills
+import 'es6-promise/auto';
 import 'isomorphic-fetch'
 
+import { ApolloClient, ApolloProvider, createNetworkInterface } from 'react-apollo';
 import ReduxToastr from 'react-redux-toastr'
 
 // PAGES
@@ -23,6 +25,7 @@ import Layout from 'pages/layout/Layout';
 import IndexPage from 'pages/IndexPage';
 import LoginPage from 'pages/LoginPage';
 import MoodPage from 'pages/MoodPage';
+import SearchPage from 'pages/SearchPage';
 import NotFound from 'pages/NotFound';
 
 // STYLES
@@ -32,30 +35,44 @@ import 'react-redux-toastr/src/styles/index.scss';
 // const store = createStore(rootReducer, initialState, applyMiddleware(thunk)) // thunk, promise,
 const store = createStore(rootReducer, applyMiddleware(thunk)) // thunk, promise,
 const history = syncHistoryWithStore(browserHistory, store) // for react-router-redux to work
+// const client = new ApolloClient()
+const client = new ApolloClient({
+  networkInterface:   createNetworkInterface({
+              uri: 'http://127.0.0.1:3000/graphql',
+              opts: {
+                  credentials: 'same-origin',
+                  mode: 'no-cors',
+              }
+          })
+}
+);
 
 class App extends Component {
   render() {
     return  <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-                <ReduxProvider store={store}>
-                  <div>
-                    <Router history={history}>
-                      <Route path="/" component={Layout}>
-                        <IndexRoute component={IndexPage} />
-                        <Route path="login" component={LoginPage} />
-                        <Route path="mood/(:moodSlug)" component={MoodPage} />
-                        <Route path="*" component={NotFound }/>                    
-                      </Route>
-                    </Router>
-                    <ReduxToastr
-                      timeOut={4000}
-                      newestOnTop={false}
-                      preventDuplicates={true}
-                      position="top-left"
-                      transitionIn="fadeIn"
-                      transitionOut="fadeOut"
-                      progressBar />
-                  </div>
-                </ReduxProvider>
+              <ApolloProvider client={client}>
+                  <ReduxProvider store={store}>
+                    <div>
+                      <Router history={history}>
+                        <Route path="/" component={Layout}>
+                          <IndexRoute component={IndexPage} />
+                          <Route path="login" component={LoginPage} />
+                          <Route path="mood/(:moodSlug)" component={MoodPage} />
+                          <Route path="search" component={SearchPage} />
+                          <Route path="*" component={NotFound }/>                    
+                        </Route>
+                      </Router>
+                      <ReduxToastr
+                        timeOut={4000}
+                        newestOnTop={false}
+                        preventDuplicates={true}
+                        position="top-left"
+                        transitionIn="fadeIn"
+                        transitionOut="fadeOut"
+                        progressBar />
+                    </div>
+                  </ReduxProvider>
+                </ApolloProvider>
               </MuiThemeProvider>
   }
 }

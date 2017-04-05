@@ -6,17 +6,23 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.INTEGER
     },
-    nextViewAt: {
-      allowNull: true,
-      type: DataTypes.DATE,
-      // defaultValue: null
-    },
+    nextViewAt: DataTypes.DATE,
     NodeId: {
       allowNull: false,
       type: DataTypes.INTEGER,
       // unique: 'compositeIndex'
     },
+    NodeRating: {
+      defaultValue: 0,
+      allowNull: false,
+      type: DataTypes.INTEGER,
+    },
     UserId: {
+      allowNull: false,      
+      type: DataTypes.INTEGER,
+      // unique: 'compositeIndex'
+    },
+    MoodId: {
       allowNull: false,      
       type: DataTypes.INTEGER,
       // unique: 'compositeIndex'
@@ -27,6 +33,7 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
         Decision.belongsTo(models.Node, {foreignKey: 'NodeId', targetKey: 'id'});
         Decision.belongsTo(models.User, {foreignKey: 'UserId', targetKey: 'id'});
+        // Decision.hasOne(models.Node)
       }
     }
   });

@@ -10,7 +10,11 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
-      }
+    },
+    UserId: {
+      allowNull: false,
+      type: DataTypes.INTEGER
+    }
   }, {
     classMethods: {
       associate: function(models) {

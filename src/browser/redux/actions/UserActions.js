@@ -1,5 +1,6 @@
 import { checkStatus, parseJSON } from'./actionHelpers'
 import { createAction } from 'redux-actions'
+import selectn from 'selectn'
 
 /**
  * dispatch succesfully fetched user object
@@ -18,13 +19,21 @@ export const fetchCurrentUser = () => dispatch => {
 	fetch('/current_user', {credentials: 'same-origin'})
 		.then(parseJSON)
 		.then(user => dispatch(recieveCurrentUser((user))))
-		.catch(err => console.error('fetchCurrentUser failed!', err))
-		// .catch(err => Materialize.toast(`Ошибка! ${err.reason}`, 4000)) // TODO add client side error handling
+		.catch(err => console.error('fetchCurrentUser failed!', err)) // TODO add client side error handling
 }
 
 export const logoutCurrentUser = () => dispatch => {
-	dispatch(fetchingInProgress())	
 	fetch('/auth/logout', {credentials: 'same-origin'})
 		.then(() => dispatch(removeCurrentUser())) // TODO refactor without arrow function?
 		.catch(err => console.error('logoutCurrentUser failed!', err))
+}
+/**
+ * toggle dialog
+ * @param {Boolean} value value to set for loginIsOpen
+ */
+export const toggleLoginDialog = value => (dispatch, getState) => {
+	dispatch({
+		type: 'TOGGLE_LOGIN_DIALOG',
+		payload: !getState().user.get('loginIsOpen')
+	})
 }

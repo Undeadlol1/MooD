@@ -18,6 +18,10 @@ export const recieveMoods = createAction('RECIEVE_MOODS')
  */
 export const recieveMood = createAction('RECIEVE_MOOD')
 /**
+ * @param {Array} moods
+ */
+export const recieveSearchResult = createAction('RECIEVE_SEARCH_RESULT')
+/**
  * @param {Boolean} value // TODO add toggle
  */
 export const fetchingInProgress = createAction('FETCHING_IN_PROGRESS')
@@ -25,13 +29,20 @@ export const fetchingInProgress = createAction('FETCHING_IN_PROGRESS')
  * @param {String} reason
  */
 export const fetchingError = createAction('FETCHING_ERROR', reason => reason)
+/**
+ * @param {null}
+ */
+export const unloadMood = createAction('UNLOAD_MOOD')
 
-export const fetchMoods = () => dispatch => {
+export const fetchMoods = (pageNumber = 1) => dispatch => {
 	dispatch(fetchingInProgress())
-	fetch('/api/moods')
+	fetch('/api/moods' + (pageNumber ? '/' + pageNumber : ''))
 		.then(checkStatus)		
 		.then(parseJSON)
-		.then(data => dispatch(recieveMoods((data))))
+		.then(data => {
+			data.currentPage = pageNumber
+			dispatch(recieveMoods((data)))
+		})
 }
 /**
  * fetch mood by slug
@@ -39,22 +50,38 @@ export const fetchMoods = () => dispatch => {
  */
 export const fetchMood = slug => dispatch => {
 	dispatch(fetchingInProgress())
-	fetch('/api/moods/' + slug)
+	fetch('/api/moods/mood/' + slug || '')
 		.then(checkStatus)		
 		.then(parseJSON)
-		// .then(mood => {
-		// 	console.log('fetchMood result', mood)
-		// 	return mood
-		// })
 		.then(mood => dispatch(recieveMood((mood))))
 }
 /**
  * create mood
  * @param {String} name mood name
  */
-export const insertMood = name => dispatch => {
+export const insertMood = (name, callback) => dispatch => {
 	dispatch(fetchingInProgress())
 	fetch('/api/moods', headersAndBody({ name }))
 		.then(checkStatus)
+		.then(parseJSON)
+		.then(moodSlug => {
+			callback && callback(moodSlug)
+			return moodSlug
+		})		
 		.then(() => dispatch(fetchMoods()))
+}
+/**
+ * search moods by name
+ * @param {String} name
+ */
+export const findMoods = name => dispatch => {
+	dispatch(fetchingInProgress())
+	fetch('/api/moods/search/' + name)
+		.then(checkStatus)		
+		.then(parseJSON)
+		.then(data => {
+			console.log('moods have been found!', data)
+			return data
+		})
+		.then(data => dispatch(recieveSearchResult((data))))
 }

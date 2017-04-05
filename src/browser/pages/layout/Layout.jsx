@@ -4,11 +4,19 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import NavBar from './NavBar'
 import { fetchCurrentUser, logoutCurrentUser } from '../../redux/actions/UserActions'
+import Sidebar from 'components/Sidebar'
+import LoginDialog from 'components/LoginDialog'
+import LoginLogoutButton from 'components/LoginLogoutButton'
 
 let timeout = null
 
 @connect(
-	(state, ownProps) => ({ user: state.user, ...ownProps}),
+	({ user, global }, ownProps) => ({
+		user,
+		...ownProps,
+		loginIsOpen: global.loginIsOpen,
+		headerIsShown: global.headerIsShown
+	}),
 	(dispatch, ownProps) => ({
 		fetchCurrentUser() { // fetch user data on load
 			dispatch(fetchCurrentUser())
@@ -54,7 +62,7 @@ export default class Layout extends React.Component {
 	}
 
 	render() {
-		const { logout } = this.props
+		const { logout, loginIsOpen, headerIsShown, ...rest } = this.props
 		
 		// styles
 		const 	baseStyles = 	{
@@ -63,12 +71,12 @@ export default class Layout extends React.Component {
 									backgroundColor: 'rgb(48, 48, 48)',
 									color: 'white'
 								},
-				headerStyles = 	{
+				headerStyles = 	{ // this is moved to navbar.scss
 									// position: 'fixed',
 									zIndex: '1',
 									width: '100%'
 								}
-
+								
 		return <div
 					className='Layout'
 					style={baseStyles}
@@ -76,24 +84,16 @@ export default class Layout extends React.Component {
 					//onMouseLeave={this.hideChildren}
 					//onMouseMove={this.showChildren}
 					//onTouchEnd={this.hideWhenIdle}
-					// onMouseStop={this.checker} // this useed to be here already commented out
+					//onMouseStop={this.checker} // this useed to be here already commented out
 				>
-					<header className='MoodHeader' hidden={this.state.hidden} style={headerStyles}>
-						{/*{this.props.nav}*/}
-						<NavBar />
-					</header>
+					{/*{this.props.nav}*/}
+					{headerIsShown ? <NavBar /> : null}
 					<main>
-						<Grid>
-							{this.props.children}
-							{/*{this.props.main}*/}
-							<h1>Привет, Сабинка!</h1>
-							<h2>Ты самая лучшая! 😍</h2>
-							<ul>
-								<li><Link to="/login">Залогиньсо</Link></li>
-								<li><a onClick={logout} href="">Logout</a></li>
-							</ul>
-						</Grid>
+						{this.props.children}
+						{/*{this.props.main}*/}
 					</main>
+					<Sidebar />
+					<LoginDialog />
 				</div>
 	}
 }

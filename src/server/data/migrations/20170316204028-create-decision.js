@@ -13,6 +13,28 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
+      NodeId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+      },
+      NodeRating: {
+        defaultValue: 0,
+        allowNull: false,
+        type: Sequelize.INTEGER,
+      },
+      UserId: {
+        allowNull: false,      
+        type: Sequelize.INTEGER,
+        // references: {
+        //   model: 'users',
+        //   key: 'id'
+        // }
+      },
+      MoodId: {
+        allowNull: false,      
+        type: Sequelize.INTEGER,
+      },
+      nextViewAt: Sequelize.DATE,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

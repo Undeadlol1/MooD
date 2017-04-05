@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
+// is this page obsolete?
+
 class LoginPage extends Component {
   render() {
     return  <div>

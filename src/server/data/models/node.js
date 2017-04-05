@@ -5,8 +5,13 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false,
         type: DataTypes.STRING
       },
-      contentId: {
+      provider: {
         type: DataTypes.STRING,
+        unique: 'compositeIndex'        
+      },
+      contentId: { // TODO add unique property
+        type: DataTypes.STRING,
+        unique: 'compositeIndex'
         // allowNull: false
       },
       UserId: {
@@ -22,7 +27,6 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false,
         defaultValue: 0
       },
-      provider: DataTypes.STRING,
       type: DataTypes.STRING,
   }, {
     classMethods: {

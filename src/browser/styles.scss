@@ -1,6 +1,25 @@
+/*
+    dependencies    
+*/
+@import "~normalize.css/normalize.css";
+@import "~font-awesome/css/font-awesome.min.css";
+/*
+    app    
+*/
+@import "./pages/IndexPage.scss";
 @import "./pages/MoodPage.scss";
-// @import "../components/Video.scss";
+@import "./pages/layout/NavBar.scss";
+@import "./components/Video.scss";
+@import "./components/Loading.scss";
+@import "./components/Sidebar.scss";
+@import "./components/Decision.scss";
+@import "./components/MoodsList.scss";
+@import "./components/LoginDialog.scss";
+/*
+    common styles    
+*/
 body { // remove after adding material-ui (?)
     margin: 0;
+    color: white; // is this needed?
     background-color: rgb(48, 48, 48); // placeholder before proper styling can be applied
 }
