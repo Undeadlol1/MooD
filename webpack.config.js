@@ -33,9 +33,6 @@ var serverConfig = {
         libraryTarget: "commonjs", // ????
         path     : 'dist',
         filename : 'server.js',
-        // publicPath: path.resolve(__dirname, '/public'), // github issue
-        // publicPath: '/src/server/public/'
-        // publicPath: '/server/public'
     },
     plugins: [
         new webpack.DefinePlugin({
@@ -52,7 +49,8 @@ var serverConfig = {
     ],
     externals: [nodeModules],    
     // devtool: 'source-map',
-    devtool: 'eval',
+    // devtool: 'eval',
+    devtool: 'cheap-module-source-map',    
     watch: true,
     module : {
         loaders: [ { 
@@ -61,16 +59,6 @@ var serverConfig = {
             } 
         ],
     },
-    resolve: {
-    //    root: path.join(__dirname, "src/server"),
-    //    modules: [
-    //      path.join(__dirname, "src"),
-    //      "node_modules"
-    //    ],
-    //    alias: {
-    //        models: path.resolve(__dirname, '/src/server/data/models')
-    //    }
-  }
 };
 
 var clientConfig = {
@@ -94,7 +82,8 @@ var clientConfig = {
         extractSass,
     ],   
     // devtool: 'source-map',
-    devtool: 'eval',
+    // devtool: 'eval',
+    devtool: 'cheap-module-source-map',
     watch: true,
     module : {
         loaders: [
@@ -110,18 +99,9 @@ var clientConfig = {
                 // include: /(normalize)|(flexboxgrid)/,
                 include: path.join(__dirname, 'node_modules'), // oops, this also includes flexboxgrid
                 loader: 'style-loader!css-loader?modules',
-                // exclude: /flexboxgrid/, // so we have to exclude it                
-                // use: ExtractTextPlugin.extract({
-                //     fallback: "style-loader",
-                //     use: 'style-loader!css-loader?modules' // https://github.com/roylee0704/react-flexbox-grid
-                // })
             },
             {
                 test: /\.scss$/,
-                // loader: 'style-loader!css-loader?sass-loader',
-                // include: path.join(__dirname, 'node_modules'), // oops, this also includes flexboxgrid
-                // exclude: /flexboxgrid/, // so we have to exclude it
-                // include: /flexboxgrid/, // react-flexbox-grid dependency
                 use: extractSass.extract({
                     use: [{
                         loader: "css-loader"                        
@@ -137,11 +117,7 @@ var clientConfig = {
     resolve: {
         alias: {
             components  : __dirname + '/src/browser/components',
-            pages       : __dirname + '/src/browser/pages',            
-            // pages: '../components',
-            // pages: './src/browser/pages',
-            // redux: 'components/redux',
-            // pages: 'components/common/utility',
+            pages       : __dirname + '/src/browser/pages',
         }, 
         enforceModuleExtension: false,
         extensions: ['.js', '.jsx']

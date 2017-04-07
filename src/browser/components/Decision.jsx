@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import { Button, Icon } from 'react-materialize' // TODO rework this
 import Slider from 'material-ui/Slider';
 import { injectProps } from 'relpers';
 import { connect } from 'react-redux';

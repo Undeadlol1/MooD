@@ -1,9 +1,23 @@
 {
-  "presets": ["es2015", "stage-3", "react"],
+  "presets": [
+    [ "es2015", { modules: false } ], "stage-3", "react",
+    //, {
+    //   "es2015": {
+    //     "loose": true,
+    //     "modules": false
+    //   }
+    // }
+  ],
   "plugins": [
     "transform-decorators-legacy",
     "transform-class-properties",
-    "transform-object-rest-spread"
+    "transform-object-rest-spread",
+    ["transform-imports", { // TODO ADD MATERIAL-UI
+        "lodash": {
+            "transform": "lodash/${member}",
+            "preventFullImport": true
+        }
+      }]
   ]
   //,
   // "experimentalDecorators": true

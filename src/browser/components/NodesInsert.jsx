@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
-import { Row, Col } from 'react-materialize'
 import { parseUrl } from '../helpers.js'
 // import { nodesInsert } from '../../api/nodes'
 import { If } from './Utils.jsx'

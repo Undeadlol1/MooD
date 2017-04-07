@@ -105,7 +105,7 @@ router
 
 
       }
-      console.log('response', response && response.dataValues)
+      // console.log('response', response && response.dataValues)
       res.json(response || nodeWithBiggestRating)      
     } catch (error) {
       console.error(error);
