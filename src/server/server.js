@@ -20,6 +20,10 @@ import { graphqlExpress } from 'graphql-server-express';
 import schema from './graphql/schema'
 import test from '../../config/dev.config'
 
+// load production values to process.env
+require('dotenv').config()
+
+
 // test.forEach(config => {
 //   console.log('process.env.npm_lifecycle_event;', process.env.npm_lifecycle_event)
 //   console.log("process.env.npm_lifecycle_event === 'start'", process.env.npm_lifecycle_event === 'start')

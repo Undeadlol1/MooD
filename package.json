@@ -6,9 +6,9 @@
   "author": "undeadlol1",
   "license": "MIT",
   "scripts": {
-    "start": "npm rebuild node-sass; concurrently \"webpack --config ./config/dev.config.js --display-error-details\" \"nodemon dist/server.js\"",
+    "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/dev.config.js --display-error-details\" \"nodemon dist/server.js\"",
     "start_old": "npm rebuild node-sass; concurrently \"webpack --config webpack.config.js --display-error-details\" \"nodemon dist/server.js\"",
-    "production": "webpack --config ./config/dev.config.js; npm rebuild node-sass; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit",
+    "production": "NODE_ENV=production webpack --config ./config/dev.config.js; npm rebuild node-sass; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit",
     "production_old": "npm rebuild node-sass; concurrently \"NODE_ENV='production' webpack -p\" \"nodemon dist/server.js\""
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "classnames": "^2.2.5",
     "cookie-parser": "^1.4.3",
     "cookie-session": "^2.0.0-beta.1",
+    "dotenv": "^4.0.0",
     "errorhandler": "^1.5.0",
     "es6-promise": "^4.1.0",
     "express": "^4.14.1",

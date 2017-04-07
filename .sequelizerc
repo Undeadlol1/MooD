@@ -3,7 +3,7 @@ var path = require('path');
 var base = './src/server/data'
 
 module.exports = {
-  'config': path.resolve(base, 'config.json'),
+  'config': path.resolve(base, 'config.js'),
   'migrations-path': path.resolve(base, 'migrations'),
   'models-path': path.resolve(base, 'models'),
   'seeders-path': path.resolve(base, 'seeders')
