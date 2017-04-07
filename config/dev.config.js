@@ -68,7 +68,7 @@ var serverConfig = merge(commonConfig, {
     },
     entry  : ['babel-polyfill', './src/server/server.js'],
     output : {
-        path     : 'dist',
+        path     : path.join(__dirname, '..', 'dist'),
         filename : 'server.js',
         libraryTarget: "commonjs",
     },
@@ -91,7 +91,7 @@ var clientConfig = merge(commonConfig, {
     output : {
         publicPath: '/',
         filename : '[name].js',
-        path     : 'dist/public',
+        path     : path.join(__dirname, '..', 'dist', 'public'),
     },   
     plugins: [ // TODO MAKE SURE PLUGINS ARE ACTUALLY INCLUDED IN CONFIG
         new webpack.optimize.CommonsChunkPlugin({

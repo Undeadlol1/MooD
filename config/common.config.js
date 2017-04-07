@@ -19,7 +19,7 @@ const developmentPlugins = isDevelopment ? [
 ] : []
 
 var baseConfig = {
-    context: path.join(__dirname, '../'),
+    context: path.resolve(__dirname, '../'),
     devtool: 'cheap-module-source-map',
     watch: isDevelopment,
     module : {
@@ -47,7 +47,7 @@ var baseConfig = {
             { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
             {
                 test: /\.css$/,
-                include: path.join(__dirname, '../', 'node_modules'), // oops, this also includes flexboxgrid
+                include: path.resolve(__dirname, '../', 'node_modules'), // oops, this also includes flexboxgrid
                 loader: 'style-loader!css-loader?modules',
             },
             {

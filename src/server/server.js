@@ -20,13 +20,13 @@ import { graphqlExpress } from 'graphql-server-express';
 import schema from './graphql/schema'
 import test from '../../config/dev.config'
 
-test.forEach(config => {
-  console.log('process.env.npm_lifecycle_event;', process.env.npm_lifecycle_event)
-  console.log("process.env.npm_lifecycle_event === 'start'", process.env.npm_lifecycle_event === 'start')
-  console.log(config.name)
-  console.log(config.plugins)
-  // console.info(`Environment varibables are: ${JSON.stringify(process.env)}!`)  
-})
+// test.forEach(config => {
+//   console.log('process.env.npm_lifecycle_event;', process.env.npm_lifecycle_event)
+//   console.log("process.env.npm_lifecycle_event === 'start'", process.env.npm_lifecycle_event === 'start')
+//   console.log(config.name)
+//   console.log(config.plugins)
+//   // console.info(`Environment varibables are: ${JSON.stringify(process.env)}!`)  
+// })
 
 const port = 3000,
       app = express(),
