@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { AppBar, Avatar } from 'material-ui'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import LoginLogoutButton from 'components/LoginLogoutButton'
+import LoginLogoutButton from '../../components/LoginLogoutButton'
 import { toggleSidebar, toggleControls } from '../../redux/actions/GlobalActions'
 // import classnames from 'classnames'
 

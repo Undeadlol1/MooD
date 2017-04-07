@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import NavBar from './NavBar'
 import { fetchCurrentUser, logoutCurrentUser } from '../../redux/actions/UserActions'
-import Sidebar from './components/Sidebar'
-import LoginDialog from './components/LoginDialog'
-import LoginLogoutButton from './components/LoginLogoutButton'
+import Sidebar from '../../components/Sidebar'
+import LoginDialog from '../../components/LoginDialog'
+import LoginLogoutButton from '../../components/LoginLogoutButton'
 
 let timeout = null
 

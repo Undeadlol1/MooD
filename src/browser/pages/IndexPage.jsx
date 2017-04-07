@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react'
-import Loading from './components/Loading'
-import MoodsList from './components/MoodsList'
-import MoodsInsert from './components/MoodsInsert'
-import MoodsFind from './components/MoodsFind'
+import Loading from '../components/Loading'
+import MoodsList from '../components/MoodsList'
+import MoodsInsert from '../components/MoodsInsert'
+import MoodsFind from '../components/MoodsFind'
 import { Grid } from 'react-flexbox-grid';
 import { injectProps } from 'relpers'
 import { connect } from 'react-redux';
