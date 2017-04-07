@@ -26,9 +26,9 @@ function findOrCreateUser(provider, userId, display_name, image) { // TODO add u
 /* VK AUTH */
 passport.use(new VKontakteStrategy(
   {
-    clientID:     '5202075',
-    clientSecret: 'QjVr1JLVAXfVmZDJ6ws9',
-    callbackURL:  "http://127.0.0.1:3000/auth/vkontakte/callback"
+    clientID:     process.env.VK_ID || '5202075',
+    clientSecret: process.env.VK_SECRET || 'QjVr1JLVAXfVmZDJ6ws9',
+    callbackURL:  "http://127.0.0.1:3000/auth/vkontakte/callback" // TODO add "port" to .env
   },
   function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) { 
     // NOTE: params contain addition requested info    
@@ -53,8 +53,8 @@ passport.use(new VKontakteStrategy(
 
 /* TWITTER AUTH */
 passport.use(new TwitterStrategy({
-    consumerKey: "L9moQHoGeNq7Gz25RRmuBNeg3",
-    consumerSecret: "D15EvlV55IfCsGnsydRi5I9QAISzkYykKOO0rCqnowDfiUmwGZ",
+    consumerKey: process.env.TWITTTER_ID || "L9moQHoGeNq7Gz25RRmuBNeg3",
+    consumerSecret: process.env.TWITTER_SECRET || "D15EvlV55IfCsGnsydRi5I9QAISzkYykKOO0rCqnowDfiUmwGZ",
     callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
