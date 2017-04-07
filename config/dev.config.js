@@ -78,7 +78,6 @@ var serverConfig = merge(commonConfig, {
         // }),
     ],
     externals: [nodeModules],
-    // watch: true,
 });
 
 var clientConfig = merge(commonConfig, {
@@ -102,13 +101,13 @@ var clientConfig = merge(commonConfig, {
         }),
         ...clientProductionPlugins
     ],
-    // watch: true,
-    resolve: {
-        alias: {
-            pages       : path.join(__dirname, '/../', 'src/browser/pages/'),
-            components  : path.join(__dirname, '/../', 'src/browser/components/'),
-        },
-    }
+    // resolving is currently disable due to wrong modules resolving on lunix machines (might be because of babel, but unlikely)
+    // resolve: {
+    //     alias: {
+    //         pages       : path.join(__dirname, '/../', 'src/browser/pages/'),
+    //         components  : path.join(__dirname, '/../', 'src/browser/components/'),
+    //     },
+    // }
 });
 
 module.exports = [serverConfig, clientConfig]

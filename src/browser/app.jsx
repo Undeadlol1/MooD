@@ -21,12 +21,12 @@ import { ApolloClient, ApolloProvider, createNetworkInterface } from 'react-apol
 import ReduxToastr from 'react-redux-toastr'
 
 // PAGES
-import Layout from 'pages/layout/Layout';
-import IndexPage from 'pages/IndexPage';
-import LoginPage from 'pages/LoginPage';
-import MoodPage from 'pages/MoodPage';
-import SearchPage from 'pages/SearchPage';
-import NotFound from 'pages/NotFound';
+import Layout from './pages/layout/Layout';
+import IndexPage from './pages/IndexPage';
+import LoginPage from './pages/LoginPage';
+import MoodPage from './pages/MoodPage';
+import SearchPage from './pages/SearchPage';
+import NotFound from './pages/NotFound';
 
 // STYLES
 import './styles.scss'

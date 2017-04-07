@@ -18,7 +18,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add'
 import { Form, Field, reduxForm } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
 import { history } from 'react-router';
-import Loading from 'components/Loading'
+import Loading from './Loading'
 
 @reduxForm({
 	form: 'NodesInsert',

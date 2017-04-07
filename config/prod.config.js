@@ -76,8 +76,8 @@ const clientConfig = merge(commonConfig, {
     ],
     resolve: {
         alias: {
-            components  : path.join(__dirname, '/../', 'src/browser/components/'),
-            pages       : path.join(__dirname, '/../', 'src/browser/pages/'),
+            // components  : path.join(__dirname, '/../', 'src/browser/components/'),
+            // pages       : path.join(__dirname, '/../', 'src/browser/pages/'),
         },
     }
 });

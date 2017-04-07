@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import React, { Component, PropTypes } from 'react'
-import LoginLogoutButton from 'components/LoginLogoutButton'
+import LoginLogoutButton from './LoginLogoutButton'
 import { toggleSidebar } from '../redux/actions/GlobalActions'
 
 @connect(
