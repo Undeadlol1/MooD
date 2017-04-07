@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { Row, Col } from 'react-flexbox-grid'
 import { connect } from 'react-redux';
 import Loading from 'components/Loading'
-import NodesInsert from 'components/NodesInsert'
+import NodesInsert from '../components/NodesInsert'
 import Decision from 'components/Decision.jsx'
 import Video from 'components/Video.jsx'
 import NavBar from '../pages/layout/NavBar'
