@@ -1,4 +1,5 @@
-const dotenv = require('dotenv').config();
+// load production values to process.env
+require('dotenv').config()
 
 module.exports = {
   "development": {
