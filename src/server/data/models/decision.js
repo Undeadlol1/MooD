@@ -28,6 +28,7 @@ module.exports = function(sequelize, DataTypes) {
       // unique: 'compositeIndex'
     }
   }, {
+    tableName: 'decisions',
     classMethods: {
       associate: function(models) {
         // associations can be defined here

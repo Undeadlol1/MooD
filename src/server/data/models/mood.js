@@ -17,6 +17,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     classMethods: {
+      tableName: 'moods',
       associate: function(models) {
         // associations can be defined here
         Mood.belongsTo(models.User, { // remember the bad copypaste? 'Mood.'

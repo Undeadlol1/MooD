@@ -13,6 +13,7 @@ module.exports = function(sequelize, DataTypes) {
     twitter_id: DataTypes.STRING,
     vk_id: DataTypes.STRING,
   }, {
+    tableName: 'users',    
     classMethods: {
       associate: function(models) {
         // associations can be defined here
