@@ -29,7 +29,8 @@ module.exports = function(sequelize, DataTypes) {
       },
       type: DataTypes.STRING,
   }, {
-    tableName: 'nodes',    
+    tableName: 'nodes',
+    freezeTableName: true,    
     classMethods: {
       associate: function(models) {
         // associations can be defined here

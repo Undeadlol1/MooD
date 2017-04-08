@@ -14,6 +14,7 @@ module.exports = function(sequelize, DataTypes) {
     vk_id: DataTypes.STRING,
   }, {
     tableName: 'users',    
+    freezeTableName: true,
     classMethods: {
       associate: function(models) {
         // associations can be defined here
