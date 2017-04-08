@@ -20,8 +20,33 @@ import { graphqlExpress } from 'graphql-server-express';
 import schema from './graphql/schema'
 import test from '../../config/dev.config'
 
+
 // load production values to process.env
 require('dotenv').config()
+
+
+
+
+var Sequelize = require('sequelize');
+var sequelize = new Sequelize({
+    "username": process.env.DB_USER,
+    "password": process.env.DB_PASS,
+    "database": process.env.DB_NAME,
+    "host": process.env.DB_HOST,
+    "dialect": process.env.DB_DIALECT,
+    "logging": false
+});
+
+sequelize
+    .authenticate()
+    .then(function(err) {
+        if (!!err) {
+            console.log('Unable to connect to the database:', err)
+        } else {
+            console.log('Connection has been established successfully.')
+        }
+    });
+
 
 
 // test.forEach(config => {
