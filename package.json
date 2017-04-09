@@ -64,7 +64,7 @@
     "selectn": "^1.1.2",
     "sequelize": "^3.30.2",
     "slug": "^0.9.1",
-    "validator": "^7.0.0"
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",

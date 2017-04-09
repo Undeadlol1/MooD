@@ -1272,11 +1272,11 @@ bluebird@^2.10.2:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.11.0.tgz#534b9033c022c9579c56ba3b3e5a5caafbb650e1"
 
-bluebird@^3.0.1, bluebird@^3.0.5, bluebird@^3.5.0:
+bluebird@^3.0.1, bluebird@^3.0.5, bluebird@^3.4.6, bluebird@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
-bluebird@^3.3.4, bluebird@^3.4.6, bluebird@^3.4.7:
+bluebird@^3.3.4, bluebird@^3.4.7:
   version "3.4.7"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.4.7.tgz#f72d760be09b7f76d08ed8fae98b289a8d05fab3"
 
@@ -2441,14 +2441,14 @@ es-to-primitive@^1.1.1:
     is-date-object "^1.0.1"
     is-symbol "^1.0.1"
 
-es5-ext@^0.10.12, es5-ext@^0.10.7, es5-ext@^0.10.8, es5-ext@^0.10.9, es5-ext@~0.10.11, es5-ext@~0.10.2, es5-ext@~0.10.7:
+es5-ext@^0.10.12, es5-ext@^0.10.7, es5-ext@^0.10.8, es5-ext@^0.10.9, es5-ext@~0.10.11:
   version "0.10.12"
   resolved "https://registry.yarnpkg.com/es5-ext/-/es5-ext-0.10.12.tgz#aa84641d4db76b62abba5e45fd805ecbab140047"
   dependencies:
     es6-iterator "2"
     es6-symbol "~3.1"
 
-es5-ext@^0.10.13, es5-ext@~0.10.14:
+es5-ext@^0.10.13, es5-ext@~0.10.14, es5-ext@~0.10.2, es5-ext@~0.10.7:
   version "0.10.15"
   resolved "https://registry.yarnpkg.com/es5-ext/-/es5-ext-0.10.15.tgz#c330a5934c1ee21284a7c081a86e5fd937c91ea6"
   dependencies:
@@ -7137,6 +7137,10 @@ v8flags@^2.0.2:
   dependencies:
     user-home "^1.1.1"
 
+valid-url@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/valid-url/-/valid-url-1.0.9.tgz#1c14479b40f1397a75782f115e4086447433a200"
+
 validate-npm-package-license@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/validate-npm-package-license/-/validate-npm-package-license-3.0.1.tgz#2804babe712ad3379459acfbe24746ab2c303fbc"
@@ -7147,10 +7151,6 @@ validate-npm-package-license@^3.0.1:
 validator@^5.2.0:
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-5.7.0.tgz#7a87a58146b695ac486071141c0c49d67da05e5c"
-
-validator@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/validator/-/validator-7.0.0.tgz#c74deb8063512fac35547938e6f0b1504a282fd2"
 
 vary@~1.1.0:
   version "1.1.0"
