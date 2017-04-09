@@ -6,8 +6,7 @@ import { parseUrl } from '../helpers.js'
 import { If } from './Utils.jsx'
 import { insertNode, actions } from '../redux/actions/NodeActions'
 import { toggleControls } from '../redux/actions/GlobalActions'
-// import isUrl from 'validator/lib/isUrl'
-import validator from 'validator'
+import isUrl from 'validator/lib/isUrl'
 import { assignIn as extend } from 'lodash'
 
 import Dialog from 'material-ui/Dialog'
@@ -29,7 +28,7 @@ import Loading from './Loading'
 	validate({url}, second) {
 		const errors = {}
         if (!url) errors.url = 'Must not be empty!'
-        else if (url && !ivalidator.sUrl(url)) errors.url = 'Thats not a proper url!'
+        else if (url && !isUrl(url)) errors.url = 'Thats not a proper url!'
 		return errors
 	}
 })
