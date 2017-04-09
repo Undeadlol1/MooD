@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/dev.config.js --display-error-details\" \"nodemon dist/server.js\"",
-    "production": "NODE_ENV=production webpack --config ./config/dev.config.js; npm rebuild node-sass; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit",
+    "production": "NODE_ENV=production webpack --config ./config/dev.config.js; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit",
     "test_production": "NODE_ENV=development webpack --config ./config/dev.config.js --display-error-details; npm rebuild node-sass; nodemon dist/server.js"
   },
   "dependencies": {
