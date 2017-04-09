@@ -2,12 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { parseUrl } from '../helpers.js'
-// import { nodesInsert } from '../../api/nodes'
 import { If } from './Utils.jsx'
 import { insertNode, actions } from '../redux/actions/NodeActions'
 import { toggleControls } from '../redux/actions/GlobalActions'
-// import isUrl from 'validator/lib/isUrl'
-import { isUri } from 'valid-url'
 import { assignIn as extend } from 'lodash'
 
 import Dialog from 'material-ui/Dialog'
@@ -21,6 +18,16 @@ import { TextField } from 'redux-form-material-ui'
 import { history } from 'react-router';
 import Loading from './Loading'
 
+function isUrl(str) {
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
+  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+  '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+  '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  return pattern.test(str);
+}
+
 @reduxForm({
 	form: 'NodesInsert',
     // asyncValidate(values) {
@@ -29,7 +36,7 @@ import Loading from './Loading'
 	validate({url}, second) {
 		const errors = {}
         if (!url) errors.url = 'Must not be empty!'
-        else if (url && !isUri(url)) errors.url = 'Thats not a proper url!'
+        else if (url && !isUrl(url)) errors.url = 'Thats not a proper url!'
 		return errors
 	}
 })
