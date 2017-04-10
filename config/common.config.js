@@ -16,6 +16,9 @@ var isDevelopment = process.env.npm_lifecycle_event == 'start'
 
 const developmentPlugins = isDevelopment ? [
     new WebpackNotifierPlugin({alwaysNotify: false}),
+    new webpack.DefinePlugin({ // TODO
+            'process.env.NODE_ENV': JSON.stringify('development')
+    }),
 ] : []
 
 var baseConfig = {
@@ -73,9 +76,6 @@ var baseConfig = {
             disable: isDevelopment // TODO check if this works properly
         }),
         ...developmentPlugins
-                // new webpack.DefinePlugin({ // TODO
-        //     'process.env.NODE_ENV': JSON.stringify('production')
-        // }),
     ],
     resolve: {
         enforceModuleExtension: false,

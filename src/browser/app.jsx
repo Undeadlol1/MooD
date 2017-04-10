@@ -33,7 +33,8 @@ import './styles.scss'
 import 'react-redux-toastr/src/styles/index.scss';
 
 // const store = createStore(rootReducer, initialState, applyMiddleware(thunk)) // thunk, promise,
-const store = createStore(rootReducer, applyMiddleware(thunk)) // thunk, promise,
+const reduxDevtools = (process.env.NODE_ENV == 'development') ? window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() : {}
+const store = createStore(rootReducer, reduxDevtools, applyMiddleware(thunk)) // thunk, promise, // TODO add dev variable to redux devtools
 const history = syncHistoryWithStore(browserHistory, store) // for react-router-redux to work
 // const client = new ApolloClient()
 const client = new ApolloClient({
@@ -50,7 +51,7 @@ const client = new ApolloClient({
 class App extends Component {
   render() {
     return  <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-              <ApolloProvider client={client}>
+              {/*<ApolloProvider client={client}>*/}
                   <ReduxProvider store={store}>
                     <div>
                       <Router history={history}>
@@ -72,7 +73,7 @@ class App extends Component {
                         progressBar />
                     </div>
                   </ReduxProvider>
-                </ApolloProvider>
+                {/*</ApolloProvider>*/}
               </MuiThemeProvider>
   }
 }
