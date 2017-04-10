@@ -39,23 +39,33 @@ class MoodPage extends Component {
 	}
 
 	render() {
-		const { mood, node, location, params, controlsAreShown, ...rest } = this.props
+		const { mood, node, location, params, controlsAreShown, toggleHeader, ...rest } = this.props
 		
 		if (mood.loading || node.loading) return <Loading />
 
-		if (!node.contentId) return 	<div>
-											<h1>Currently zero content here</h1>
-											<NodesInsert moodSlug={params.moodSlug} />
-										</div>
-		else return <RouteTransition {...presets.slideLeft} pathname={location.pathname}>
-						<section className='MoodPage'>
+		let dom;
+		if (!node.contentId) {
+			// show header if no content there is no content to show
+			// toggleHeader()
+			dom = 	<section className="MoodPage MoodPage--empty">
+						<NavBar className='NavBar--sticky' />				
+						<h1 className="MoodPage__header">Currently zero content here</h1>
+						<NodesInsert moodSlug={params.moodSlug} />
+					</section>
+		}
+		else {
+			dom =  <section className='MoodPage'>
 							<Video className='MoodPage__video'>
 								<NavBar className='NavBar--sticky' />
 								<Decision className='MoodPage__decision' />
 								<NodesInsert moodSlug={params.moodSlug} />																	
 							</Video>
-						</section>
-					</RouteTransition>
+					</section>
+		}
+
+		return 	<RouteTransition {...presets.slideLeft} pathname={location.pathname}>
+					{dom}
+				</RouteTransition>
 	}
 }
 

@@ -7,6 +7,7 @@ import { fetchCurrentUser, logoutCurrentUser } from '../../redux/actions/UserAct
 import Sidebar from '../../components/Sidebar'
 import LoginDialog from '../../components/LoginDialog'
 import LoginLogoutButton from '../../components/LoginLogoutButton'
+import selectn from 'selectn'
 
 let timeout = null
 
@@ -38,6 +39,10 @@ export default class Layout extends React.Component {
 		// hidden: true,
 	}
 
+	static contextTypes = {
+		router: React.PropTypes.func.isRequired
+	}
+
 	// componentDidMount() {
 	// 	$('body').css('background-color', 'rgb(48, 48, 48)')
 	// 	$('input[type=url]:focus:not([readonly])').css('box-shadow', 'none !important')
@@ -63,6 +68,10 @@ export default class Layout extends React.Component {
 
 	render() {
 		const { logout, loginIsOpen, headerIsShown, ...rest } = this.props
+
+		const currentPath = this.context.router.getCurrentPathname && this.context.router.getCurrentPathname()
+		const location = selectn('router.location.pathname', this.context)
+		const isMoodPage = location.includes('/mood/')
 		
 		// styles
 		const 	baseStyles = 	{
@@ -87,7 +96,7 @@ export default class Layout extends React.Component {
 					//onMouseStop={this.checker} // this useed to be here already commented out
 				>
 					{/*{this.props.nav}*/}
-					{headerIsShown ? <NavBar /> : null}
+					{!isMoodPage && <NavBar />}
 					<main>
 						{this.props.children}
 						{/*{this.props.main}*/}
