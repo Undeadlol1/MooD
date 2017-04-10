@@ -27,7 +27,7 @@ class NavBar extends Component {
                             ? <Avatar className="NavBar__avatar" src={user.get('image')} />
                             : <LoginLogoutButton />
 
-        return  <header className={'NavBar ' + className}>
+        return  <header className={'NavBar ' + className} {...rest}>
                     <AppBar
                         title={titleLink}
                         iconElementRight={loginButton}

@@ -45,25 +45,22 @@ class MoodPage extends Component {
 
 		let dom;
 		if (!node.contentId) {
-			// show header if no content there is no content to show
-			// toggleHeader()
-			dom = 	<section className="MoodPage MoodPage--empty">
+
+			dom = 	<div className="MoodPage--empty">
 						<NavBar className='NavBar--sticky' />				
 						<h1 className="MoodPage__header">Currently zero content here</h1>
 						<NodesInsert moodSlug={params.moodSlug} />
-					</section>
+					</div>
 		}
 		else {
-			dom =  <section className='MoodPage'>
-							<Video className='MoodPage__video'>
-								<NavBar className='NavBar--sticky' />
-								<Decision className='MoodPage__decision' />
-								<NodesInsert moodSlug={params.moodSlug} />																	
-							</Video>
-					</section>
+			dom =  <Video className='MoodPage__video'>
+						<NavBar className='NavBar--sticky' />
+						<Decision className='MoodPage__decision' />
+						<NodesInsert moodSlug={params.moodSlug} />																	
+					</Video>
 		}
 
-		return 	<RouteTransition {...presets.slideLeft} pathname={location.pathname}>
+		return 	<RouteTransition {...presets.slideLeft} pathname={location.pathname} className="MoodPage">
 					{dom}
 				</RouteTransition>
 	}
