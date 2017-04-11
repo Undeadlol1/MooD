@@ -24,47 +24,6 @@ import test from '../../config/dev.config'
 // load production values to process.env
 require('dotenv').config()
 
-
-console.log('process.env.DB_USER', process.env.DB_USER)
-console.log('process.env.DB_PASS', process.env.DB_PASS)
-console.log('process.env.DB_NAME', process.env.DB_NAME)
-console.log('process.env.DB_HOST', process.env.DB_HOST)
-console.log('process.env.DB_PORT', process.env.DB_PORT)
-console.log('process.env.DB_DIALECT', process.env.DB_DIALECT)
-
-var Sequelize = require('sequelize');
-var sequelize = new Sequelize({
-    "username": process.env.DB_USER,
-    "password": process.env.DB_PASS,
-    "database": process.env.DB_NAME,
-    "host": process.env.DB_HOST,
-    "dialect": process.env.DB_DIALECT,
-    "logging": false
-});
-
-sequelize
-    .authenticate()
-    .then(function(err) {
-        if (!!err) {
-            console.log('Unable to connect to the database:', err)
-        } else {
-            console.log('Connection has been established successfully.')
-        }
-    })
-    .catch(error => {
-      console.error('Unable to connect to database:', error)
-    })
-
-
-
-// test.forEach(config => {
-//   console.log('process.env.npm_lifecycle_event;', process.env.npm_lifecycle_event)
-//   console.log("process.env.npm_lifecycle_event === 'start'", process.env.npm_lifecycle_event === 'start')
-//   console.log(config.name)
-//   console.log(config.plugins)
-//   // console.info(`Environment varibables are: ${JSON.stringify(process.env)}!`)  
-// })
-
 const port = 3000,
       app = express(),
       publicUrl = path.resolve('./dist', 'public'), // TODO: or use server/public?
