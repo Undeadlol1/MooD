@@ -24,7 +24,7 @@ import test from '../../config/dev.config'
 // load production values to process.env
 require('dotenv').config()
 
-const port = 3000,
+const port = process.env.PORT || 3000,
       app = express(),
       publicUrl = path.resolve('./dist', 'public'), // TODO: or use server/public?
       cookieExpires = 100 * 60 * 24 * 100 // 100 days
