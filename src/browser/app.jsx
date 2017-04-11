@@ -26,6 +26,7 @@ import IndexPage from './pages/IndexPage';
 import LoginPage from './pages/LoginPage';
 import MoodPage from './pages/MoodPage';
 import SearchPage from './pages/SearchPage';
+import AboutPage from './pages/AboutPage';
 import NotFound from './pages/NotFound';
 
 // STYLES
@@ -60,6 +61,7 @@ class App extends Component {
                           <Route path="login" component={LoginPage} />
                           <Route path="mood/(:moodSlug)" component={MoodPage} />
                           <Route path="search" component={SearchPage} />
+                          <Route path="about" component={AboutPage} />
                           <Route path="*" component={NotFound }/>                    
                         </Route>
                       </Router>
