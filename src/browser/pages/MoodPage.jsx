@@ -53,7 +53,7 @@ class MoodPage extends Component {
 					</div>
 		}
 		else {
-			dom =  <Video className='MoodPage__video'>
+			dom =  <Video className='MoodPage__video' moodSlug={params.moodSlug}> {/* TODO rework passing of moodSlug */}
 						<NavBar className='NavBar--sticky' />
 						<Decision className='MoodPage__decision' />
 						<NodesInsert moodSlug={params.moodSlug} />																	

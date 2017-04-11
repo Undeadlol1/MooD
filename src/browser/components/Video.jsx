@@ -35,16 +35,11 @@ const { object, string } = PropTypes
 			console.log('params', params)
 			console.info('IMPLEMENT requestNewVideo()!');
 			// dispatch(requestNewVideo(params))
-			dispatch(fetchNode())
+			dispatch(fetchNode(ownProps.moodSlug))
 		}
     })
 )
 export default class Video extends Component {
-	
-	test = () => {
-		console.log('test!')
-	}
-
 	render() {
 		const 	{node, controlsAreShown, contentId, slug, rating, toggleControls, fetchMoodContent, requestNewVideo, className, ...rest} = this.props,
 				{props, state} = this,
@@ -55,9 +50,6 @@ export default class Video extends Component {
 					playerVars: {autoplay: 1, controls: 1}
 				}
 
-		console.log('controlsAreShown', controlsAreShown);
-
-		// return <iframe width="100%" height="100%" onMouseEnter={this.test} onMouseMove={this.test} src={"https://www.youtube.com/embed/" + node.contentId} />
 		return 	<section
 					{...rest}
 					className={"Video " + className}
