@@ -43,7 +43,6 @@ export default class SearchPage extends Component {
 						{...presets.pop}
 					>
 						<Grid className="SearchPage">
-							<h1>SEARCH PAGE!</h1>
 	        				<MoodsFind />
 							<MoodsList moods={moods} currentPage={currentPage} totalPages={totalPages} />
 	        	    	</Grid>
