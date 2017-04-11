@@ -48,7 +48,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // })) // ???
 app.use(cookieSession({
   name: 'session',
-  keys: ['keyboard cat'], // [/* secret keys */],
+  keys: [process.env.SESSION_KEY || 'keyboard cat'], // [/* secret keys */],
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
