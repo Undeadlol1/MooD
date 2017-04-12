@@ -6,6 +6,8 @@
   "author": "undeadlol1",
   "license": "MIT",
   "scripts": {
+    "test": "mocha-webpack --webpack-config config/tests.config.js src --glob \"*.test.js\" --recursive",
+    "test_old": "find ./src -name '*.test.js' | xargs mocha -R spec",
     "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/dev.config.js --display-error-details\" \"nodemon dist/server.js\"",
     "production": "yarn; NODE_ENV=production webpack --config ./config/dev.config.js; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit"
   },
@@ -79,6 +81,7 @@
     "babel-preset-stage-3": "^6.22.0",
     "babili-webpack-plugin": "^0.0.11",
     "browser-sync-webpack-plugin": "^1.1.4",
+    "chai": "^3.5.0",
     "concurrently": "^3.4.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.27.1",
@@ -90,6 +93,8 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.10.1",
     "html-webpack-plugin": "^2.28.0",
+    "mocha": "^3.2.0",
+    "mocha-webpack": "^0.7.0",
     "morgan": "^1.8.1",
     "node-sass": "^4.5.2",
     "nodemon": "^1.11.0",
@@ -99,6 +104,7 @@
     "sequelize-cli": "^2.7.0",
     "source-map-support": "^0.4.11",
     "style-loader": "^0.13.2",
+    "supertest": "^3.0.0",
     "transform-runtime": "^0.0.0",
     "typescript": "^2.2.1",
     "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony",
