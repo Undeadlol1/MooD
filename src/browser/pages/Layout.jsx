@@ -2,11 +2,11 @@ import { Grid } from 'react-flexbox-grid';
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import NavBar from './NavBar'
-import { fetchCurrentUser, logoutCurrentUser } from '../../redux/actions/UserActions'
-import Sidebar from '../../components/Sidebar'
-import LoginDialog from '../../components/LoginDialog'
-import LoginLogoutButton from '../../components/LoginLogoutButton'
+import NavBar from '../components/NavBar'
+import { fetchCurrentUser, logoutCurrentUser } from '../redux/actions/UserActions'
+import Sidebar from '../components/Sidebar'
+import LoginDialog from '../components/LoginDialog'
+import LoginLogoutButton from '../components/LoginLogoutButton'
 import selectn from 'selectn'
 
 let timeout = null
@@ -95,11 +95,9 @@ export default class Layout extends React.Component {
 					//onTouchEnd={this.hideWhenIdle}
 					//onMouseStop={this.checker} // this useed to be here already commented out
 				>
-					{/*{this.props.nav}*/}
 					{!isMoodPage && <NavBar />}
 					<main>
 						{this.props.children}
-						{/*{this.props.main}*/}
 					</main>
 					<Sidebar />
 					<LoginDialog />
