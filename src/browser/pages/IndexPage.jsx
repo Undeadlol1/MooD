@@ -3,6 +3,7 @@ import Loading from '../components/Loading'
 import MoodsList from '../components/MoodsList'
 import MoodsInsert from '../components/MoodsInsert'
 import MoodsFind from '../components/MoodsFind'
+import YoutubeSearch from '../components/YoutubeSearch'
 import { Grid } from 'react-flexbox-grid';
 import { injectProps } from 'relpers'
 import { connect } from 'react-redux';
@@ -40,6 +41,7 @@ export default class IndexPage extends Component {
 						{...presets.pop}
 					>
 					<Grid className="IndexPage">
+						{/*<YoutubeSearch />*/}
 						{/*<MoodsFind />*/}
 						<MoodsInsert />						
 						{
