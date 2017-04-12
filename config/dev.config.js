@@ -1,5 +1,4 @@
 var path = require('path');
-var fs = require('fs');
 var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
@@ -11,20 +10,10 @@ var extractSass = new ExtractTextPlugin({
     // disable: process.env.NODE_ENV === "development"
 });
 var merge = require('webpack-merge');
-
 const BabiliPlugin = require('babili-webpack-plugin');
+var nodeExternals = require('webpack-node-externals');
 
 var commonConfig = require('./common.config.js')
-
-// this is important. Without nodeModules in "externals" bundle will throw and error
-// bundling for node requires modules not to be packed on top of bundle, but to be found via "require"
-var nodeModules = {};
-fs.readdirSync('node_modules')
-  .filter(x => ['.bin'].indexOf(x) === -1)
-  .forEach(function(mod) {
-    nodeModules[mod] = 'commonjs ' + mod;
-});
-
 
 // https://survivejs.com/webpack/optimizing/minifying/#enabling-a-performance-budget
 
@@ -77,7 +66,9 @@ var serverConfig = merge(commonConfig, {
         //     $dirname: '__dirname',
         // }),
     ],
-    externals: [nodeModules],
+    // this is important. Without nodeModules in "externals" bundle will throw and error
+    // bundling for node requires modules not to be packed on top of bundle, but to be found via "require"
+    externals: [nodeExternals()],
 });
 
 var clientConfig = merge(commonConfig, {
