@@ -17,9 +17,16 @@ if (config.use_env_variable) {
   var sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
+// TODO rework to this in future (seems like a better decision)
+// var context = require.context('.', true, /.js?$/);
+// context.keys().forEach(key => {
+//   // console.log('context key', key)
+// })
+
 fs
   .readdirSync(__dirname)
   .filter(function(file) {
+    // console.log(file)
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
   })
   .forEach(function(file) {

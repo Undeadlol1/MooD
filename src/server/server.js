@@ -18,8 +18,6 @@ import { buildSchema } from 'graphql'
 import graphqlHTTP from 'express-graphql'
 import { graphqlExpress } from 'graphql-server-express';
 import schema from './graphql/schema'
-import test from '../../config/dev.config'
-
 
 // load production values to process.env
 require('dotenv').config()
@@ -98,6 +96,9 @@ app.get('/*', function(req, res) {
   console.log('user is logged in: ', req.isAuthenticated()); 
   res.sendFile(path.join(publicUrl, '/index.html'));
 })
+
+// export app to use in tess suits
+export default app
 
 app.listen(port, () => {
   console.info(`Environment is: ${process.env.NODE_ENV}!`)

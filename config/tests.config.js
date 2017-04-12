@@ -1,7 +1,24 @@
 var nodeExternals = require('webpack-node-externals');
- 
+var path = require('path')
+
+// TODO rework this to work with common.config.js
+// TODO or export serverConfig from targets?
 module.exports = {
   target: 'node', // in order to ignore built-in modules like path, fs, etc. 
   externals: [nodeExternals()], // in order to ignore all modules in node_modules folder 
-  devtool: "cheap-module-source-map" // faster than 'source-map' 
+  devtool: "cheap-module-source-map", // faster than 'source-map' 
+  node: {
+        __filename: true,
+        __dirname: true 
+    },
+  context: path.resolve(__dirname, '../'),
+  module : {
+        loaders: [
+            { 
+                test   : /.jsx?$/,
+                loader : 'babel-loader',
+                exclude: /node_modules/,
+            },
+        ],
+    },
 };
