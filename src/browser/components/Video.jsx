@@ -32,8 +32,7 @@ const { object, string } = PropTypes
 			dispatch(fetchMoodContent(...params))
 		},
 		requestNewVideo(params) {// REMOVE THIS?
-			console.log('params', params)
-			console.info('IMPLEMENT requestNewVideo()!');
+			// console.info('IMPLEMENT requestNewVideo()!');
 			// dispatch(requestNewVideo(params))
 			dispatch(fetchNode(ownProps.moodSlug))
 		}

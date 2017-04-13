@@ -9,89 +9,87 @@ const router = express.Router()
 router
 
   .get('/:moodSlug/:nodeId?', async function({ params, user }, res) {
+    /*
+      If user is NOT logged in:
+        1. Show highest rated Node
+        2. Afterwards show lower rated Node
+        3. If there is no Node just send the highest rated one
+      If user IS logged in:
+        1.
+    */
     console.log('params', params)
+    
     try {
+
       let response      
+
+      const UserId = await user && user.id
       const MoodId = await Mood.findIdBySlug(params.moodSlug)
-      const previousNode = await Node.findById(params.nodeId) // IMPLEMENT THIS IN NODE ACTIONS
-      const nodeWithBiggestRating = await Node.findOne({ // move this to bottom?
-            where: { MoodId },
-            order: [['rating', 'DESC']]            
-          })
+      const previousNode = await Node.findById(params.nodeId)
 
       if (!MoodId) return res.boom.notFound()
 
       /* USER IS NOT LOGGED IN */
-      if (!(user && user.id)) {
-        /* PREVIOUS NODE IS PROVIDED */                
-        if (previousNode) {
-          console.log('moodId', MoodId)
+      if (!UserId) {
+        if(previousNode) {
           response = await Node.findOne({
-            where: {
-              MoodId,
-              rating: { $lte: previousNode.rating },
-              id: { $not: previousNode.id }
-            },
-            order: [['rating', 'DESC']]
-          })
-          if (!response) response = nodeWithBiggestRating // move this to bottom?
-          // console.log('node with no user and with no previous node', response.dataValues);
-        }
-        /* NO PREVIOUS NODE PROVIDED */        
-        else {
-          response = nodeWithBiggestRating  // move this to bottom?
-          // console.log('node with no user and with previous node', response.dataValues);
+                              where: {
+                                MoodId,
+                                id: { $not: previousNode.id },
+                                rating: { $lte: previousNode.rating },
+                              },
+                              order: [['rating', 'DESC']]
+                            })
         }
       }
-
 
       /* USER IS LOGGED IN */     // IMPLEMENT THIS 
       else {// IMPLEMENT THIS // DO NOT FORGET TO IMPLEMENT DECISIONS ON USER CREATION       
-        const UserId = user.id
-        // const decision = await Decision.findOne({
-        //   where: {
-        //       UserId,
-        //       MoodId,
-        //       rating: { $gre: 0 },
-        //       // nextViewAt: { $lte: new Date() }
-        //   }
-        // })
-        // console.log('decision', decision)
-        const where = {
-              UserId,
-              MoodId,
-              rating: { $gte: 0 },
-              nextViewAt: { 
-                $or: {
-                  $lte: new Date(),
-                  $not: null // WHAT ABOUT THIS?
-                }
-               }
+          // const decision = await Decision.findOne({
+          //   where: {
+          //       UserId,
+          //       MoodId,
+          //       rating: { $gre: 0 },
+          //       // nextViewAt: { $lte: new Date() }
+          //   }
+          // })
+          // console.log('decision', decision)
+          const where = {
+                UserId,
+                MoodId,
+                rating: { $gte: 0 },
+                // nextViewAt: { 
+                //   $or: {
+                //     $lte: new Date(),
+                //     $not: null // WHAT ABOUT THIS?
+                //   }
+                // }
+              }
+
+          if (previousNode) {
+            // console.log('previousNode', previousNode && previousNode.dataValues)
+            where.NodeRating = {
+              $lte: previousNode.rating
             }
-
-        if (previousNode) {
-          where.NodeRating = {
-            $lte: previousNode.rating
+            where.NodeId = {
+              $not: previousNode.id
+            }
           }
-          where.NodeId = {
-            $not: previousNode.id
-          }
-        }
-
-        response = await Node.findOne({
-          include: [{
-            where,
-            model: Decision,
-            // order: [['NodeRating', 'DESC']] // // change order? // WHAT ABOUT THIS?
-          }]
-        })
-
-        // if ()
-
-
+          response = await Node.findOne({
+            include: [{
+              where,
+              model: Decision,
+              // order: [['NodeRating', 'DESC']] // // change order? // WHAT ABOUT THIS?
+            }]
+          })
       }
-      // console.log('response', response && response.dataValues)
-      res.json(response || nodeWithBiggestRating)      
+
+      if (!response) response = await Node.findOne({
+                                        where: { MoodId },
+                                        order: [['rating', 'DESC']]            
+                                      })
+
+      res.json(response)      
     } catch (error) {
       console.error(error);
       res.boom.internal(error)
