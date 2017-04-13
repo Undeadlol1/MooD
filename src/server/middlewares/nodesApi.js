@@ -1,33 +1,18 @@
 import express from "express"
-import selectn from "selectn"
-import sequelize from 'sequelize'
 import { Node, Mood, Decision, User } from '../data/models'
 import { mustLogin } from './permissions'
-import slugify from 'slug'
 import { assignIn as extend } from 'lodash'
-
-function findMoodIdBySlug(slug) { // TODO extend Mood with this function
-    return Mood
-            .findOne({ where: { slug }})
-            // .then(result => selectn('dataValues.id', result))
-            .then(result => result && result.get('id'))
-}
 
 // routes
 const router = express.Router()
 
 router
 
-  // for forms validation
-  // .get('/:moodSlug/validate', async function(req, rs) {
-
-  // })
-
   .get('/:moodSlug/:nodeId?', async function({ params, user }, res) {
     console.log('params', params)
     try {
       let response      
-      const MoodId = await findMoodIdBySlug(params.moodSlug)
+      const MoodId = await Mood.findIdBySlug(params.moodSlug)
       const previousNode = await Node.findById(params.nodeId) // IMPLEMENT THIS IN NODE ACTIONS
       const nodeWithBiggestRating = await Node.findOne({ // move this to bottom?
             where: { MoodId },
@@ -151,7 +136,7 @@ router
     if (!params.moodSlug) return res.boom.badQuery()
     try {
       const UserId = user && user.id
-      const MoodId = await findMoodIdBySlug(params.moodSlug)
+      const MoodId = await Mood.findIdBySlug(params.moodSlug)
       // const node = await Node.findAll({
       //   where: {
       //     // UserId: user.id,
@@ -246,7 +231,7 @@ router
       2. Create a Decision for every User corresponding with this NodeId
     */
     try {
-      const MoodId = await findMoodIdBySlug(body.moodSlug)
+      const MoodId = await Mood.findIdBySlug(body.moodSlug)
       extend(body, { MoodId, UserId: user.id })
       const node   = await Node.create(body)
       const users  = await User.findAll()
