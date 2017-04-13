@@ -20,14 +20,18 @@ module.exports = function(sequelize, DataTypes) {
       tableName: 'moods',
       freezeTableName: true,
       associate: function(models) {
-        // associations can be defined here
-        Mood.belongsTo(models.User, { // remember the bad copypaste? 'Mood.'
-          // onDelete: "CASCADE",
+        Mood.belongsTo(models.User, {
+          // onDelete: "CASCADE", // TODO implement this?
           foreignKey: {
             allowNull: false
           }
         });
         Mood.hasMany(models.Node)
+      },
+      findIdBySlug: function(slug) {
+        return Mood
+                .findOne({ where: { slug } }) 
+                .then(mood => mood && mood.get('id'))
       }
     }
   });
