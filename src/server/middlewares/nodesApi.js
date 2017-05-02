@@ -2,7 +2,7 @@ import express from "express"
 import { Node, Mood, Decision, User } from '../data/models'
 import { mustLogin } from './permissions'
 import { assignIn as extend } from 'lodash'
-
+          
 // routes
 const router = express.Router()
 
@@ -21,7 +21,7 @@ router
     
     try {
 
-      let response      
+      let response
 
       const UserId = await user && user.id
       const MoodId = await Mood.findIdBySlug(params.moodSlug)
@@ -45,14 +45,6 @@ router
 
       /* USER IS LOGGED IN */     // IMPLEMENT THIS 
       else {// IMPLEMENT THIS // DO NOT FORGET TO IMPLEMENT DECISIONS ON USER CREATION       
-          // const decision = await Decision.findOne({
-          //   where: {
-          //       UserId,
-          //       MoodId,
-          //       rating: { $gre: 0 },
-          //       // nextViewAt: { $lte: new Date() }
-          //   }
-          // })
           // console.log('decision', decision)
           const where = {
                 UserId,
@@ -84,10 +76,12 @@ router
           })
       }
 
-      if (!response) response = await Node.findOne({
-                                        where: { MoodId },
-                                        order: [['rating', 'DESC']]            
-                                      })
+      if (!response) {
+        response = await Node.findOne({
+                            where: { MoodId },
+                            order: [['rating', 'DESC']]            
+                          })
+      }
 
       res.json(response)      
     } catch (error) {
@@ -95,6 +89,46 @@ router
       res.boom.internal(error)
     }
   })
+
+  .post('/', mustLogin, async function({user, body}, res) {
+    /*
+      When user creates a node do the following:
+      1. Create Node
+      2. Create a Decision for every User corresponding with this NodeId
+    */
+    try {
+      const MoodId = await Mood.findIdBySlug(body.moodSlug)
+      const node   = await Node.create(body)
+      const users  = await User.findAll()
+
+      extend(body, { MoodId, UserId: user.id })
+
+      await users.forEach(user => {
+            return Decision.create({
+                      UserId: user.get('id'),
+                      NodeId: node.get('id'),
+                      MoodId: node.get('MoodId'),
+                    })
+      })
+
+      res.end()
+    } catch (error) {
+      console.error(error);
+      res.boom.internal(error)
+    }
+  })
+
+
+
+  // const decision = await Decision.findOne({
+  //   where: {
+  //       UserId,
+  //       MoodId,
+  //       rating: { $gre: 0 },
+  //       // nextViewAt: { $lte: new Date() }
+  //   }
+  // })
+
   /*
     rework this so "where" parameter is determinated on whatever user is logged in or not
   */
@@ -222,31 +256,5 @@ router
     }
   })
 
-  .post('/', mustLogin, async function({user, body}, res) {
-    /*
-      When user creates a node do the following:
-      1. Create Node
-      2. Create a Decision for every User corresponding with this NodeId
-    */
-    try {
-      const MoodId = await Mood.findIdBySlug(body.moodSlug)
-      extend(body, { MoodId, UserId: user.id })
-      const node   = await Node.create(body)
-      const users  = await User.findAll()
-
-      await users.forEach(user => {
-            return Decision.create({
-                      UserId: user.get('id'),
-                      NodeId: node.get('id'),
-                      MoodId: node.get('MoodId'),
-                    })
-      })
-
-      res.end()
-    } catch (error) {
-      console.error(error);
-      res.boom.internal(error)
-    }
-  })
 
 export default router
