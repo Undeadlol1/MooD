@@ -71,7 +71,7 @@ class MoodsList extends Component {
 								hideFirstAndLastPageLink: bool, optional, default: false - boolean flag to hide first and last page links
 								onChange: function - callback that will be called with new page when it should be changed by user interaction (optional)*/}
 							{
-								props.totalPages
+								props.totalPages > 1
 								? <Pagination
 									onChange={props.changePage}
 									currentPage={props.currentPage}
