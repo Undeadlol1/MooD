@@ -1,5 +1,6 @@
 import { toggleLoginDialog } from '../redux/actions/UserActions'
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';

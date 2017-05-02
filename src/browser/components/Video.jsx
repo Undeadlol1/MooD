@@ -1,5 +1,6 @@
-import React, { PropTypes, Component } from 'react'
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import YouTube from 'react-youtube'
 import { toggleState } from '../components/Utils'
 import { fetchNode, actions } from '../redux/actions/NodeActions'

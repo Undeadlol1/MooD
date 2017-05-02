@@ -1,6 +1,7 @@
 import Pagination from 'react-ultimate-pagination-material-ui'
 import { Card, CardMedia, CardTitle } from 'material-ui/Card'
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Row, Col } from 'react-flexbox-grid'
 import { fetchMoods } from '../redux/actions/MoodActions'
 import { connect } from 'react-redux'
