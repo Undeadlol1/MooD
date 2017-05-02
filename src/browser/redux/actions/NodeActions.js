@@ -27,8 +27,11 @@ export const insertNode = payload => (dispatch, getState) => {
 	dispatch(actions.fetchingInProgress())
 	fetch('/api/nodes', headersAndBody(payload))
 		.then(checkStatus)	
+		.then(parseJSON)		
 		.then(function(response) {
 			dispatch(actions.toggleDialog())
+			const {node} = getState()
+			if(!node.id) dispatch(actions.recieveNode(response))
 		})
 }
 

@@ -71,6 +71,9 @@ MoodPage.propTypes = {
 	node: PropTypes.object,
 	// fetchMood: PropTypes.func.isRequred,
 	// fetchNode: PropTypes.func.isRequred,		
+	// unloadMood: PropTypes.func.isRequred,		
+	// unloadNode: PropTypes.func.isRequred,		
+	// toggleHeader: PropTypes.func.isRequred,
 }
 
 export default MoodPage
