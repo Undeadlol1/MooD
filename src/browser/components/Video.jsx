@@ -49,7 +49,6 @@ export default class Video extends Component {
 				}
 
 		return 	<section
-					{...rest}
 					className={"Video " + className}
 					// TODO add comments about iframe!!!
 					// onMouseEnter={props.openContorls} // on mouseEnter?
