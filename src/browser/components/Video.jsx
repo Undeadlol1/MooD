@@ -2,8 +2,6 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux';
 import YouTube from 'react-youtube'
 import { toggleState } from '../components/Utils'
-import { fetchMoodContent } from '../redux/main'
-// import { requestNewVideo } from '../redux/main'
 import { fetchNode, actions } from '../redux/actions/NodeActions'
 import { toggleControls, openControls, closeControls } from '../redux/actions/GlobalActions'
 
@@ -27,10 +25,6 @@ const { object, string } = PropTypes
 			console.log('toggleControls', boolean);
 			dispatch(toggleControls(boolean))
 		},
-		// are these two functions used?
-		fetchMoodContent(...params) {// REMOVE THIS?
-			dispatch(fetchMoodContent(...params))
-		},
 		requestNewVideo(params) {// REMOVE THIS?
 			// console.info('IMPLEMENT requestNewVideo()!');
 			// dispatch(requestNewVideo(params))
@@ -45,7 +39,7 @@ const { object, string } = PropTypes
 )
 export default class Video extends Component {
 	render() {
-		const 	{node, controlsAreShown, contentId, slug, rating, toggleControls, fetchMoodContent, requestNewVideo, className, ...rest} = this.props,
+		const 	{node, controlsAreShown, contentId, slug, rating, toggleControls, requestNewVideo, className, ...rest} = this.props,
 				{props, state} = this,
 				opts = {
 					height: '100%',
