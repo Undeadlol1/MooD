@@ -6,8 +6,7 @@
   "author": "undeadlol1",
   "license": "MIT",
   "scripts": {
-    "devtest": "webpack --config config/loader.test.js; mocha ./dist/tests.js",
-    "test": "mocha-webpack --webpack-config config/tests.config.js src --glob \"*.test.js\" --recursive",
+    "test": "webpack --config config/tests.config.js; mocha ./dist/*.test.js",
     "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/targets.config.js --display-error-details\" \"nodemon dist/server.js\"",
     "production": "yarn; NODE_ENV=production webpack --config ./config/targets.config.js; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit"
   },
