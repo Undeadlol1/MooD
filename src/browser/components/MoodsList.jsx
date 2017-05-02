@@ -9,9 +9,9 @@ import selectn from 'selectn'
 
 @connect(
 	// stateToProps
-	({ mood }, ownProps) => ({ mood, ownProps }),
+	(state, ownProps) => ({ ...ownProps }),
 	// dispatchToProps
-    (dispatch, {moodSlug}) => ({
+    (dispatch, ownProps) => ({
 		changePage(page) {
 			dispatch(fetchMoods(page))
 		}
@@ -52,8 +52,7 @@ class MoodsList extends Component {
 
 	render() {
 		const { props } = this
-		const { mood } = props // do i need this?
-		
+
 		return  <section className="MoodsList">
 					<Row>
 						{this.renderItems()}
@@ -71,7 +70,7 @@ class MoodsList extends Component {
 								hideFirstAndLastPageLink: bool, optional, default: false - boolean flag to hide first and last page links
 								onChange: function - callback that will be called with new page when it should be changed by user interaction (optional)*/}
 							{
-								props.totalPages
+								props.totalPages > 1
 								? <Pagination
 									onChange={props.changePage}
 									currentPage={props.currentPage}
@@ -88,6 +87,13 @@ class MoodsList extends Component {
 
 MoodsList.propTypes = {
   moods: PropTypes.object.isRequired,
+  totalPages: PropTypes.number,  
+  currentPage: PropTypes.number,
+}
+
+MoodsList.defaultProps = {
+	totalPages: 0,
+	currentPage: 0,
 }
 
 export default MoodsList
