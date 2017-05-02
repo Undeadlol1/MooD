@@ -13,7 +13,6 @@ import presets from 'react-router-transition/src/presets';
 	({ global, mood }) => {
 		const 	{ moods, loading } = mood
 		const searchedMoods = mood.get('searchedMoods')
-		console.log('mood', mood.toJS())
 		return 	{
 			loading: mood.get('loading'),
 			totalPages: searchedMoods.get('totalPages'), // TODO rework this?
