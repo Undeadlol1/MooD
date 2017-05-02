@@ -5,7 +5,6 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var WebpackNotifierPlugin = require('webpack-notifier');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-// TODO webpack-build-notifier (seems better tgeb webpack-notifier)
 var extractSass = new ExtractTextPlugin({
     filename: "styles.css",
     // disable: process.env.NODE_ENV === "development" // TODO
@@ -30,20 +29,6 @@ var baseConfig = {
             { 
                 test   : /.jsx?$/,
                 loader : 'babel-loader',
-                // query: {
-                //     presets: [
-                //         'es2015',
-                //         'react'
-                //     ],
-                //     plugins: []
-                // },
-
-                
-                // options: { 
-                //     presets: [ 
-                //         'es2015' 
-                //     ] 
-                // },
                 exclude: /node_modules/,
             },
             { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
