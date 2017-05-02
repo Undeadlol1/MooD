@@ -4,7 +4,7 @@ import YouTube from 'react-youtube'
 import { toggleState } from '../components/Utils'
 import { fetchMoodContent } from '../redux/main'
 // import { requestNewVideo } from '../redux/main'
-import { fetchNode } from '../redux/actions/NodeActions'
+import { fetchNode, actions } from '../redux/actions/NodeActions'
 import { toggleControls, openControls, closeControls } from '../redux/actions/GlobalActions'
 
 const { object, string } = PropTypes
@@ -34,6 +34,11 @@ const { object, string } = PropTypes
 		requestNewVideo(params) {// REMOVE THIS?
 			// console.info('IMPLEMENT requestNewVideo()!');
 			// dispatch(requestNewVideo(params))
+			/*
+				unload node before fetching new one in case
+				because mutability does node load video if node is the same
+			*/
+			dispatch(actions.unloadNode())
 			dispatch(fetchNode(ownProps.moodSlug))
 		}
     })
