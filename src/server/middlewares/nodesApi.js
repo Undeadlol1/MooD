@@ -98,10 +98,9 @@ router
     */
     try {
       const MoodId = await Mood.findIdBySlug(body.moodSlug)
+      extend(body, { MoodId, UserId: user.id })
       const node   = await Node.create(body)
       const users  = await User.findAll()
-
-      extend(body, { MoodId, UserId: user.id })
 
       await users.forEach(user => {
             return Decision.create({
@@ -111,7 +110,7 @@ router
                     })
       })
 
-      res.end()
+      res.json(node)
     } catch (error) {
       console.error(error);
       res.boom.internal(error)
