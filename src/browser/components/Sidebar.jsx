@@ -20,7 +20,7 @@ export default class Sidebar extends Component {
 		return 	<Drawer className="Sidebar" docked={false} open={sidebarIsOpen} onRequestChange={toggleSidebar}>
 					<MenuItem onClick={toggleSidebar}><LoginLogoutButton inline fullWidth /></MenuItem>
 					<MenuItem><Link onClick={toggleSidebar} to="search">search</Link></MenuItem>
-					<MenuItem><Link onClick={toggleSidebar} to="about">about</Link></MenuItem>
+					{/*<MenuItem><Link onClick={toggleSidebar} to="about">about</Link></MenuItem>*/}
 				</Drawer>
 	}
 }
