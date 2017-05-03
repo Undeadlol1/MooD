@@ -4,8 +4,8 @@ module.exports = {
     return queryInterface.createTable('moods', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
         type: Sequelize.INTEGER
       },
       name: {
