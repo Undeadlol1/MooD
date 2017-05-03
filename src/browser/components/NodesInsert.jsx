@@ -17,7 +17,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add'
 import { Form, Field, reduxForm } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
 import { history } from 'react-router';
-import Loading from './Loading'
+import store from '../redux/store'
 
 function isUrl(str) {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -35,9 +35,13 @@ function isUrl(str) {
     //     fetch('api')
     // },
 	validate({url}, second) {
-		const errors = {}
-        if (!url) errors.url = 'Must not be empty!'
-        else if (url && !isUrl(url)) errors.url = 'Thats not a proper url!'
+		let errors = {}
+        const user = store.getState().user.get('id')
+
+		if (!user) errors.url = 'Please login'
+        if (!url) errors.url = "Url can't be empty"
+        else if (url && !isUrl(url)) errors.url = 'Something wrong with this url'
+
 		return errors
 	}
 })
