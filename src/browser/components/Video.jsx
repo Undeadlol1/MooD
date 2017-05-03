@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import YouTube from 'react-youtube'
 import { toggleState } from '../components/Utils'
-import { fetchNode, actions } from '../redux/actions/NodeActions'
+import { fetchNode } from '../redux/actions/NodeActions'
 import { toggleControls, openControls, closeControls } from '../redux/actions/GlobalActions'
 
 const { object, string } = PropTypes
@@ -26,14 +26,7 @@ const { object, string } = PropTypes
 			console.log('toggleControls', boolean);
 			dispatch(toggleControls(boolean))
 		},
-		requestNewVideo(params) {// REMOVE THIS?
-			// console.info('IMPLEMENT requestNewVideo()!');
-			// dispatch(requestNewVideo(params))
-			/*
-				unload node before fetching new one in case
-				because mutability does node load video if node is the same
-			*/
-			dispatch(actions.unloadNode())
+		requestNewVideo(params) {
 			dispatch(fetchNode(ownProps.moodSlug))
 		}
     })
