@@ -31,7 +31,7 @@ function isUrl(str) {
 
 @reduxForm({
 	form: 'NodesInsert',
-    // asyncValidate(values) {
+    // asyncValidate(values) { // TODO add check if node already exists
     //     fetch('api')
     // },
 	validate({url}, second) {
@@ -50,11 +50,13 @@ function isUrl(str) {
 	({mood, node, decision, loading, global}, ownProps) => {
         return ({mood, node, decision, loading, global, ...ownProps})},
 	// dispatchToProps
-    (dispatch, {moodSlug}) => ({
+    (dispatch, ownProps) => ({
         insertNode(formValues) {
-            const node = parseUrl(formValues.url)           
+            const { moodSlug } = ownProps
+            const node = parseUrl(formValues.url)
             extend(node, { moodSlug })
             dispatch(insertNode(node))
+            ownProps.reset()
         },
         toggleDialog() {
             dispatch(actions.toggleDialog())
