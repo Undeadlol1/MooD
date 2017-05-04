@@ -6,7 +6,7 @@
   "author": "undeadlol1",
   "license": "MIT",
   "scripts": {
-    "test": "webpack --config config/tests.config.js; mocha ./dist/*.test.js",
+    "test": "NODE_ENV=test webpack --config config/tests.config.js; mocha ./dist/*.test.js",
     "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/targets.config.js --display-error-details\" \"nodemon dist/server.js\"",
     "production": "yarn; sequelize db:migrate; NODE_ENV=production webpack --config ./config/targets.config.js; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit"
   },

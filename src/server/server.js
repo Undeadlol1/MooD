@@ -60,7 +60,7 @@ app.use('/auth', authorization)
 app.use('/api/moods', moodsApi)
 app.use('/api/nodes', nodesApi)
 app.use('/api/decisions', decisionsApi)
-app.get('/current_user', function(req, res) {
+app.get('/current_user', function(req, res) { // TODO move this to auth middleware
   res.json(req.user ? req.user : {})
 })
 
