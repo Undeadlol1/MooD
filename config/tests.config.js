@@ -41,7 +41,7 @@ var serverConfig =  {
     },
     plugins: [
         new WebpackShellPlugin({
-            onBuildEnd: "mocha dist/*.test.js --no-exit --watch" //onBuildEnd //onBuildExit
+            onBuildEnd: "mocha dist/*.test.js --opts ./mocha.opts" //onBuildEnd //onBuildExit
         }),
     ],
     externals: [nodeExternals()],
