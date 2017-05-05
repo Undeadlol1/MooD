@@ -11,7 +11,7 @@ import moodsApi from './middlewares/moodsApi'
 import nodesApi from './middlewares/nodesApi'
 import decisionsApi from './middlewares/decisionsApi'
 import { mustLogin } from './middlewares/permissions'
-import authorization, { passport } from './middlewares/auth'
+import authorization, { passport } from './middlewares/authApi'
 import 'source-map-support/register' // do we actually need this?
 import morgan from 'morgan'
 import { buildSchema } from 'graphql'
