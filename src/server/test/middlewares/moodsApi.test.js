@@ -1,42 +1,106 @@
 import 'babel-polyfill'
 import chai from 'chai'
 import request from 'supertest'
-import server from '../../server.js'
-
+import server from '../../server'
+import { Mood, User } from '../../data/models'
+import slugify from 'slug'
 chai.should();
 
-export default describe('/moods API CRUD', function() {
-    // it('should GET moods', function() {
-        // request(server)
-        //     .get('/api/moods')
-        //     .expect('Content-Type', /json/)
-        //     .expect('Content-Length', '15')
-        //     .expect(200)
-        //     .end(function(err, res) {
-        //         if (err) throw err;
-        //     });
-    // })
+const   user = request.agent(server),
+        username = "somename",
+        password = "somepassword",
+        moodName = "random name",
+        slug = slugify(moodName)
 
-    // it('should GET single mood', function() {
+export default describe('/moods API', function() {
+    
+    before(function(done) {
+        // TODO add logout? to test proper user login?
+        // Kill supertest server in watch mode to avoid errors
+        server.close()
+        // Create user and login
+        user
+            .post('/api/auth/signup')
+            .send({ username, password })
+            .end(result => {
+                user
+                    .post('/api/auth/login')
+                    .send({ username, password })
+                    .expect(302)
+                    .end(error => {
+                        if (error) return done(error)
+                        done()
+                    })
+            })
+    })
 
-    // })
+    // clean up
+    after(function() {
+        User.destroy({where: { username }})
+        Mood.destroy({where: { name: moodName }})        
+    })
 
-    // it('should POST mood', function(done) {
-        // request(server)
-            // .post('/api/moods')
-            // .expect('Content-Type', /json/)
-            // .expect('Content-Length', '15')
-            // .expect(200, done)
-            // .end(function(err, res) {
-            //     if (err) throw err;
-            // });
-    // })
+    it('POST mood', function(done) {
+        user
+            .post('/api/moods')
+            .send({ name: moodName })
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res){ 
+                if (err) return done(err);
+                res.body.should.be.equal(slug)
+                done()
+        })
+    })
 
-    // it('should fail to POST if not authorized', function() { // TODO move this to previous function?
+    it('GET moods', function(done) {
+        request(server)
+            .get('/api/moods')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+                if (err) return done(err);
+                res.body.moods.should.be.a('array')
+                done()
+            });
+    })
 
-    // })
+    it('GET single mood', function(done) {
+        user
+            .get('/api/moods/mood/' + slug )
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+                if (err) return done(err);
+                res.body.name.should.be.equal(moodName)
+                done()
+            });
+    })
 
-    // it('should GET /search moods', function() {
+    it('GET /search moods', function(done) {
+        user
+            .get('/api/moods/search/' + 'something' )
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+                if (err) return done(err);
+                res.body.moods.should.be.a('array')                
+                done()
+            });
+    })
+    // TODO create test for "mustLogin" function and this kind of tests will be obsolete
+    it('fail to POST if not authorized', function(done) { // TODO move this to previous function?
+        // TODO how to test if user is logged in?
+        user
+            .get('/api/auth/logout')
+            .expect(200)
+            .end(err => {
+                if (err) return done(err);
+                user
+                    .post('/api/moods')
+                    .send({ name: moodName })
+                    .expect(401, done)
+            })
+    })
 
-    // })
 })
