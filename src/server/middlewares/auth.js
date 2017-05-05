@@ -79,7 +79,7 @@ passport.use(new TwitterStrategy({
 passport.use('local-login', new LocalStrategy(
   function(username, password, done) {
         // console.log('request!!!1');
-        if(!username || !password) throw new Error() // TODO this    
+        if(!username || !password) throw new Error('forgot credentials') // TODO this    
     User.findOne({ where: { username }})
         .then(user => {
             if (!user) {
