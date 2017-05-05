@@ -52,7 +52,6 @@ app.use(cookieSession({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(morgan('dev')) // logger
 app.use(boom()) // provides res.boom. erros dispatching
 
 // REST API
