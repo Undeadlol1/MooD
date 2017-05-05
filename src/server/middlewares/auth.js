@@ -1,5 +1,6 @@
 import { Strategy as VKontakteStrategy } from "passport-vkontakte"
 import { Strategy as TwitterStrategy } from "passport-twitter"
+import { Strategy as LocalStrategy } from "passport-local"
 import { User } from '../data/models'
 import passport from "passport"
 import express from "express"
@@ -74,6 +75,64 @@ passport.use(new TwitterStrategy({
   }
 ));
 
+/* LOCAL AUTH */
+passport.use('local-login', new LocalStrategy(
+  function(username, password, done) {
+        // console.log('request!!!1');
+        if(!username || !password) throw new Error() // TODO this    
+    User.findOne({ where: { username }})
+        .then(user => {
+            if (!user) {
+              return done(null, false, { message: 'Username not found' });
+            }
+            if (!user.validPassword(password)) {
+              return done(null, false, { message: 'Incorrect password' });
+            }
+            return done(null, user);
+        })
+        .catch(error => done(error))
+  }
+));
+
+passport.use('local-signup', new LocalStrategy({
+    usernameField: 'username',
+    passwordField: 'password',
+    passReqToCallback : true },
+    function(req, username, password, done) {
+      process.nextTick(function() {
+        if(!username || !password) throw new Error() // TODO this
+        // asynchronous
+        // User.findOne wont fire unless data is sent back
+        // process.nextTick(function() {
+
+          // find a user whose email is the same as the forms email
+          // we are checking to see if the user trying to login already exists
+          User.findOne({where: { username }})
+              .then(user => {
+                // console.log('user', user)
+                if (user) {
+                    throw new Error()
+                    // return done(null, false);//, req.flash('signupMessage', 'That username is already taken.')
+                } else {
+                  User.create({
+                    username,
+                    image: '/userpic.png',
+                    password: User.generateHash(password)
+                  })
+                  .then(newUser => done(null, newUser))
+                  .catch(error => {
+                    console.error(error)
+                    done(error)
+                  })
+                }
+              })
+              .catch(error => {
+                console.log(error)
+                done(error)
+              })
+    });
+}));
+
 // User session support for our hypothetical `user` objects.
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -100,9 +159,27 @@ router
   .get('/vkontakte/callback',
     passport.authenticate('vkontakte', { successRedirect: '/',
                                           failureRedirect: '/failed-login' }))
+  .post('/signup', passport.authenticate('local-signup', {
+    successRedirect : '/', // redirect to the secure profile section
+    failureRedirect : '/xxx', // redirect back to the signup page if there is an error // TODO add failure redirect
+    failureFlash : true // allow flash messages
+  }))
+
+  .post('/login', passport.authenticate('local-login', {
+    successRedirect : '/', // redirect to the secure profile section
+    failureRedirect : '/xxxx', // redirect back to the signup page if there is an error // TODO add failure redirect
+    failureFlash : true // allow flash messages
+  }))
+
   .get('/logout', function(req, res){
-    req.logout();
-    res.end();
+    // console.log('req.user', req.user)
+    if (req.user) {
+      req.logout();
+      res.end();
+    }
+    else {
+      res.status(401).end()
+    }
   })
 
 export {passport}
