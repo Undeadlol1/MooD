@@ -55,7 +55,7 @@ app.use(passport.session())
 app.use(boom()) // provides res.boom. erros dispatching
 
 // REST API
-app.use('/auth', authorization)
+app.use('/api/auth', authorization)
 app.use('/api/moods', moodsApi)
 app.use('/api/nodes', nodesApi)
 app.use('/api/decisions', decisionsApi)
