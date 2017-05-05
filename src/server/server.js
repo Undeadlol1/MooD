@@ -96,10 +96,8 @@ app.get('/*', function(req, res) {
   res.sendFile(path.join(publicUrl, '/index.html'));
 })
 
-// export app to use in tess suits
-export default app
-
-app.listen(port, () => {
-  console.info(`Environment is: ${process.env.NODE_ENV}!`)
-  console.info(`Server listening on port ${port}!`)
+// export app to use in test suits
+export default app.listen(port, () => {
+    console.info(`Environment is: ${process.env.NODE_ENV}!`)
+    console.info(`Server listening on port ${port}!`)
 })
