@@ -17,7 +17,6 @@ router
       If user IS logged in:
         1.
     */
-    console.log('params', params)
     
     try {
 

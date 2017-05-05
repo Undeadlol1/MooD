@@ -1,7 +1,11 @@
+var webpack = require('webpack');
+var WebpackShellPlugin = require('webpack-shell-plugin');
 var nodeExternals = require('webpack-node-externals');
 var path = require('path')
 
 var clientConfig = {
+    watch: true,    
+    devtool: 'cheap-module-source-map',
     target: 'web',
     entry: [path.resolve('mocha!', __dirname, '../', 'src/browser/test/entry.js')],
     output : {
@@ -11,7 +15,9 @@ var clientConfig = {
     },
 };
 
-var serverConfig = {
+var serverConfig =  {
+    watch: true,
+    devtool: 'cheap-module-source-map',
     target: 'node',  
     entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/server/test/entry.js')],
     context: path.resolve(__dirname, '../'),
@@ -31,8 +37,13 @@ var serverConfig = {
                 loaders: ['babel-loader'],
                 exclude: /node_modules/,                
             }
-        ]
+        ],
     },
+    plugins: [
+        new WebpackShellPlugin({
+            onBuildEnd: "mocha dist/*.test.js --opts ./mocha.opts" //onBuildEnd //onBuildExit
+        }),
+    ],
     externals: [nodeExternals()],
 };
 

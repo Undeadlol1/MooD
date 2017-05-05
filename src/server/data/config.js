@@ -15,7 +15,8 @@ module.exports = {
     "password": null,
     "database": "mood_test", // "database_test", TODO bring this back
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "logging": false    
   },
   "production": {
     "username": process.env.DB_USER,

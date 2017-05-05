@@ -11,7 +11,7 @@ var extractSass = new ExtractTextPlugin({
 });
 
 
-var isDevelopment = process.env.npm_lifecycle_event == 'start'
+var isDevelopment = process.env.NODE_ENV === "development"
 
 const developmentPlugins = isDevelopment ? [
     new WebpackNotifierPlugin({alwaysNotify: false}),
