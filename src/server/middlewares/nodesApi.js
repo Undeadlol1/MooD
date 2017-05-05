@@ -1,7 +1,7 @@
-import express from "express"
 import { Node, Mood, Decision, User } from '../data/models'
-import { mustLogin } from './permissions'
+import { mustLogin } from '../services/permissions'
 import { assignIn as extend } from 'lodash'
+import express from "express"
           
 // routes
 const router = express.Router()
