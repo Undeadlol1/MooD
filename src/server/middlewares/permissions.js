@@ -6,12 +6,6 @@ import Boom from 'boom';
  * @param {string} redirectRoute // TODO
  * @returns 
  */
-export function mustLogin(req, res, next) { // redirectRoute = '/login'
-    // if (user && user.id) return next()
-    // console.log(user);
-    // console.log(Boom.unauthorized());
+export function mustLogin(req, res, next) {
     req.isAuthenticated() ? next() : res.boom.unauthorized('Please, log in to do this')
-    // if (req.isAuthenticated()) next() 
-    // else Boom.unauthorized()
-    // else res.redirect('/login') // redirectRoute = '/login'
 }
