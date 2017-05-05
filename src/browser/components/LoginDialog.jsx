@@ -32,12 +32,12 @@ export default class LoginDialog extends Component {
 					<span className="LoginDialog__icons">
 						<RaisedButton
 							label="vk.com"
-							href="/auth/vkontakte"
+							href="/api/auth/vkontakte"
 							className="LoginDialog__icon"
 							icon={<FontAwesome {...iconOptions('vk')} />} />
 						<RaisedButton
 							label="twitter.com"
-							href="/auth/twitter"
+							href="/api/auth/twitter"
 							className="LoginDialog__icon"							
 							icon={<FontAwesome {...iconOptions('twitter')} />} />	
 					</span>
