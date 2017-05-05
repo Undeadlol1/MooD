@@ -1,83 +1,68 @@
-import chai from 'chai'
+import chai, { assert } from 'chai'
 import request from 'supertest'
 import server from '../../server.js'
 import { User } from '../../data/models'
 
 chai.should();
 
-//  ALL OF THIS IS UNFINISHED WORK
-
 export default describe('Authethication tests', function() {
+    const user = request.agent(server)
+    
+    function loginUser() {
+        return user
+            .post('/api/auth/login')
+            .send({ username: 'somename', password: 'somepassword' })
+            .expect(302)
+            .then(result => result)
+    }    
+    
+    before(function() {
+        // TODO add logout? to test proper user login?
+        // Kill supertest server in watch mode to avoid errors
+        server.close()
+    })
 
     after(function() {
         User.destroy({where: {}})
     })
 
-    const user = request.agent(server)    
-    
-    // var user = request.agent();
-    // user
-    // .post('http://localhost:4000/api/auth/vk')
-    // .send({ user: 'hunter@hunterloftis.com', password: 'password' })
-    // .end(function(err, res) {
-    //     // user1 will manage its own cookies
-    //     // res.redirects contains an Array of redirects
-    // });
-    
-    it('login through vk', function(done) {
-        user
-            .get('/auth/vkontakte')
-            .expect(200)
-            .expect('Location', '/')
-            .end(function(err, res){
-                if (err) return done(err);
-                console.log(res.body);
-                console.log('location', res.location)
-                done()
-            })
+    it('create user', function() {
+        return user
+                .post('/api/auth/signup')
+                .send({ username: 'somename', password: 'somepassword' })
+                .expect(302)
     })
 
-    it('login through twitter', function(done) {
-        user
-            .get('/auth/twitter')
-            .expect(200)
-            .expect('Location', '/')
-            .end(function(err, res){
-                if (err) return done(err);
-                console.log(res.body);
-                console.log('location', res.location)
-                done()
-            })
+    // TODO test if username exists already
+    // TODO test if password is incorrect
+
+    it('login user', function() {
+        return loginUser()
     })
 
-    it('GET logged in user', function(done) {
-        user
-            .get('/auth/current_user')
-            .expect(200) 
-            .end(function(err, res){
-                if (err) return done(err);
-                res.body.should.not.be.empty()
-                res.body.should.have.property('id')
-                res.body.id.should.be.defined()
-                console.log(res.body);
-                done()
-            })
-    })
-
-    
-
-    // it('login through twitter', function(done) {
-        // request(server)
-        //     .get('/api/moods')
-        //     .expect('Content-Type', /json/)
-        //     .expect(200)
-        //     .end(function(err, res) {
-        //         if (err) throw err;
-        //     });
+    it('get logged in user', function() {
+        // return loginUser().then(response => {
+            return user
+                .get('/current_user')
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .then(function(res){
+                    // console.log(res.body)
+                    assert(res.body && res.body.id, 'res.body must have an id')
+                })
+        })        
     // })
 
-    // it('logout user', function() { // TODO move this to previous function?
-
-    // })
+    it('logout user', function(done) { // TODO move this to previous function?
+        loginUser()
+        // TODO test logout more properly
+        user
+            .get('/api/auth/logout')
+            .expect(200)
+            .end(function(err, res){
+                if (err) return done(err);
+                done()
+            })
+    })
 
 })
