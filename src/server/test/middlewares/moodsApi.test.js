@@ -48,7 +48,7 @@ export default describe('/moods API', function() {
             .expect(200)
             .end(function(err, res){ 
                 if (err) return done(err);
-                res.body.should.be.equal(slug)
+                res.body.slug.should.be.equal(slug)
                 done()
         })
     })

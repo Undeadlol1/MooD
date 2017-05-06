@@ -56,9 +56,8 @@ router
   .post('/', mustLogin, async ({user: { id: UserId }, body: { name }}, res) => {
     try {
       const slug = slugify(name)
-      await Mood.create({ UserId, name, slug }) // TODO move this in model definition?
-      // res.redirect('/mood' + slug)
-      res.json(slug)
+      const mood = await Mood.create({ UserId, name, slug }) // TODO move this in model definition?
+      res.json(mood)
     } catch (error) {
       console.log(error)
       res.boom.internal(error)

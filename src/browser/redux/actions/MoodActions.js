@@ -64,9 +64,9 @@ export const insertMood = (name, callback) => dispatch => {
 	fetch('/api/moods', headersAndBody({ name }))
 		.then(checkStatus)
 		.then(parseJSON)
-		.then(moodSlug => {
-			callback && callback(moodSlug)
-			return moodSlug
+		.then(({slug}) => {
+			callback && callback(slug)
+			return slug
 		})		
 		.then(() => dispatch(fetchMoods()))
 }
