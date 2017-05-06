@@ -91,9 +91,8 @@ app.use('/graphql', graphqlExpress({ schema }));
 //   })
 // }));
 
-// HTML PAGES
+// SEND HTML FOR SPA
 app.get('/*', function(req, res) {
-  console.log('user is logged in: ', req.isAuthenticated()); 
   res.sendFile(path.join(publicUrl, '/index.html'));
 })
 
