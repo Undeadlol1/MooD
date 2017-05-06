@@ -32,7 +32,7 @@ export default describe('Authethication tests', function() {
                 .send({ username: 'somename', password: 'somepassword' })
                 .expect(302)
     })
-
+    // TODO write vk and twitter auth tests
     // TODO test if username exists already
     // TODO test if password is incorrect
 
