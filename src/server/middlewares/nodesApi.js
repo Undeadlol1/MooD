@@ -1,6 +1,7 @@
 import { Node, Mood, Decision, User } from '../data/models'
 import { mustLogin } from '../services/permissions'
 import { assignIn as extend } from 'lodash'
+import { parseUrl } from '../../shared/parsers'
 import express from "express"
           
 // routes
@@ -90,6 +91,7 @@ router
   })
 
   .post('/', mustLogin, async function({user, body}, res) {
+    // TODO add validations
     /*
       When user creates a node do the following:
       1. Create Node
@@ -97,7 +99,12 @@ router
     */
     try {
       const MoodId = await Mood.findIdBySlug(body.moodSlug)
-      extend(body, { MoodId, UserId: user.id })
+      extend(
+        body,
+        { MoodId, UserId: user.id },
+        parseUrl(body.url).contentId,
+      )
+
       const node   = await Node.create(body)
       const users  = await User.findAll()
 

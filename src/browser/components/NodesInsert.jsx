@@ -53,6 +53,7 @@ function isUrl(str) {
     (dispatch, ownProps) => ({
         insertNode(formValues) {
             const { moodSlug } = ownProps
+            // TODO parseUrl is not really needed anymore. Parsing is made on server side. Remove this?
             const node = parseUrl(formValues.url)
             extend(node, { moodSlug })
             dispatch(insertNode(node))
