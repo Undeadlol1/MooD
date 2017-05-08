@@ -2,8 +2,10 @@ import chai, { assert } from 'chai'
 import request from 'supertest'
 import server from '../../server.js'
 import { User } from '../../data/models'
-
 chai.should();
+
+const   username = 'somename',
+        password = 'somepassword'
 
 export default describe('Authethication tests', function() {
     const user = request.agent(server)
@@ -11,7 +13,7 @@ export default describe('Authethication tests', function() {
     function loginUser() {
         return user
             .post('/api/auth/login')
-            .send({ username: 'somename', password: 'somepassword' })
+            .send({ username, password })
             .expect(302)
             .then(result => result)
     }    
@@ -23,13 +25,13 @@ export default describe('Authethication tests', function() {
     })
 
     after(function() {
-        User.destroy({where: {}})
+        User.destroy({where: { username }})
     })
 
     it('create user', function() {
         return user
                 .post('/api/auth/signup')
-                .send({ username: 'somename', password: 'somepassword' })
+                .send({ username, password })
                 .expect(302)
     })
     // TODO write vk and twitter auth tests
@@ -47,7 +49,6 @@ export default describe('Authethication tests', function() {
                 .expect(200)
                 .expect('Content-Type', /json/)
                 .then(function(res){
-                    // console.log(res.body)
                     assert(res.body && res.body.id, 'res.body must have an id')
                 })
         })        
