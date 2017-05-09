@@ -22,12 +22,13 @@ export default describe('/moods API', function() {
         user
             .post('/api/auth/signup')
             .send({ username, password })
-            .end(result => {
+            .end(function(error, result) {
+                if (error) return done(error)
                 user
                     .post('/api/auth/login')
                     .send({ username, password })
                     .expect(302)
-                    .end(error => {
+                    .end((error, result) => {
                         if (error) return done(error)
                         done()
                     })
