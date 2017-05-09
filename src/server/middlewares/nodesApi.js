@@ -25,7 +25,7 @@ router
 
       const UserId = await user && user.id
       const MoodId = await Mood.findIdBySlug(params.moodSlug)
-      const previousNode = await params.nodeId ? Node.findById(params.nodeId) : null
+      const previousNode = params.nodeId ? await Node.findById(params.nodeId) : null
 
       if (!MoodId) return res.boom.notFound()
 
