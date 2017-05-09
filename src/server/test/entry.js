@@ -20,8 +20,20 @@ urls = [
             "https://www.youtube.com/watch?v=Q29SbuuvGEM",
         ]
 
-function randomIntFromInterval(min,max) {
-    return Math.floor(Math.random()*(max-min+1)+min);
+// this function creates random digit and
+// adds Date.now after decimal point
+// afterwards last digit after decimal is randomized,
+// since on .bulkCreate every Date.now() is the same
+// (this is needed to make every rating unique to
+// avoid duplicates and infinite cycles in node fetching api)
+function randomIntFromInterval(min, max) {
+    const randomNumber = Math.floor(Math.random()*(max-min+1)+min)
+    let now = ('0.' + Date.now().toString()).split('')
+    const dateLastDigit = now.pop()
+    now.push(Number(dateLastDigit) + Math.abs(Number(randomNumber))) // sometimes adds two digits instead of one
+    now = Number(now.join(''))
+    const randomWithDate = Number(randomNumber.toFixed(1)) + now
+    return randomWithDate
 }
 
 // insert fixtures into database
@@ -47,12 +59,13 @@ before(function() {
         .then(() => Mood.findAll())
         .each(mood => {
             urls.forEach(url => {
+                const rating = randomIntFromInterval(-3, 20) 
                 nodes.push(
                     extend(
                         parseUrl(url), {
+                        rating,
                         MoodId: mood.id,
                         UserId: mood.UserId,
-                        rating: randomIntFromInterval(-3, 20),
                     })
                 )
             })
@@ -66,7 +79,7 @@ before(function() {
                 MoodId: node.MoodId,
                 UserId: node.UserId,
                 NodeRating: node.rating,
-                rating: randomIntFromInterval(-3, 20),
+                rating: Number(randomIntFromInterval(-3, 20)),
             })
         })
         // create decisions
