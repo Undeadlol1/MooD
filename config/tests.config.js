@@ -3,6 +3,14 @@ var WebpackShellPlugin = require('webpack-shell-plugin');
 var nodeExternals = require('webpack-node-externals');
 var path = require('path')
 
+var stats = {
+    hash: false,
+    chunks: false,
+    modules: false,
+    version: false,
+    children: false,
+};
+
 var clientConfig = {
     watch: true,    
     devtool: 'cheap-module-source-map',
@@ -13,6 +21,7 @@ var clientConfig = {
         filename: 'client.test.js',        
         path     : path.join(__dirname, '..', 'dist')        
     },
+    stats
 };
 
 var serverConfig =  {
@@ -45,6 +54,7 @@ var serverConfig =  {
         }),
     ],
     externals: [nodeExternals()],
+    stats
 };
 
 module.exports = [clientConfig, serverConfig]
