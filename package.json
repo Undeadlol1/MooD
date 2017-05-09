@@ -7,8 +7,8 @@
   "license": "MIT",
   "scripts": {
     "test": "cross-env NODE_ENV=test webpack --config ./config/tests.config.js --display-error-details --hide-modules",
-    "start": "npm rebuild node-sass; cross-env NODE_ENV=development concurrently \"webpack --config ./config/targets.config.js --display-error-details --hide-modules\" \"nodemon dist/server.js\"",
-    "production": "yarn; sequelize db:migrate; cross-env NODE_ENV=production webpack --config ./config/targets.config.js; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit"
+    "start": "cross-env NODE_ENV=development npm rebuild node-sass; concurrently \"webpack --config ./config/targets.config.js --display-error-details --hide-modules\" \"nodemon dist/server.js\"",
+    "production": "cross-env NODE_ENV=production yarn; sequelize db:migrate; webpack --config ./config/targets.config.js; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit"
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
