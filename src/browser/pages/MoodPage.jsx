@@ -41,7 +41,7 @@ class MoodPage extends Component {
 
 	render() {
 		const { mood, node, location, params, controlsAreShown, toggleHeader, ...rest } = this.props
-		
+		console.warn('MAKE MIGRAIONS FOR NODES AND DECISIONS RATING \n or this wont work properly')		
 		if (mood.loading || node.loading) return <Loading />
 
 		let dom;
