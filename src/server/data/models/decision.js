@@ -16,6 +16,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
+    lastViewAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
     nextViewAt: DataTypes.DATE,
     NodeId: {
       allowNull: false,
