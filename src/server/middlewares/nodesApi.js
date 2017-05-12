@@ -1,117 +1,139 @@
-import express from "express"
-import selectn from "selectn"
-import sequelize from 'sequelize'
 import { Node, Mood, Decision, User } from '../data/models'
-import { mustLogin } from './permissions'
-import slugify from 'slug'
+import { mustLogin } from '../services/permissions'
 import { assignIn as extend } from 'lodash'
-
-function findMoodIdBySlug(slug) { // TODO extend Mood with this function
-    return Mood
-            .findOne({ where: { slug }})
-            // .then(result => selectn('dataValues.id', result))
-            .then(result => result && result.get('id'))
-}
-
+import { parseUrl } from '../../shared/parsers'
+import express from "express"
+          
 // routes
 const router = express.Router()
 
 router
 
-  // for forms validation
-  // .get('/:moodSlug/validate', async function(req, rs) {
-
-  // })
-
   .get('/:moodSlug/:nodeId?', async function({ params, user }, res) {
-    console.log('params', params)
+    /*
+      If user is NOT logged in:
+        1. Show highest rated Node
+        2. Afterwards show lower rated Node
+        3. If there is no Node just send the highest rated one
+      If user IS logged in:
+        1.
+    */
+    
     try {
-      let response      
-      const MoodId = await findMoodIdBySlug(params.moodSlug)
-      const previousNode = await Node.findById(params.nodeId) // IMPLEMENT THIS IN NODE ACTIONS
-      const nodeWithBiggestRating = await Node.findOne({ // move this to bottom?
-            where: { MoodId },
-            order: [['rating', 'DESC']]            
-          })
+
+      let response
+
+      const UserId = await user && user.id
+      const MoodId = await Mood.findIdBySlug(params.moodSlug)
+      const previousNode = params.nodeId ? await Node.findById(params.nodeId) : null
 
       if (!MoodId) return res.boom.notFound()
 
       /* USER IS NOT LOGGED IN */
-      if (!(user && user.id)) {
-        /* PREVIOUS NODE IS PROVIDED */                
-        if (previousNode) {
-          console.log('moodId', MoodId)
+      if (!UserId) {
+        if(previousNode) {
           response = await Node.findOne({
-            where: {
-              MoodId,
-              rating: { $lte: previousNode.rating },
-              id: { $not: previousNode.id }
-            },
-            order: [['rating', 'DESC']]
-          })
-          if (!response) response = nodeWithBiggestRating // move this to bottom?
-          // console.log('node with no user and with no previous node', response.dataValues);
-        }
-        /* NO PREVIOUS NODE PROVIDED */        
-        else {
-          response = nodeWithBiggestRating  // move this to bottom?
-          // console.log('node with no user and with previous node', response.dataValues);
+                              where: {
+                                MoodId,
+                                id: { $not: previousNode.id },
+                                rating: { $lte: previousNode.rating },
+                              },
+                              order: [['rating', 'DESC']]
+                            })
         }
       }
-
 
       /* USER IS LOGGED IN */     // IMPLEMENT THIS 
       else {// IMPLEMENT THIS // DO NOT FORGET TO IMPLEMENT DECISIONS ON USER CREATION       
-        const UserId = user.id
-        // const decision = await Decision.findOne({
-        //   where: {
-        //       UserId,
-        //       MoodId,
-        //       rating: { $gre: 0 },
-        //       // nextViewAt: { $lte: new Date() }
-        //   }
-        // })
-        // console.log('decision', decision)
-        const where = {
-              UserId,
-              MoodId,
-              rating: { $gte: 0 },
-              nextViewAt: { 
-                $or: {
-                  $lte: new Date(),
-                  $not: null // WHAT ABOUT THIS?
-                }
-               }
+          // console.log('decision', decision)
+          const where = {
+                UserId,
+                MoodId,
+                rating: { $gte: 0 },
+                // nextViewAt: { 
+                //   $or: {
+                //     $lte: new Date(),
+                //     $not: null // WHAT ABOUT THIS?
+                //   }
+                // }
+              }
+
+          if (previousNode) {
+            // console.log('previousNode', previousNode && previousNode.dataValues)
+            where.NodeRating = {
+              $lte: previousNode.rating
             }
-
-        if (previousNode) {
-          where.NodeRating = {
-            $lte: previousNode.rating
+            where.NodeId = {
+              $not: previousNode.id
+            }
           }
-          where.NodeId = {
-            $not: previousNode.id
-          }
-        }
-
-        response = await Node.findOne({
-          include: [{
-            where,
-            model: Decision,
-            // order: [['NodeRating', 'DESC']] // // change order? // WHAT ABOUT THIS?
-          }]
-        })
-
-        // if ()
-
-
+          response = await Node.findOne({
+            include: [{
+              where,
+              model: Decision,
+              // order: [['NodeRating', 'DESC']] // // change order? // WHAT ABOUT THIS?
+            }]
+          })
       }
-      // console.log('response', response && response.dataValues)
-      res.json(response || nodeWithBiggestRating)      
+
+      if (!response) {
+        response = await Node.findOne({
+                            where: { MoodId },
+                            order: [['rating', 'DESC']]            
+                          })
+      }
+
+      res.json(response)      
     } catch (error) {
       console.error(error);
       res.boom.internal(error)
     }
   })
+
+  .post('/', mustLogin, async function({user, body}, res) {
+    // TODO add validations
+    /*
+      When user creates a node do the following:
+      1. Create Node
+      2. Create a Decision for every User corresponding with this NodeId
+    */
+    try {
+      const MoodId = await Mood.findIdBySlug(body.moodSlug)
+      extend(
+        body,
+        { MoodId, UserId: user.id },
+        parseUrl(body.url).contentId,
+      )
+
+      const node   = await Node.create(body)
+      const users  = await User.findAll()
+
+      await users.forEach(user => {
+            return Decision.create({
+                      UserId: user.get('id'),
+                      NodeId: node.get('id'),
+                      MoodId: node.get('MoodId'),
+                    })
+      })
+
+      res.json(node)
+    } catch (error) {
+      console.error(error);
+      res.boom.internal(error)
+    }
+  })
+
+
+
+  // const decision = await Decision.findOne({
+  //   where: {
+  //       UserId,
+  //       MoodId,
+  //       rating: { $gre: 0 },
+  //       // nextViewAt: { $lte: new Date() }
+  //   }
+  // })
+
   /*
     rework this so "where" parameter is determinated on whatever user is logged in or not
   */
@@ -151,7 +173,7 @@ router
     if (!params.moodSlug) return res.boom.badQuery()
     try {
       const UserId = user && user.id
-      const MoodId = await findMoodIdBySlug(params.moodSlug)
+      const MoodId = await Mood.findIdBySlug(params.moodSlug)
       // const node = await Node.findAll({
       //   where: {
       //     // UserId: user.id,
@@ -239,31 +261,5 @@ router
     }
   })
 
-  .post('/', mustLogin, async function({user, body}, res) {
-    /*
-      When user creates a node do the following:
-      1. Create Node
-      2. Create a Decision for every User corresponding with this NodeId
-    */
-    try {
-      const MoodId = await findMoodIdBySlug(body.moodSlug)
-      extend(body, { MoodId, UserId: user.id })
-      const node   = await Node.create(body)
-      const users  = await User.findAll()
-
-      await users.forEach(user => {
-            return Decision.create({
-                      UserId: user.get('id'),
-                      NodeId: node.get('id'),
-                      MoodId: node.get('MoodId'),
-                    })
-      })
-
-      res.end()
-    } catch (error) {
-      console.error(error);
-      res.boom.internal(error)
-    }
-  })
 
 export default router

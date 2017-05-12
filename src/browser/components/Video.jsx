@@ -1,9 +1,8 @@
-import React, { PropTypes, Component } from 'react'
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import YouTube from 'react-youtube'
 import { toggleState } from '../components/Utils'
-import { fetchMoodContent } from '../redux/main'
-// import { requestNewVideo } from '../redux/main'
 import { fetchNode } from '../redux/actions/NodeActions'
 import { toggleControls, openControls, closeControls } from '../redux/actions/GlobalActions'
 
@@ -27,21 +26,14 @@ const { object, string } = PropTypes
 			console.log('toggleControls', boolean);
 			dispatch(toggleControls(boolean))
 		},
-		// are these two functions used?
-		fetchMoodContent(...params) {// REMOVE THIS?
-			dispatch(fetchMoodContent(...params))
-		},
-		requestNewVideo(params) {// REMOVE THIS?
-			console.log('params', params)
-			console.info('IMPLEMENT requestNewVideo()!');
-			// dispatch(requestNewVideo(params))
+		requestNewVideo(params) {
 			dispatch(fetchNode(ownProps.moodSlug))
 		}
     })
 )
 export default class Video extends Component {
 	render() {
-		const 	{node, controlsAreShown, contentId, slug, rating, toggleControls, fetchMoodContent, requestNewVideo, className, ...rest} = this.props,
+		const 	{node, controlsAreShown, contentId, slug, rating, toggleControls, requestNewVideo, className, ...rest} = this.props,
 				{props, state} = this,
 				opts = {
 					height: '100%',
@@ -51,7 +43,6 @@ export default class Video extends Component {
 				}
 
 		return 	<section
-					{...rest}
 					className={"Video " + className}
 					// TODO add comments about iframe!!!
 					// onMouseEnter={props.openContorls} // on mouseEnter?

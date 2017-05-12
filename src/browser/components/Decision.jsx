@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types';
 import Slider from 'material-ui/Slider';
 import { injectProps } from 'relpers';
 import { connect } from 'react-redux';
-// import { changeRating } from '../redux/main';
 import { changeRating } from '../redux/actions/NodeActions'
 import InputRange from 'react-input-range';
 import selectn from 'selectn'

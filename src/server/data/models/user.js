@@ -1,23 +1,32 @@
+var bcrypt   = require('bcrypt-nodejs');
+
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define('User', {
     username: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
-    image: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
+    password: DataTypes.STRING,
+    image: DataTypes.STRING,
     facebook_id: DataTypes.STRING,
     twitter_id: DataTypes.STRING,
     vk_id: DataTypes.STRING,
   }, {
-    tableName: 'users',    
+    tableName: 'users',
     freezeTableName: true,
     classMethods: {
+      generateHash: function(password) {
+        return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+      },
       associate: function(models) {
         // associations can be defined here
+      }
+    },
+    instanceMethods: {
+      validPassword: function(password) {
+        return bcrypt.compareSync(password, this.password);
       }
     }
   });

@@ -20,7 +20,9 @@ export const toggleHeader = value => (dispatch, getState) => {
 export const toggleSidebar = value => (dispatch, getState) => {
 	dispatch({
 		type: 'TOGGLE_SIDEBAR',
-		payload: typeof value == 'undefined' ? !selectn('global.sidebarIsOpen', getState()) : value
+		// sometimes event maybe passed to this function,
+		// hence type checking
+		payload: typeof value === 'boolean' ? value : !selectn('global.sidebarIsOpen', getState())
 	})
 }
 /**

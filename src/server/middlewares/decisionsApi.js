@@ -1,8 +1,8 @@
+import { Node, Mood, Decision, User } from '../data/models'
+import { mustLogin } from '../services/permissions'
+import { assignIn as extend } from 'lodash'
 import express from "express"
 import selectn from "selectn"
-import { Node, Mood, Decision, User } from '../data/models'
-import { mustLogin } from './permissions'
-import { assignIn as extend } from 'lodash'
 
 const router = express.Router(); // TODO refactor without "const"?
 

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router'
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
@@ -7,6 +8,7 @@ import { insertMood } from '../redux/actions/MoodActions'
 import { TextField } from 'redux-form-material-ui'
 import { checkStatus, parseJSON } from'../redux/actions/actionHelpers'
 import slugify from 'slug'
+import store from '../redux/store'
 
 @reduxForm({
 	form: 'MoodsInsert',
@@ -19,8 +21,12 @@ import slugify from 'slug'
 				})
     },
 	validate(values) {
-		const errors = {}
-		if (!values.name) errors.name = 'Name is required!'
+		let errors = {}
+		const user = store.getState().user.get('id')
+
+		if (!user) errors.name = 'Please login'
+		if (!values.name) errors.name = "Name can't be empty"
+		
 		return errors
 	},
 	asyncBlurFields: [ 'name' ]

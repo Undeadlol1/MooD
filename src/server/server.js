@@ -10,8 +10,8 @@ import cookieSession from 'cookie-session'
 import moodsApi from './middlewares/moodsApi'
 import nodesApi from './middlewares/nodesApi'
 import decisionsApi from './middlewares/decisionsApi'
-import { mustLogin } from './middlewares/permissions'
-import authorization, { passport } from './middlewares/auth'
+import { mustLogin } from './services/permissions'
+import authorization, { passport } from './middlewares/authApi'
 import 'source-map-support/register' // do we actually need this?
 import morgan from 'morgan'
 import { buildSchema } from 'graphql'
@@ -34,6 +34,7 @@ if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic
 }
 
 // middlewares
+if (process.env.NODE_ENV === 'development') app.use(morgan('dev')) // logger
 app.use(express.static(publicUrl))
 app.use(cookieParser())
 app.use(bodyParser.json())
@@ -52,15 +53,14 @@ app.use(cookieSession({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(morgan('dev')) // logger
 app.use(boom()) // provides res.boom. erros dispatching
 
 // REST API
-app.use('/auth', authorization)
+app.use('/api/auth', authorization)
 app.use('/api/moods', moodsApi)
 app.use('/api/nodes', nodesApi)
 app.use('/api/decisions', decisionsApi)
-app.get('/current_user', function(req, res) {
+app.get('/current_user', function(req, res) { // TODO move this to auth middleware
   res.json(req.user ? req.user : {})
 })
 
@@ -91,16 +91,13 @@ app.use('/graphql', graphqlExpress({ schema }));
 //   })
 // }));
 
-// HTML PAGES
+// SEND HTML FOR SPA
 app.get('/*', function(req, res) {
-  console.log('user is logged in: ', req.isAuthenticated()); 
   res.sendFile(path.join(publicUrl, '/index.html'));
 })
 
-// export app to use in tess suits
-export default app
-
-app.listen(port, () => {
-  console.info(`Environment is: ${process.env.NODE_ENV}!`)
-  console.info(`Server listening on port ${port}!`)
+// export app to use in test suits
+export default app.listen(port, () => {
+    console.info(`Environment is: ${process.env.NODE_ENV}!`)
+    console.info(`Server listening on port ${port}!`)
 })

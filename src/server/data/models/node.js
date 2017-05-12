@@ -23,7 +23,9 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false
       },
       rating: {
-        type: DataTypes.INTEGER,
+        // Deciaml points allow making of rating to be unique
+        // example: rating = actualNumber + "." + Date.now()
+        type: DataTypes.DECIMAL(38, 17),
         allowNull: false,
         defaultValue: 0
       },

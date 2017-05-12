@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Row, Col } from 'react-flexbox-grid'
 import { connect } from 'react-redux';
 import Loading from '../components/Loading'
@@ -40,7 +41,7 @@ class MoodPage extends Component {
 
 	render() {
 		const { mood, node, location, params, controlsAreShown, toggleHeader, ...rest } = this.props
-		
+		console.warn('MAKE MIGRAIONS FOR NODES AND DECISIONS RATING \n or this wont work properly')		
 		if (mood.loading || node.loading) return <Loading />
 
 		let dom;
@@ -71,6 +72,9 @@ MoodPage.propTypes = {
 	node: PropTypes.object,
 	// fetchMood: PropTypes.func.isRequred,
 	// fetchNode: PropTypes.func.isRequred,		
+	// unloadMood: PropTypes.func.isRequred,		
+	// unloadNode: PropTypes.func.isRequred,		
+	// toggleHeader: PropTypes.func.isRequred,
 }
 
 export default MoodPage

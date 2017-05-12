@@ -1,7 +1,8 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
-import { parseUrl } from '../helpers.js'
+import { parseUrl } from '../../shared/parsers.js'
 import { If } from './Utils.jsx'
 import { insertNode, actions } from '../redux/actions/NodeActions'
 import { toggleControls } from '../redux/actions/GlobalActions'
@@ -16,7 +17,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add'
 import { Form, Field, reduxForm } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
 import { history } from 'react-router';
-import Loading from './Loading'
+import store from '../redux/store'
 
 function isUrl(str) {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -30,13 +31,17 @@ function isUrl(str) {
 
 @reduxForm({
 	form: 'NodesInsert',
-    // asyncValidate(values) {
+    // asyncValidate(values) { // TODO add check if node already exists
     //     fetch('api')
     // },
 	validate({url}, second) {
-		const errors = {}
-        if (!url) errors.url = 'Must not be empty!'
-        else if (url && !isUrl(url)) errors.url = 'Thats not a proper url!'
+		let errors = {}
+        const user = store.getState().user.get('id')
+
+		if (!user) errors.url = 'Please login'
+        if (!url) errors.url = "Url can't be empty"
+        else if (url && !isUrl(url)) errors.url = 'Something wrong with this url'
+
 		return errors
 	}
 })
@@ -45,11 +50,14 @@ function isUrl(str) {
 	({mood, node, decision, loading, global}, ownProps) => {
         return ({mood, node, decision, loading, global, ...ownProps})},
 	// dispatchToProps
-    (dispatch, {moodSlug}) => ({
+    (dispatch, ownProps) => ({
         insertNode(formValues) {
-            const node = parseUrl(formValues.url)           
+            const { moodSlug } = ownProps
+            // TODO parseUrl is not really needed anymore. Parsing is made on server side. Remove this?
+            const node = parseUrl(formValues.url)
             extend(node, { moodSlug })
             dispatch(insertNode(node))
+            ownProps.reset()
         },
         toggleDialog() {
             dispatch(actions.toggleDialog())

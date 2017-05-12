@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Loading from '../components/Loading'
 import MoodsList from '../components/MoodsList'
 import MoodsFind from '../components/MoodsFind'
@@ -13,7 +14,6 @@ import presets from 'react-router-transition/src/presets';
 	({ global, mood }) => {
 		const 	{ moods, loading } = mood
 		const searchedMoods = mood.get('searchedMoods')
-		console.log('mood', mood.toJS())
 		return 	{
 			loading: mood.get('loading'),
 			totalPages: searchedMoods.get('totalPages'), // TODO rework this?

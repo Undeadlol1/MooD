@@ -27,8 +27,11 @@ export const insertNode = payload => (dispatch, getState) => {
 	dispatch(actions.fetchingInProgress())
 	fetch('/api/nodes', headersAndBody(payload))
 		.then(checkStatus)	
+		.then(parseJSON)		
 		.then(function(response) {
 			dispatch(actions.toggleDialog())
+			const {node} = getState()
+			if(!node.id) dispatch(actions.recieveNode(response))
 		})
 }
 
@@ -37,17 +40,27 @@ export const insertNode = payload => (dispatch, getState) => {
  * @param {String} moodSLug 
  */
 export const fetchNode = moodSLug => (dispatch, getState) => {
+	
 	dispatch(actions.fetchingInProgress())
+
 	const state = getState()
 	const slug = selectn('mood.slug', state) // rename to "moodSlug" in future and remove parameter from function
 	const nodeId = selectn('node.id', state)
+
 	fetch(
 		'/api/nodes/' + (moodSLug || slug) + '/' + nodeId, 
 		{ credentials: 'same-origin' }
 	)
 		.then(checkStatus)
 		.then(parseJSON)
-		.then(data => dispatch(actions.recieveNode((data))))
+		.then(data => {
+			/*
+				unload node before assigning new one because
+				mutability does node load youtube video if node is the same
+			*/
+			dispatch(actions.unloadNode())
+			dispatch(actions.recieveNode((data)))
+		})
 		.catch(err => console.error('fetchNode failed!', err))
 }
 

@@ -1,8 +1,6 @@
-import { Mood, Node, Decision } from '../data/models'
-import { mustLogin } from './permissions'
-import sequelize from 'sequelize'
-import express from "express"
-import selectn from "selectn"
+import { mustLogin } from '../services/permissions'
+import { Mood, Node } from '../data/models'
+import express from 'express'
 import slugify from 'slug'
 
 // routes
@@ -58,9 +56,8 @@ router
   .post('/', mustLogin, async ({user: { id: UserId }, body: { name }}, res) => {
     try {
       const slug = slugify(name)
-      await Mood.create({ UserId, name, slug }) // TODO move this in model definition?
-      // res.redirect('/mood' + slug)
-      res.json(slug)
+      const mood = await Mood.create({ UserId, name, slug }) // TODO move this in model definition?
+      res.json(mood)
     } catch (error) {
       console.log(error)
       res.boom.internal(error)
