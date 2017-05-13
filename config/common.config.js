@@ -1,9 +1,10 @@
-var path = require('path');
 var fs = require('fs');
+var path = require('path');
 var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin')
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var WebpackNotifierPlugin = require('webpack-notifier');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var extractSass = new ExtractTextPlugin({
     filename: "styles.css",
@@ -18,6 +19,7 @@ const developmentPlugins = isDevelopment ? [
     new webpack.DefinePlugin({ // TODO
             'process.env.NODE_ENV': JSON.stringify('development')
     }),
+    new FriendlyErrorsWebpackPlugin(),
 ] : []
 
 var baseConfig = {
