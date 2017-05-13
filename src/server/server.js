@@ -1,3 +1,5 @@
+// this prevents babel to parse css as javascript
+import csshook from 'css-modules-require-hook/preset'
 import path from 'path'
 import express from 'express'
 import boom from 'express-boom' // "boom" library for express responses
