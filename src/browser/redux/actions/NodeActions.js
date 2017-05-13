@@ -2,6 +2,10 @@ import selectn from 'selectn'
 import { createAction, createActions } from 'redux-actions'
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
 
+const moodsUrl = process.env.API_URL + 'moods/'
+const nodesUrl = process.env.API_URL + 'nodes/'
+const decisionsUrl = process.env.API_URL + 'decisions/'
+
 // // TODO add types
 // export const recieveNode = createAction('RECIEVE_NODE') // , node => node
 
@@ -25,7 +29,7 @@ export const actions = createActions({
  */
 export const insertNode = payload => (dispatch, getState) => {
 	dispatch(actions.fetchingInProgress())
-	fetch('/api/nodes', headersAndBody(payload))
+	fetch(nodesUrl, headersAndBody(payload))
 		.then(checkStatus)	
 		.then(parseJSON)		
 		.then(function(response) {
@@ -48,7 +52,7 @@ export const fetchNode = moodSLug => (dispatch, getState) => {
 	const nodeId = selectn('node.id', state)
 
 	fetch(
-		'/api/nodes/' + (moodSLug || slug) + '/' + nodeId, 
+		moodsUrl + (moodSLug || slug) + '/' + nodeId, 
 		{ credentials: 'same-origin' }
 	)
 		.then(checkStatus)
@@ -71,6 +75,6 @@ export const fetchNode = moodSLug => (dispatch, getState) => {
 export const changeRating = payload => (dispatch, getState) => {
 	// if (payload.rating <= 3) dispatch(requestNewVideo()) // TODO add this
 	if (!payload.NodeId) payload.NodeId = selectn('node.id', getState()) // TODO rework this
-	fetch('/api/decisions/', headersAndBody(payload))
+	fetch(decisionsUrl, headersAndBody(payload))
 		.then(checkStatus)
 }

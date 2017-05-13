@@ -28,6 +28,7 @@ var commonConfig = require('./common.config.js')
 
 
 const isDevelopment = process.env.NODE_ENV === 'development'
+const isTest = process.env.NODE_ENV === 'test'
 
 const clientProductionPlugins = isDevelopment ? [] : [
     new webpack.DefinePlugin({ // <-- key to reducing React's size
@@ -62,6 +63,7 @@ var serverConfig = merge(commonConfig, {
                 'isBrowser': false,
                 'SERVER': true,
                 'isServer': true,
+                'API_URL': isDevelopment || isTest ? JSON.stringify('http://127.0.0.1:3000/api/') : undefined,
             }
         }),
     ],
@@ -96,6 +98,7 @@ var clientConfig = merge(commonConfig, {
                 'isBrowser': true,
                 'SERVER': false,
                 'isServer': false,
+                'API_URL': isDevelopment || isTest ? JSON.stringify('http://127.0.0.1:3000/api/') : undefined,                             
             }
         }),
         ...clientProductionPlugins

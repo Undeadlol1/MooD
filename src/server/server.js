@@ -104,8 +104,6 @@ app.set('view engine', 'handlebars');
 app.set('views', path.resolve(__dirname, './public'));
 
 app.get('/*', function(req, res) {
-  console.log('BROWSER', process.env.BROWSER)
-  console.log('isBrowser', process.env.isBrowser)
   match(
       {routes: routesConfig, location: req.url},
       (error, redirectLocation, renderProps) => {
