@@ -6,13 +6,14 @@ var WebpackNotifierPlugin = require('webpack-notifier');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-var extractSass = new ExtractTextPlugin({
-    filename: "styles.css",
-    // disable: process.env.NODE_ENV === "development" // TODO
-});
-
 
 var isDevelopment = process.env.NODE_ENV === "development"
+
+var extractSass = new ExtractTextPlugin({
+    filename: "styles.css",
+    disable: isDevelopment // TODO
+});
+
 
 const developmentPlugins = isDevelopment ? [
     new WebpackNotifierPlugin({alwaysNotify: false}),
@@ -44,12 +45,13 @@ var baseConfig = {
                 test: /\.scss$/,
                 use: extractSass.extract({
                     use: [
-                        { loader: "css-loader" },
+                        { loader: "css-loader", },
                         { loader: "sass-loader" }
                     ],
                     fallback: "style-loader"
                 })
-            }
+            },
+            { test: /\.handlebars$/, loader: "handlebars-loader" },
         ],
     },
     plugins: [

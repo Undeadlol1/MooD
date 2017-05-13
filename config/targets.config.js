@@ -5,10 +5,6 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var WebpackNotifierPlugin = require('webpack-notifier');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 // TODO webpack-build-notifier (seems better tgeb webpack-notifier)
-var extractSass = new ExtractTextPlugin({
-    filename: "styles.css",
-    // disable: process.env.NODE_ENV === "development"
-});
 var merge = require('webpack-merge');
 const BabiliPlugin = require('babili-webpack-plugin');
 var nodeExternals = require('webpack-node-externals');
@@ -31,9 +27,7 @@ var commonConfig = require('./common.config.js')
 // ]);
 
 
-
-
-const isDevelopment = process.env.npm_lifecycle_event === 'start'
+const isDevelopment = process.env.NODE_ENV === 'development'
 
 const clientProductionPlugins = isDevelopment ? [] : [
     new webpack.DefinePlugin({ // <-- key to reducing React's size
@@ -62,33 +56,47 @@ var serverConfig = merge(commonConfig, {
         libraryTarget: "commonjs",
     },
     plugins: [
-        // new webpack.DefinePlugin({ // move to common?
-        //     $dirname: '__dirname',
-        // }),
+        new webpack.DefinePlugin({ // <-- key to reducing React's size
+            'process.env': {
+                'BROWSER': false,
+                'isBrowser': false,
+                'SERVER': true,
+                'isServer': true,
+            }
+        }),
     ],
     // this is important. Without nodeModules in "externals" bundle will throw and error
     // bundling for node requires modules not to be packed on top of bundle, but to be found via "require"
-    externals: [nodeExternals()],
+    externals: [nodeExternals({
+        whitelist: ['jquery', 'webpack/hot/dev-server', /^lodash/, 'react-router-transition/src/presets']
+    })],
 });
 
 var clientConfig = merge(commonConfig, {
     name: 'client',
     target: 'web',
     entry  : {
-        vendor: ['react', 'redux', 'react-redux', 'redux-form', 'material-ui'], // TODO MAKE SURE TREE SHAKING WORKS HERE
-        scripts: './src/browser/app.jsx',
+        'vendor.js': ['react', 'redux', 'react-redux', 'redux-form', 'material-ui'], // TODO MAKE SURE TREE SHAKING WORKS HERE
+        'scripts.js': './src/browser/app.jsx',
+        // 'styles.css': './src/browser/styles.scss',
     },
     output : {
         publicPath: '/',
-        filename : '[name].js',
+        filename : '[name]',
         path     : path.join(__dirname, '..', 'dist', 'public'),
-    },   
+    },
     plugins: [ // TODO MAKE SURE PLUGINS ARE ACTUALLY INCLUDED IN CONFIG
         new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
+            name: 'vendor.js',
         }),
-        new HtmlWebpackPlugin({
-            template: path.join(__dirname, '../', '/src/server/public/index.html')
+        // TODO this will be overriden in production!!!
+        new webpack.DefinePlugin({ // <-- key to reducing React's size
+            'process.env': {
+                'BROWSER': true,
+                'isBrowser': true,
+                'SERVER': false,
+                'isServer': false,
+            }
         }),
         ...clientProductionPlugins
     ],
