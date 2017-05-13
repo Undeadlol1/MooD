@@ -1,5 +1,5 @@
 // DEPENDENCIES
-import { Router, Route, browserHistory, IndexRoute } from 'react-router';
+import { Router, Route, browserHistory, IndexRoute, RouterContext } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux' // TODO is it even used?
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
@@ -20,20 +20,14 @@ import store from './redux/store'
 import { ApolloClient, ApolloProvider, createNetworkInterface } from 'react-apollo';
 import ReduxToastr from 'react-redux-toastr'
 
-// PAGES
-import Layout from './pages/Layout';
-import IndexPage from './pages/IndexPage';
-import LoginPage from './pages/LoginPage';
-import MoodPage from './pages/MoodPage';
-import SearchPage from './pages/SearchPage';
-import AboutPage from './pages/AboutPage';
-import NotFound from './pages/NotFound';
+// ROUTES
+import routesConfig from './routes'
 
 // STYLES
-import './styles.scss'
-import 'react-redux-toastr/src/styles/index.scss';
-
-const history = syncHistoryWithStore(browserHistory, store) // for react-router-redux to work
+if (process.env.BROWSER) require('./styles.scss'); //import './styles.scss'
+// require('css-modules-require-hook/preset');
+const history = browserHistory
+// const history = syncHistoryWithStore(browserHistory, store) // for react-router-redux to work
 // const client = new ApolloClient()
 const client = new ApolloClient({
   networkInterface:   createNetworkInterface({
@@ -52,16 +46,11 @@ class App extends Component {
               {/*<ApolloProvider client={client}>*/}
                   <ReduxProvider store={store}>
                     <div>
-                      <Router history={history}>
-                        <Route path="/" component={Layout}>
-                          <IndexRoute component={IndexPage} />
-                          <Route path="login" component={LoginPage} />
-                          <Route path="mood/(:moodSlug)" component={MoodPage} />
-                          <Route path="search" component={SearchPage} />
-                          <Route path="about" component={AboutPage} />
-                          <Route path="*" component={NotFound }/>                    
-                        </Route>
-                      </Router>
+                      {
+                        process.env.BROWSER
+                        ? <Router history={browserHistory} routes={routesConfig}/>
+                        : <RouterContext {...this.props} />
+                      }
                       <ReduxToastr
                         timeOut={4000}
                         newestOnTop={false}
@@ -76,5 +65,7 @@ class App extends Component {
               </MuiThemeProvider>
   }
 }
- 
-ReactDOM.render(<App />, document.getElementById('react-root'));
+
+if (process.env.BROWSER) ReactDOM.render(<App />, document.getElementById('react-root'));
+
+export default App
