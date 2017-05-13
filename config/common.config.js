@@ -51,7 +51,6 @@ var baseConfig = {
                     fallback: "style-loader"
                 })
             },
-            { test: /\.handlebars$/, loader: "handlebars-loader" },
         ],
     },
     plugins: [

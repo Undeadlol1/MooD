@@ -20,6 +20,12 @@ import { buildSchema } from 'graphql'
 import graphqlHTTP from 'express-graphql'
 import { graphqlExpress } from 'graphql-server-express';
 import schema from './graphql/schema'
+import App from '../browser/app.jsx'
+
+import React from 'react'
+import { renderToString } from 'react-dom/server'
+import { match, RouterContext } from 'react-router'
+import routesConfig from '../browser/routes'
 
 // load production values to process.env
 require('dotenv').config()
@@ -94,8 +100,30 @@ app.use('/graphql', graphqlExpress({ schema }));
 // }));
 
 // SEND HTML FOR SPA
+var exphbs  = require('express-handlebars');
+var hbs = exphbs.create({ /* config */ });
+app.engine('handlebars',  hbs.engine);
+app.set('view engine', 'handlebars');
+app.set('views', path.resolve(__dirname, './public'));
+
 app.get('/*', function(req, res) {
-  res.sendFile(path.join(publicUrl, '/index.html'));
+  console.log('BROWSER', process.env.BROWSER)
+  console.log('isBrowser', process.env.isBrowser)
+  match(
+      {routes: routesConfig, location: req.url},
+      (error, redirectLocation, renderProps) => {
+        if (error) {
+          res.status(500).send(error.message)
+        } else if (redirectLocation) {
+          res.redirect(302, redirectLocation.pathname +
+            redirectLocation.search)
+        } else if (renderProps) {
+          const markup = renderToString(<App {...renderProps} />);
+          res.render('index', {markup});
+        } else {
+          res.status(404).send('Not found')
+        }
+  } );
 })
 
 // export app to use in test suits
