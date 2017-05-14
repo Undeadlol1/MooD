@@ -1,3 +1,6 @@
+// load production values to process.env
+require('dotenv').config()
+
 import path from 'path'
 import express from 'express'
 import boom from 'express-boom' // "boom" library for express responses
@@ -18,9 +21,6 @@ import { buildSchema } from 'graphql'
 import graphqlHTTP from 'express-graphql'
 import { graphqlExpress } from 'graphql-server-express';
 import schema from './graphql/schema'
-
-// load production values to process.env
-require('dotenv').config()
 
 const port = process.env.PORT || 3000,
       app = express(),
@@ -98,6 +98,8 @@ app.get('/*', function(req, res) {
 
 // export app to use in test suits
 export default app.listen(port, () => {
-    console.info(`Environment is: ${process.env.NODE_ENV}!`)
-    console.info(`Server listening on port ${port}!`)
+    if (process.env.NODE_ENV != 'test') {
+      console.info(`Environment is: ${process.env.NODE_ENV}!`)
+      console.info(`Server listening on port ${port}!`)
+    }
 })
