@@ -6,7 +6,7 @@
   "author": "undeadlol1",
   "license": "MIT",
   "scripts": {
-    "test": "NODE_ENV=test webpack --config ./config/tests.config.js --display-error-details --hide-modules",
+    "test": "clear; NODE_ENV=test webpack --config ./config/tests.config.js --display-error-details --hide-modules",
     "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/targets.config.js --display-error-details --hide-modules\" \"nodemon dist/server.js\"",
     "production": "yarn; sequelize db:migrate; NODE_ENV=production webpack --config ./config/targets.config.js; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit"
   },
@@ -85,6 +85,8 @@
     "babili-webpack-plugin": "^0.0.11",
     "browser-sync-webpack-plugin": "^1.1.4",
     "chai": "^3.5.0",
+    "chai-datetime": "^1.4.1",
+    "colors": "^1.1.2",
     "concurrently": "^3.4.0",
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^4.0.0",
@@ -106,7 +108,6 @@
     "node-sass": "^4.5.2",
     "nodemon": "^1.11.0",
     "pm2": "^2.4.4",
-    "pretty-error": "^2.0.2",
     "sass-loader": "^6.0.3",
     "sequelize-cli": "^2.7.0",
     "source-map-support": "^0.4.11",
