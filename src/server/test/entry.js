@@ -10,7 +10,7 @@ const userFixtures = require('../data/fixtures/users.js')
 const { User, Mood, Node, Decision } = require('../data/models/index.js')
 chai.should()
 
-urls = [
+const urls = [
             "https://www.youtube.com/watch?v=nBwHtgQH2EQ",
             "https://www.youtube.com/watch?v=l5-gja10qkw",
             "https://www.youtube.com/watch?v=M3B5U1S-I4Y",
@@ -43,6 +43,8 @@ function randomIntFromInterval(min, max) {
 
 // insert fixtures into database
 before(function() {
+    // close server incase of supertest.agent server is in use
+    require('../server.js').default.close()
 
     const moods = [],
           nodes = [],
