@@ -42,19 +42,23 @@ const users = [
         username: 'dominikana',
         password: "sladenykaya",
         image   : faker.image.imageUrl(),        
-    },{
+    },
+    {
         username: 'slezki',
         password: "sladenykaya",
         image   : faker.image.imageUrl(),        
-    },{
+    },
+    {
         username: 'penisy',
         password: "sladenykaya",
         image   : faker.image.imageUrl(),        
-    },{
+    },
+    {
         username: 'kavabanga',
         password: "sladenykaya",
         image   : faker.image.imageUrl(),        
-    },{
+    },
+    {
         username: 'kadzima',
         password: "sladenykaya",
         image   : faker.image.imageUrl(),        
