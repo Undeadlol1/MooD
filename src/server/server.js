@@ -43,6 +43,7 @@ if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic
 
 // middlewares
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev')) // logger
+app.use(helmet()) // security
 app.use(express.static(publicUrl))
 app.use(cookieParser())
 app.use(bodyParser.json())
