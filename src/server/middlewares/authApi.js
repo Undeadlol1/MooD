@@ -182,5 +182,9 @@ router
     }
   })
 
+  .get('/current_user', function(req, res) { // TODO move this to auth middleware
+      res.json(req.user ? req.user : {})
+  })
+
 export {passport}
 export default router

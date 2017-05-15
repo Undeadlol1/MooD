@@ -2,6 +2,8 @@ import { checkStatus, parseJSON } from'./actionHelpers'
 import { createAction } from 'redux-actions'
 import selectn from 'selectn'
 
+const authUrl = process.env.API_URL + 'auth/'
+
 /**
  * dispatch succesfully fetched user object
  * @param {Object} user object
@@ -16,14 +18,14 @@ export const fetchingError = createAction('FETCHING_ERROR', error => error)
 
 export const fetchCurrentUser = () => dispatch => {
 	dispatch(fetchingInProgress())
-	fetch('/current_user', {credentials: 'same-origin'})
+	fetch(authUrl + 'current_user', {credentials: 'same-origin'})
 		.then(parseJSON)
 		.then(user => dispatch(recieveCurrentUser((user))))
 		.catch(err => console.error('fetchCurrentUser failed!', err)) // TODO add client side error handling
 }
 
 export const logoutCurrentUser = () => dispatch => {
-	fetch('/auth/logout', {credentials: 'same-origin'})
+	fetch(authUrl + 'logout', {credentials: 'same-origin'})
 		.then(() => dispatch(removeCurrentUser())) // TODO refactor without arrow function?
 		.catch(err => console.error('logoutCurrentUser failed!', err))
 }

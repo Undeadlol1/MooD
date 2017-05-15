@@ -35,7 +35,7 @@ export default class SearchPage extends Component {
 	componentWillMount() { this.props.fetchMoods() }
 
     @injectProps
-    render({loading, moods, currentPage, totalPages,}) {
+    render({loading, moods, currentPage, totalPages, location}) {
         return 	loading
                 ?   <Loading />
                 :	<RouteTransition

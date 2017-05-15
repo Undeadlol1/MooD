@@ -1,3 +1,5 @@
+// this prevents babel to parse css as javascript
+import csshook from 'css-modules-require-hook/preset'
 import path from 'path'
 import express from 'express'
 import boom from 'express-boom' // "boom" library for express responses
@@ -18,6 +20,12 @@ import { buildSchema } from 'graphql'
 import graphqlHTTP from 'express-graphql'
 import { graphqlExpress } from 'graphql-server-express';
 import schema from './graphql/schema'
+import App from '../browser/app.jsx'
+
+import React from 'react'
+import { renderToString } from 'react-dom/server'
+import { match, RouterContext } from 'react-router'
+import routesConfig from '../browser/routes'
 
 // load production values to process.env
 require('dotenv').config()
@@ -60,9 +68,6 @@ app.use('/api/auth', authorization)
 app.use('/api/moods', moodsApi)
 app.use('/api/nodes', nodesApi)
 app.use('/api/decisions', decisionsApi)
-app.get('/current_user', function(req, res) { // TODO move this to auth middleware
-  res.json(req.user ? req.user : {})
-})
 
 // GRAPHQL
 app.use('/graphql', graphqlExpress({ schema }));
@@ -92,8 +97,28 @@ app.use('/graphql', graphqlExpress({ schema }));
 // }));
 
 // SEND HTML FOR SPA
+var exphbs  = require('express-handlebars');
+var hbs = exphbs.create({ /* config */ });
+app.engine('handlebars',  hbs.engine);
+app.set('view engine', 'handlebars');
+app.set('views', path.resolve(__dirname, './public'));
+
 app.get('/*', function(req, res) {
-  res.sendFile(path.join(publicUrl, '/index.html'));
+  match(
+      {routes: routesConfig, location: req.url},
+      (error, redirectLocation, renderProps) => {
+        if (error) {
+          res.status(500).send(error.message)
+        } else if (redirectLocation) {
+          res.redirect(302, redirectLocation.pathname +
+            redirectLocation.search)
+        } else if (renderProps) {
+          const markup = renderToString(<App {...renderProps} />);
+          res.render('index', {markup});
+        } else {
+          res.status(404).send('Not found')
+        }
+  } );
 })
 
 // export app to use in test suits

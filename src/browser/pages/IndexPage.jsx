@@ -33,7 +33,7 @@ export default class IndexPage extends Component {
 	componentWillMount() { this.props.fetchMoods() }
 
     @injectProps
-    render({loading, moods, currentPage, totalPages, dispatch}) {
+    render({loading, moods, currentPage, totalPages, dispatch, location}) {
         // return 	loading
                 // ?   <Loading />
                 // :	<RouteTransition
@@ -46,7 +46,7 @@ export default class IndexPage extends Component {
 						{/*<MoodsFind />*/}
 						<MoodsInsert />						
 						{
-							loading
+							process.env.BROWSER && loading
 							? <Loading />
 							: <div>
 								<MoodsList moods={moods} currentPage={currentPage} totalPages={totalPages} />

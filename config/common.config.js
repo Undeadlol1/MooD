@@ -1,23 +1,26 @@
-var path = require('path');
 var fs = require('fs');
+var path = require('path');
 var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin')
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var WebpackNotifierPlugin = require('webpack-notifier');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-var extractSass = new ExtractTextPlugin({
-    filename: "styles.css",
-    // disable: process.env.NODE_ENV === "development" // TODO
-});
-
 
 var isDevelopment = process.env.NODE_ENV === "development"
+
+var extractSass = new ExtractTextPlugin({
+    filename: "styles.css",
+    disable: isDevelopment // TODO
+});
+
 
 const developmentPlugins = isDevelopment ? [
     new WebpackNotifierPlugin({alwaysNotify: false}),
     new webpack.DefinePlugin({ // TODO
             'process.env.NODE_ENV': JSON.stringify('development')
     }),
+    new FriendlyErrorsWebpackPlugin(),
 ] : []
 
 var baseConfig = {
@@ -42,12 +45,12 @@ var baseConfig = {
                 test: /\.scss$/,
                 use: extractSass.extract({
                     use: [
-                        { loader: "css-loader" },
+                        { loader: "css-loader", },
                         { loader: "sass-loader" }
                     ],
                     fallback: "style-loader"
                 })
-            }
+            },
         ],
     },
     plugins: [
