@@ -16,7 +16,6 @@ import { mustLogin } from './services/permissions'
 import authorization, { passport } from './middlewares/authApi'
 import 'source-map-support/register' // do we actually need this?
 import morgan from 'morgan'
-import App from '../browser/app.jsx'
 import helmet from 'helmet'
 
 // load production values to process.env
@@ -67,6 +66,7 @@ import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { match } from 'react-router'
 import routes from '../browser/routes'
+// import App from '../browser/app.jsx'
 
 // all routes are processed client side via react-router
 app.get('/*', function(req, res) {
@@ -82,7 +82,14 @@ app.get('/*', function(req, res) {
         }
         // render website content
         else if (renderProps) {
+          
+          // supply userAgent for material ui prefixer in ssr
+          // http://stackoverflow.com/a/38100609
+          global.navigator = global.navigator || {};
+          global.navigator.userAgent = req.headers['user-agent'] || 'all';
+
           // render App to string
+          const App = require('../browser/app.jsx').default
           const markup = renderToString(<App {...renderProps} />);
           // send string to handlebars template
           res.render('index', { markup });

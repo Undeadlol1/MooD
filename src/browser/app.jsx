@@ -40,6 +40,10 @@ const client = new ApolloClient({
 }
 );
 
+// supply userAgent for material ui prefixer in ssr
+// http://stackoverflow.com/a/38100609
+darkBaseTheme.userAgent = navigator.userAgent
+
 class App extends Component {
   render() {
     return  <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
