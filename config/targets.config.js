@@ -11,21 +11,8 @@ var nodeExternals = require('webpack-node-externals');
 
 var commonConfig = require('./common.config.js')
 
+// TODO
 // https://survivejs.com/webpack/optimizing/minifying/#enabling-a-performance-budget
-
-// const productionConfig = merge([
-
-//   {
-//     performance: {
-//       hints: 'warning', // 'error' or false are valid too
-//       maxEntrypointSize: 100000, // in bytes
-//       maxAssetSize: 450000, // in bytes
-//     },
-//   },
-
-//   ...
-// ]);
-
 
 const isDevelopment = process.env.NODE_ENV === 'development'
 const isTest = process.env.NODE_ENV === 'test'
@@ -70,7 +57,7 @@ var serverConfig = merge(commonConfig, {
     // this is important. Without nodeModules in "externals" bundle will throw and error
     // bundling for node requires modules not to be packed on top of bundle, but to be found via "require"
     externals: [nodeExternals({
-        whitelist: ['jquery', 'webpack/hot/dev-server', /^lodash/, 'react-router-transition/src/presets']
+        whitelist: ['jquery', 'webpack/hot/dev-server', /^lodash/, 'react-router-transition/src/presets'] // TODO remove jquery
     })],
 });
 
