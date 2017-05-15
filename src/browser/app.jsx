@@ -1,3 +1,6 @@
+import 'es6-promise/auto';
+import 'isomorphic-fetch'
+
 // DEPENDENCIES
 import { Router, Route, browserHistory, IndexRoute, RouterContext } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux' // TODO is it even used?
@@ -12,13 +15,11 @@ import injectTapEventPlugin from 'react-tap-event-plugin'; // material-ui
 injectTapEventPlugin(); // material-ui // TODO reorganize polyfills
 // import promise from 'es6-promise'; // isomorphic-fetch dependency
 // promise.polyfill() // isomorphic-fetch dependency // TODO reorganize polyfills
-import 'es6-promise/auto';
-import 'isomorphic-fetch'
-
 import store from './redux/store'
 import ReduxToastr from 'react-redux-toastr' // TODO do i even use this?
-
 import routesConfig from './routes'
+import Translator from './containers/Translator'
+import { FormattedMessage } from 'react-intl';
 
 // STYLES
 if (process.env.BROWSER) require('./styles.scss');
@@ -34,21 +35,29 @@ class App extends Component {
   render() {
     return  <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
               <ReduxProvider store={store}>
-                <div>
-                  {
-                    process.env.BROWSER
-                    ? <Router history={browserHistory} routes={routesConfig}/>
-                    : <RouterContext {...this.props} />
-                  }
-                  <ReduxToastr
-                    timeOut={4000}
-                    newestOnTop={false}
-                    preventDuplicates={true}
-                    position="top-left"
-                    transitionIn="fadeIn"
-                    transitionOut="fadeOut"
-                    progressBar />
-                </div>
+                <Translator>
+                  <div>
+                    <h1>
+                      <FormattedMessage
+                          id="test"
+                          defaultMessage={`THis is a default message!`}
+                      />
+                    </h1>
+                    {
+                      process.env.BROWSER
+                      ? <Router history={browserHistory} routes={routesConfig}/>
+                      : <RouterContext {...this.props} />
+                    }
+                    <ReduxToastr
+                      timeOut={4000}
+                      newestOnTop={false}
+                      preventDuplicates={true}
+                      position="top-left"
+                      transitionIn="fadeIn"
+                      transitionOut="fadeOut"
+                      progressBar />
+                  </div>
+                </Translator>
               </ReduxProvider>
             </MuiThemeProvider>
   }
