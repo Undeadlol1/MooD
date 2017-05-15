@@ -16,16 +16,8 @@ import { mustLogin } from './services/permissions'
 import authorization, { passport } from './middlewares/authApi'
 import 'source-map-support/register' // do we actually need this?
 import morgan from 'morgan'
-import { buildSchema } from 'graphql'
-import graphqlHTTP from 'express-graphql'
-import { graphqlExpress } from 'graphql-server-express';
-import schema from './graphql/schema'
 import App from '../browser/app.jsx'
-
-import React from 'react'
-import { renderToString } from 'react-dom/server'
-import { match, RouterContext } from 'react-router'
-import routesConfig from '../browser/routes'
+import helmet from 'helmet'
 
 // load production values to process.env
 require('dotenv').config()
@@ -39,25 +31,18 @@ const port = process.env.PORT || 3000,
 if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic applues all dev specific middlewares
   app.use(errorhandler())
   expressDebug(app) // TODO add comments
+  app.use(morgan('dev')) // logger
 }
 
 // middlewares
-if (process.env.NODE_ENV === 'development') app.use(morgan('dev')) // logger
 app.use(helmet()) // security
 app.use(express.static(publicUrl))
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-// app.use(session({
-//   // resave: true,
-//   // saveUninitialized: true,
-//   secret: 'keyboard cat', // TODO: this
-//   // cookie:{maxAge : cookieExpires} // ?????
-// })) // ???
 app.use(cookieSession({
   name: 'session',
-  keys: [process.env.SESSION_KEY || 'keyboard cat'], // [/* secret keys */],
-  // Cookie Options
+  keys: [process.env.SESSION_KEY || 'keyboard cat'],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
 app.use(passport.initialize())
@@ -70,55 +55,40 @@ app.use('/api/moods', moodsApi)
 app.use('/api/nodes', nodesApi)
 app.use('/api/decisions', decisionsApi)
 
-// GRAPHQL
-app.use('/graphql', graphqlExpress({ schema }));
-// Construct a schema, using GraphQL schema language
-// var schema = buildSchema(`
-//   type Query {
-//     hello: String
-//   }
-// `);
-
-// // The root provides a resolver function for each API endpoint
-// var rootValue = {
-//   hello: () => {
-//     return 'Hello world!';
-//   },
-// };
-
-// app.use('/graphql', graphqlHTTP({
-//   schema,
-//   rootValue, // TODO implement this // or not? read the docs
-//   graphiql: true,
-//   formatError: error => ({
-//     message: error.message,
-//     locations: error.locations,
-//     stack: error.stack
-//   })
-// }));
-
-// SEND HTML FOR SPA
-var exphbs  = require('express-handlebars');
-var hbs = exphbs.create({ /* config */ });
-app.engine('handlebars',  hbs.engine);
+/* SEND HTML FOR SPA */
+// set handlebars as templating engine
+import exphbs from 'express-handlebars'
+const { engine } = exphbs.create({});
+app.engine('handlebars', engine);
 app.set('view engine', 'handlebars');
 app.set('views', path.resolve(__dirname, './public'));
 
+import React from 'react'
+import { renderToString } from 'react-dom/server'
+import { match } from 'react-router'
+import routes from '../browser/routes'
+
+// all routes are processed client side via react-router
 app.get('/*', function(req, res) {
   match(
-      {routes: routesConfig, location: req.url},
+      {routes, location: req.url},
       (error, redirectLocation, renderProps) => {
-        if (error) {
-          res.status(500).send(error.message)
-        } else if (redirectLocation) {
-          res.redirect(302, redirectLocation.pathname +
-            redirectLocation.search)
-        } else if (renderProps) {
-          const markup = renderToString(<App {...renderProps} />);
-          res.render('index', {markup});
-        } else {
-          res.status(404).send('Not found')
+        if (error) res.status(500).send(error.message)
+
+        else if (redirectLocation) {
+          const location =  redirectLocation.pathname
+                            + redirectLocation.search
+          res.redirect(302, location)
         }
+        // render website content
+        else if (renderProps) {
+          // render App to string
+          const markup = renderToString(<App {...renderProps} />);
+          // send string to handlebars template
+          res.render('index', { markup });
+        }
+
+        else res.status(404).send('Not found')
   } );
 })
 
