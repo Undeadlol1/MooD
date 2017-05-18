@@ -2,6 +2,8 @@ var webpack = require('webpack');
 var WebpackShellPlugin = require('webpack-shell-plugin');
 var nodeExternals = require('webpack-node-externals');
 var path = require('path')
+var commonConfig = require('./common.config.js')
+var merge = require('webpack-merge');
 
 var stats = {
     hash: false,
@@ -11,7 +13,7 @@ var stats = {
     children: false,
 };
 
-var clientConfig = {
+var clientConfig =  merge(commonConfig, {
     watch: true,    
     devtool: 'cheap-module-source-map',
     target: 'web',
@@ -22,14 +24,13 @@ var clientConfig = {
         path     : path.join(__dirname, '..', 'dist')        
     },
     stats
-};
+});
 
-var serverConfig =  {
+var serverConfig =   merge(commonConfig, {
     watch: true,
     devtool: 'cheap-module-source-map',
     target: 'node',  
     entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/server/test/entry.js')],
-    context: path.resolve(__dirname, '../'),
     node: {
         __filename: true,
         __dirname: true 
@@ -53,8 +54,12 @@ var serverConfig =  {
             onBuildEnd: "mocha dist/*.test.js --opts ./mocha.opts" //onBuildEnd //onBuildExit
         }),
     ],
-    externals: [nodeExternals()],
+    // this is important. Without nodeModules in "externals" bundle will throw and error
+    // bundling for node requires modules not to be packed on top of bundle, but to be found via "require"
+    externals: [nodeExternals({
+        whitelist: ['jquery', 'webpack/hot/dev-server', /^lodash/, 'react-router-transition/src/presets'] // TODO remove jquery
+    })],
     stats
-};
+});
 
 module.exports = [clientConfig, serverConfig]
