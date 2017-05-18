@@ -1,3 +1,5 @@
+// load production values to process.env
+require('dotenv').config()
 // this prevents babel to parse css as javascript
 import csshook from 'css-modules-require-hook/preset'
 import path from 'path'
@@ -17,9 +19,6 @@ import authorization, { passport } from './middlewares/authApi'
 import 'source-map-support/register' // do we actually need this?
 import morgan from 'morgan'
 import helmet from 'helmet'
-
-// load production values to process.env
-require('dotenv').config()
 
 const port = process.env.PORT || 3000,
       app = express(),
@@ -101,6 +100,8 @@ app.get('/*', function(req, res) {
 
 // export app to use in test suits
 export default app.listen(port, () => {
-    console.info(`Environment is: ${process.env.NODE_ENV}!`)
-    console.info(`Server listening on port ${port}!`)
+    if (process.env.NODE_ENV != 'test') {
+      console.info(`Environment is: ${process.env.NODE_ENV}!`)
+      console.info(`Server listening on port ${port}!`)
+    }
 })

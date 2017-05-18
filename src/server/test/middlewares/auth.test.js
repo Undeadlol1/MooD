@@ -25,6 +25,7 @@ export default describe('Authethication tests', function() {
     })
 
     after(function() {
+        server.close()
         User.destroy({where: { username }})
     })
 

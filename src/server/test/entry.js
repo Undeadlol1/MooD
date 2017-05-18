@@ -1,12 +1,16 @@
 require('babel-polyfill')
+const chai = require('chai')
 const slugify = require('slug')
 const uniqid = require('uniqid')
+const { expect } = require('chai')
+const { isEqual } = require('lodash')
 const extend = require('lodash/assignIn')
-const users = require('../data/fixtures/users.js')
 const { parseUrl } = require('../../shared/parsers.js')
+const userFixtures = require('../data/fixtures/users.js')
 const { User, Mood, Node, Decision } = require('../data/models/index.js')
+chai.should()
 
-urls = [
+const urls = [
             "https://www.youtube.com/watch?v=nBwHtgQH2EQ",
             "https://www.youtube.com/watch?v=l5-gja10qkw",
             "https://www.youtube.com/watch?v=M3B5U1S-I4Y",
@@ -17,15 +21,16 @@ urls = [
             "https://www.youtube.com/watch?v=3Pv7jAKIPa0",
             "https://www.youtube.com/watch?v=KrCMWS_fB4o",
             "https://www.youtube.com/watch?v=W7mNmiW9qts",
-            "https://www.youtube.com/watch?v=Q29SbuuvGEM",
         ]
 
-// this function creates random digit and
-// adds Date.now after decimal point
-// afterwards last digit after decimal is randomized,
-// since on .bulkCreate every Date.now() is the same
-// (this is needed to make every rating unique to
-// avoid duplicates and infinite cycles in node fetching api)
+/* 
+    this function creates random digit and
+    adds Date.now after decimal point
+    afterwards last digit after decimal is randomized,
+    since on .bulkCreate every Date.now() is the same
+    (this is needed to make every rating unique to
+    avoid duplicates and infinite cycles in node fetching api)
+*/
 function randomIntFromInterval(min, max) {
     const randomNumber = Math.floor(Math.random()*(max-min+1)+min)
     let now = ('0.' + Date.now().toString()).split('')
@@ -38,16 +43,27 @@ function randomIntFromInterval(min, max) {
 
 // insert fixtures into database
 before(function() {
+    // close server incase of supertest.agent server is in use
+    require('../server.js').default.close()
+
     const moods = [],
           nodes = [],
-          decisions = []
+          decisions = [],
+          createdUsers = []
+
+    const usersWithHashedPassword = userFixtures.map(user => {
+        user.password = User.generateHash(user.password)
+        return user
+    })
+
     // create users
-    User.bulkCreate(users)
+    return User.bulkCreate(usersWithHashedPassword)
         // refetch users because .bulkCreate return objects with id == null
         .then(() => User.findAll())
         // create moods fixtures array
         .each(user => {
             const name = uniqid()
+            createdUsers.push(user)      
             moods.push({
                 name,
                 slug: slugify(name),
@@ -56,7 +72,7 @@ before(function() {
         })
         // create moods
         .then(() => Mood.bulkCreate(moods))
-        .then(() => Mood.findAll())
+        .then(() => Mood.findAll({where: {}}))
         .each(mood => {
             urls.forEach(url => {
                 const rating = randomIntFromInterval(-3, 20) 
@@ -72,26 +88,93 @@ before(function() {
         })
         // create nodes
         .then(() => Node.bulkCreate(nodes))
-        .then(() => Node.findAll())
-        .each(node => {
-            decisions.push({
-                NodeId: node.id,
-                MoodId: node.MoodId,
-                UserId: node.UserId,
-                NodeRating: node.rating,
-                rating: Number(randomIntFromInterval(-3, 20)),
+        .then(() => Node.findAll({raw: true}))
+        .each((node, index) => {
+            return createdUsers.forEach((user, index2) => {                  
+                decisions.push({
+                    position: index, 
+                    NodeId: node.id,
+                    MoodId: node.MoodId,
+                    UserId: user.id,
+                    NodeRating: node.rating,
+                    rating: Number(randomIntFromInterval(-3, 20)),
+                })
             })
         })
         // create decisions
         .then(() => Decision.bulkCreate(decisions))
+        .catch(error => {
+            console.error(error)
+            return error
+            // throw new Error(error)
+        })
 })
 
 // clean up db
-after(function() {
-    User.destroy({ where: {} })
-    Mood.destroy({ where: {} })
-    Node.destroy({ where: {} })
-    Decision.destroy({ where: {} })
+after(async function() {
+    try {
+        User.destroy({ where: {} })
+        Mood.destroy({ where: {} })
+        Node.destroy({ where: {} })
+        Decision.destroy({ where: {} })
+    }
+    catch(error) {
+        console.log(error)
+        throw new Error(error)
+    }
+})
+
+// TODO make proper names
+describe('fixture data setup', function() {
+    it('added fixtures properly', async function(){
+        try {
+            const users = await User.findAll({raw: true})
+            const moods = await Mood.findAll({raw: true})
+            const nodes = await Node.findAll({raw: true})
+            const decisions = await Decision.findAll({raw: true})
+
+            expect(users.length).to.be.equal(10)
+            expect(moods.length).to.be.equal(10)
+            expect(nodes.length).to.be.equal(100) // 10 moods * 10 nodes
+            expect(decisions.length).to.be.equal(1000) // 10 moods * 10 nodes * 10 decisions
+            
+            moods.forEach(mood => {
+                const moodNodes = nodes.filter(
+                    node => node.MoodId == mood.id
+                )
+                expect(
+                    moodNodes.length,
+                    'each mood must have 10 nodes'
+                ).to.be.equal(10)
+            })
+
+            nodes.forEach(async node => {
+                const nodeDecisions = decisions.filter(
+                    decision => decision.NodeId == node.id
+                )
+                expect(
+                    nodeDecisions.length,
+                    'each node must have 10 decisions'
+                ).to.be.equal(10)
+            })
+
+            users.forEach(user => {
+                nodes.forEach(node => {
+                    const userDecisions = decisions.filter(
+                        decision => (decision.MoodId == node.MoodId
+                                    && decision.UserId == user.id)
+                    )
+                    expect(
+                        userDecisions.length,
+                        'each user in mood must have 10 decisions'
+                    ).to.be.equal(10)
+                })
+            })
+        } catch (error) {
+            console.log(error)
+            throw new Error(error)
+        }
+    })
 })
 
 /* This will search for files ending in .test.js and

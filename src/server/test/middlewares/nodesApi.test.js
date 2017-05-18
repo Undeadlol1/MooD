@@ -2,16 +2,19 @@ import 'babel-polyfill'
 import chai, { should, expect } from 'chai'
 import request from 'supertest'
 import server from '../../server'
-import { Mood, User, Node } from '../../data/models'
+import { Mood, User, Node, Decision } from '../../data/models'
 import slugify from 'slug'
 import { uniq } from 'lodash'
+import colors from 'colors'
+import users from '../../data/fixtures/users'
+chai.use(require('chai-datetime'));
 chai.should();
 
 const   user = request.agent(server),
-        username = "somename",
-        password = "somepassword",
+        username = users[0].username,
+        password = users[0].password,
         moodName = "random name",
-        slug = slugify(moodName),
+        moodSlug = slugify(moodName),
         url = "https://www.youtube.com/watch?v=hDH7D8_31X8",
         urls = [
             "https://www.youtube.com/watch?v=nBwHtgQH2EQ",
@@ -21,114 +24,111 @@ const   user = request.agent(server),
             "https://www.youtube.com/watch?v=VoA9tLkrgHY",
         ]
 
+function login() {
+    return user
+        .post('/api/auth/login')
+        .send({ username, password })
+        .expect(302)
+}
+
 export default describe('/nodes API', function() {
     
-    before(function(done) {
+    before(async function() {
         // TODO add logout? to test proper user login?
         // Kill supertest server in watch mode to avoid errors
         server.close()
-        // Create user, mood and nodes
-        user
-            .post('/api/auth/signup')
-            .send({ username, password })
-            .expect(200)            
-            .end(result => {
-                user
-                    .post('/api/auth/login')
-                    .send({ username, password })
-                    .expect(302)
-                    .end((error, res) => {
-                        if (error) return done(error)
-                        user
-                            .post('/api/moods')
-                            .send({ name: moodName })
-                            .expect(200)
-                            .end(error => {
-                                if (error) return done(error)
-                                urls.map(url=> {
-                                    user
-                                        .post('/api/nodes')
-                                        .send({
-                                            url, moodSlug: res.body.moodslug
-                                        })
-                                        .expect(200)
-                                })
-                                if (error) return done(error)                                
-                                done()
-                            })
-                    })
-            })
+        // login user
+        await login()
     })
 
     // clean up
     after(function() {
-        User.destroy({where: { username }})
-        Mood.destroy({where: { name: moodName }})
-        Node.destroy({where: { url }})
+        server.close()
     })
 
-    it('POST node', function(done) {
-        user
+    it('POST node', async function() {
+        const mood = await Mood.findOne({order: 'rand()'})
+        return user
             .post('/api/nodes')
-            .send({ moodSlug: slug, url })
+            .send({ moodSlug: mood.slug, url })
             .expect('Content-Type', /json/)
             .expect(200)
-            .end(function(err, res){ 
-                if (err) return done(err);
+            .then(function(res) { 
                 res.body.url.should.be.equal(url)
-                done()
             })
     })
 
-    it('GET single node', function(done) {
-        user
-            .get('/api/nodes/' + slug )
+    function getNextNode(slug, previousNodeId = "") {
+        return user
+            .get(`/api/nodes/${slug}/${previousNodeId}`)
             .expect('Content-Type', /json/)
             .expect(200)
-            .end(function(err, res) {
-                if (err) return done(err);
-                res.body.url.should.be.equal(url)
-                done()
-            });
+            .then(res => res.body)
+    }
+
+    it('GET single node', async function() {
+        const mood = await Mood.findOne({order: 'rand()'})        
+        const node = await getNextNode(mood.slug)
+        node.url.should.be.string
     })
 
-    it('nodes cycle properly for unlogged user', async function() {
-        
-        function getNextNode(moodSlug, previousNodeId = "") {
-            return user
-                .get(`/api/nodes/${moodSlug}/${previousNodeId}`)
-                .expect(200)
-                .then(res => res.body)
-        }
+    // make 10 subsequent node requests
+    async function cycleThroughNodes(slug, nodeId) {
+            let nextNodeId = nodeId
+            const nodeIds = []
+            for(var x = 0; x < 10; x++) {
+                const nextNode = await getNextNode(slug, nextNodeId)
+                nextNodeId = nextNode.id
+                nodeIds.push(nextNode.id)
+            }
+            return nodeIds
+    }
 
+    it('nodes cycle properly for unlogged user', async function() {
         try {
             // logout user
             await user.get('/api/auth/logout').expect(200)
 
-            const nodeIds = []
             const mood = await Mood.findOne()
             const initialNode = await getNextNode(mood.slug)
+            const nodeIds = await cycleThroughNodes(mood.slug, initialNode.id)
             
-            // make 10 subsequent node requests
-            let nextNodeId
-            for(var x = 0; x < 10; x++) {
-                const nextNode = await getNextNode(mood.slug, nextNodeId || initialNode.id)
-                nextNodeId = nextNode.id
-                nodeIds.push(nextNode.id)
-            }
-            
-            // there must be no duplicate nodes fetched
-            expect(
-                nodeIds.length != uniq(nodeIds).length,
-                'nodes in cycle are not unique'
-            ).to.be.true
+            expect(uniq(nodeIds).length, 'unique nodes').to.be.above(7)
         } catch (error) {
             throw new Error(error)
         }
     })
 
-    // it('nodes cycle properly for logged in user', async function(){
-    //     throw new Error('implement this')
+    // it('changes Decision properly', async function() {
+    //     await login()
+
+    //     const currentDate = new Date()
+    //     const mood = await Mood.findOne({order: 'rand()'})
+    //     const firstNode = await getNextNode(mood.slug)
+
+    //     // this is needed to make a change to firstNode
+    //     // (because node changes on second request to api)
+    //     await getNextNode(mood.slug, firstNode.id)
+        
+    //     const updatedDecision = await Decision.findById(firstNode.Decision.id)
+    //     expect(updatedDecision.position).to.not.be.equal("0")
+    //     expect(updatedDecision.lastViewAt).to.be.beforeTime(currentDate) // TODO is this true?        
+    //     // expect(updatedDecision.position > 0).to.be.true
+    // })
+
+    // it('nodes cycle properly for logged in user', async function() {
+    //     try {            
+    //         await login()
+            
+    //         const mood = await Mood.findOne({order: 'rand()'})
+    //         const node = await getNextNode(mood.slug)
+    //         const nodeIds = await cycleThroughNodes(mood.slug)
+            
+    //         expect(uniq(nodeIds), 'unique nodes').to.not.be.equal(1)       
+    //     } catch (error) {
+    //         console.error(error)
+    //         throw new Error(error)
+    //     }
     // })
 
 })

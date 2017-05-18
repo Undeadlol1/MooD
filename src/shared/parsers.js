@@ -29,7 +29,7 @@ function parseUrl(url) {
 			contentId: parseYoutube(url)
 		}
 	}
-	else throw new Meteor.Error("Unrecognised-url-provider")
+	else throw new Error("Unrecognised-url-provider")
 }
 
 export { parseUrl }
