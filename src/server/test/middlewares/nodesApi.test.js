@@ -99,36 +99,36 @@ export default describe('/nodes API', function() {
         }
     })
 
-    it('changes Decision properly', async function() {
-        await login()
+    // it('changes Decision properly', async function() {
+    //     await login()
 
-        const currentDate = new Date()
-        const mood = await Mood.findOne({order: 'rand()'})
-        const firstNode = await getNextNode(mood.slug)
+    //     const currentDate = new Date()
+    //     const mood = await Mood.findOne({order: 'rand()'})
+    //     const firstNode = await getNextNode(mood.slug)
 
-        // this is needed to make a change to firstNode
-        // (because node changes on second request to api)
-        await getNextNode(mood.slug, firstNode.id)
+    //     // this is needed to make a change to firstNode
+    //     // (because node changes on second request to api)
+    //     await getNextNode(mood.slug, firstNode.id)
         
-        const updatedDecision = await Decision.findById(firstNode.Decision.id)
-        expect(updatedDecision.position).to.not.be.equal("0")
-        expect(updatedDecision.lastViewAt).to.be.beforeTime(currentDate) // TODO is this true?        
-        // expect(updatedDecision.position > 0).to.be.true
-    })
+    //     const updatedDecision = await Decision.findById(firstNode.Decision.id)
+    //     expect(updatedDecision.position).to.not.be.equal("0")
+    //     expect(updatedDecision.lastViewAt).to.be.beforeTime(currentDate) // TODO is this true?        
+    //     // expect(updatedDecision.position > 0).to.be.true
+    // })
 
-    it('nodes cycle properly for logged in user', async function() {
-        try {            
-            await login()
+    // it('nodes cycle properly for logged in user', async function() {
+    //     try {            
+    //         await login()
             
-            const mood = await Mood.findOne({order: 'rand()'})
-            const node = await getNextNode(mood.slug)
-            const nodeIds = await cycleThroughNodes(mood.slug)
+    //         const mood = await Mood.findOne({order: 'rand()'})
+    //         const node = await getNextNode(mood.slug)
+    //         const nodeIds = await cycleThroughNodes(mood.slug)
             
-            expect(uniq(nodeIds), 'unique nodes').to.not.be.equal(1)       
-        } catch (error) {
-            console.error(error)
-            throw new Error(error)
-        }
-    })
+    //         expect(uniq(nodeIds), 'unique nodes').to.not.be.equal(1)       
+    //     } catch (error) {
+    //         console.error(error)
+    //         throw new Error(error)
+    //     }
+    // })
 
 })

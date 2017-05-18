@@ -25,9 +25,11 @@ module.exports = function(sequelize, DataTypes) {
       rating: {
         // Deciaml points allow making of rating to be unique
         // example: rating = actualNumber + "." + Date.now()
-        type: DataTypes.DECIMAL(38, 17),
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: () => {
+          return String(0 + '.' + Date.now() + (50 * Math.floor((Math.random() * 100) + 1)))
+        }, // TODO remove multiplier in future
       },
       type: DataTypes.STRING,
   }, {
