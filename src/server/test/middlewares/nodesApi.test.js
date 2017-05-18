@@ -93,7 +93,7 @@ export default describe('/nodes API', function() {
             const initialNode = await getNextNode(mood.slug)
             const nodeIds = await cycleThroughNodes(mood.slug, initialNode.id)
             
-            expect(uniq(nodeIds).length, 'unique nodes').to.be.above(7)
+            expect(uniq(nodeIds).length, 'unique nodes').to.be.above(6)
         } catch (error) {
             throw new Error(error)
         }
