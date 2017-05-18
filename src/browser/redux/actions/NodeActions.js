@@ -52,7 +52,7 @@ export const fetchNode = moodSLug => (dispatch, getState) => {
 	const nodeId = selectn('node.id', state)
 
 	fetch(
-		moodsUrl + (moodSLug || slug) + '/' + nodeId, 
+		nodesUrl + (moodSLug || slug) + '/' + nodeId, 
 		{ credentials: 'same-origin' }
 	)
 		.then(checkStatus)
