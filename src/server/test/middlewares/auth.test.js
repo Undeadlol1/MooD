@@ -43,17 +43,21 @@ export default describe('Authethication tests', function() {
         return loginUser()
     })
 
-    it('get logged in user', function() {
-        // return loginUser().then(response => {
-            return user
-                .get('/current_user')
+    it('get logged in user', async function() {
+        try {
+            await user
+                .get('/api/auth/current_user')
                 .expect(200)
                 .expect('Content-Type', /json/)
-                .then(function(res){
+                .then(function(res) {
                     assert(res.body && res.body.id, 'res.body must have an id')
                 })
-        })        
-    // })
+        }
+        catch (error) {
+            console.error(error)
+            throw new Error(error)
+        }
+    })
 
     it('logout user', function(done) { // TODO move this to previous function?
         loginUser()
