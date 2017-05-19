@@ -48,7 +48,7 @@ export const toggleLoginDialog = value => (dispatch, getState) => {
 
 export const fetchUser = username => dispatch => {
 	dispatch(fetchingInProgress())
-	fetch(`${usersUrl}user/${username}`, {credentials: 'same-origin'})
+	fetch(`${usersUrl}user/${username}`)
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(user => dispatch(recieveFetchedUser((user))))
