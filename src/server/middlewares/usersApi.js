@@ -9,8 +9,9 @@ export default Router()
   .get('/user/:username', async function({ params }, res) {
     try {
       const username  = params.username
-      const user = await User.findOne({where: {username}})
+      if (!username) return res.badRequest('invalid query')
 
+      const user = await User.findOne({where: {username}})
       if (!user) res.boom.notFound('user not found')
       else res.json(user)
 
