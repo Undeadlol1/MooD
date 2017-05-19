@@ -6,18 +6,18 @@ import boom from 'express-boom' // "boom" library for express responses
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import errorhandler from 'errorhandler'
-import expressDebug from 'express-debug'
 import cookieParser from 'cookie-parser'
 import cookieSession from 'cookie-session'
 import moodsApi from './middlewares/moodsApi'
 import nodesApi from './middlewares/nodesApi'
+import usersApi from './middlewares/usersApi'
 import decisionsApi from './middlewares/decisionsApi'
 import { mustLogin } from './services/permissions'
 import authorization, { passport } from './middlewares/authApi'
 import 'source-map-support/register' // do we actually need this?
 import morgan from 'morgan'
 import helmet from 'helmet'
-
+import createLocaleMiddleware from 'express-locale';
 // load production values to process.env
 require('dotenv').config()
 
@@ -29,12 +29,13 @@ const port = process.env.PORT || 3000,
 // development only middlewares
 if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic applues all dev specific middlewares
   app.use(errorhandler())
-  expressDebug(app) // TODO add comments
   app.use(morgan('dev')) // logger
 }
 
 // middlewares
 app.use(helmet()) // security
+// detect accepted languages for i18n
+app.use(createLocaleMiddleware())
 app.use(express.static(publicUrl))
 app.use(cookieParser())
 app.use(bodyParser.json())
@@ -50,6 +51,7 @@ app.use(boom()) // provides res.boom. erros dispatching
 
 // REST API
 app.use('/api/auth', authorization)
+app.use('/api/users', usersApi)
 app.use('/api/moods', moodsApi)
 app.use('/api/nodes', nodesApi)
 app.use('/api/decisions', decisionsApi)
@@ -82,10 +84,11 @@ app.get('/*', function(req, res) {
         }
         // render website content
         else if (renderProps) {
-          
+          const language = req.locale.language          
           // supply userAgent for material ui prefixer in ssr
           // http://stackoverflow.com/a/38100609
-          global.navigator = global.navigator || {};
+          // global.navigator = global.navigator || {};
+          global.navigator = global.navigator || {language};
           global.navigator.userAgent = req.headers['user-agent'] || 'all';
 
           // render App to string
