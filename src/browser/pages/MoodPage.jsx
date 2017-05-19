@@ -12,6 +12,7 @@ import { fetchNode, actions } from '../redux/actions/NodeActions'
 import { toggleHeader } from '../redux/actions/GlobalActions'
 import { RouteTransition } from 'react-router-transition';
 import presets from 'react-router-transition/src/presets';
+import { FormattedMessage } from 'react-intl';
 
 @connect(
 	({ node, mood, global: { controlsAreShown } }, ownProps) => {
@@ -50,7 +51,7 @@ class MoodPage extends Component {
 
 			dom = 	<div className="MoodPage--empty">
 						<NavBar className='NavBar--sticky' />				
-						<h1 className="MoodPage__header">Currently zero content here</h1>
+						<h1 className="MoodPage__header"><FormattedMessage id="currently_zero_content_here" /></h1>
 						<NodesInsert moodSlug={params.moodSlug} />
 					</div>
 		}

@@ -24,8 +24,9 @@ class NavBar extends Component {
     render() {
         const { user, headerIsShown, controlsAreShown, className, toggleSidebar, children, ...rest } = this.props
         const titleLink = <Link to="/" className="NavBar__home-link">MooD</Link>
+        const username = user.get('username')
         const loginButton = user.get('id')
-                            ? <Avatar className="NavBar__avatar" src={user.get('image')} />
+                            ? <Link to={`/users/${username}`}> <Avatar className="NavBar__avatar" src={`https://api.adorable.io/avatars/285/${username}.png`} /></Link>
                             : <LoginLogoutButton />
 
         return  <header className={'NavBar ' + className} {...rest}>
