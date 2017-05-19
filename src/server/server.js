@@ -105,6 +105,7 @@ app.get('/*', function(req, res) {
 // export app to use in test suits
 export default app.listen(port, () => {
     if (process.env.NODE_ENV != 'test') {
+      console.log('env', process.env)
       console.info(`Environment is: ${process.env.NODE_ENV}!`)
       console.info(`Server listening on port ${port}!`)
     }

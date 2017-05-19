@@ -8,21 +8,39 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var merge = require('webpack-merge');
 const BabiliPlugin = require('babili-webpack-plugin');
 var nodeExternals = require('webpack-node-externals');
-
+var extend = require('lodash/assignIn')
 var commonConfig = require('./common.config.js')
 
 // TODO
 // https://survivejs.com/webpack/optimizing/minifying/#enabling-a-performance-budget
 
 const isDevelopment = process.env.NODE_ENV === 'development'
+const isProduction = process.env.NODE_ENV === 'production'
 const isTest = process.env.NODE_ENV === 'test'
 
+var productionConfig = {}
+
+const serverVariables =  {
+                            'BROWSER': false,
+                            'isBrowser': false,
+                            'SERVER': true,
+                            'isServer': true,
+                            'API_URL': isDevelopment || isTest ? 'http://127.0.0.1:3000/api/' : undefined,
+                        }
+                        
+const clientVariables =  {
+                            'BROWSER': true,
+                            'isBrowser': true,
+                            'SERVER': false,
+                            'isServer': false,
+                            'API_URL': isDevelopment || isTest ? 'http://127.0.0.1:3000/api/' : undefined,
+                        }
+
+if (isProduction) {
+    productionConfig = require('../production.json')
+}
+
 const clientProductionPlugins = isDevelopment ? [] : [
-    new webpack.DefinePlugin({ // <-- key to reducing React's size
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
-    }),
     // new webpack.optimize.DedupePlugin(), //dedupe similar code 
     // new webpack.optimize.UglifyJsPlugin(), //minify everything
     new BabiliPlugin(),
@@ -44,20 +62,14 @@ var serverConfig = merge(commonConfig, {
         libraryTarget: "commonjs",
     },
     plugins: [
-        new webpack.DefinePlugin({ // <-- key to reducing React's size
-            'process.env': {
-                'BROWSER': false,
-                'isBrowser': false,
-                'SERVER': true,
-                'isServer': true,
-                'API_URL': isDevelopment || isTest ? JSON.stringify('http://127.0.0.1:3000/api/') : undefined,
-            }
+        new webpack.DefinePlugin({
+            'process.env': JSON.stringify(extend(serverVariables, productionConfig))
         }),
     ],
     // this is important. Without nodeModules in "externals" bundle will throw and error
     // bundling for node requires modules not to be packed on top of bundle, but to be found via "require"
     externals: [nodeExternals({
-        whitelist: ['jquery', 'webpack/hot/dev-server', /^lodash/, 'react-router-transition/src/presets'] // TODO remove jquery
+        whitelist: ['webpack/hot/dev-server', /^lodash/, 'react-router-transition/src/presets']
     })],
 });
 
@@ -79,14 +91,9 @@ var clientConfig = merge(commonConfig, {
             name: 'vendor.js',
         }),
         // TODO this will be overriden in production!!!
-        new webpack.DefinePlugin({ // <-- key to reducing React's size
-            'process.env': {
-                'BROWSER': true,
-                'isBrowser': true,
-                'SERVER': false,
-                'isServer': false,
-                'API_URL': isDevelopment || isTest ? JSON.stringify('http://127.0.0.1:3000/api/') : undefined,                             
-            }
+        new webpack.DefinePlugin({
+            'process.env': JSON.stringify(extend(clientVariables, productionConfig))
+
         }),
         ...clientProductionPlugins
     ],
