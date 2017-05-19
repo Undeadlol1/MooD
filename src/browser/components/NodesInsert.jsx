@@ -18,6 +18,7 @@ import { Form, Field, reduxForm } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
 import { history } from 'react-router';
 import store from '../redux/store'
+import { FormattedMessage } from 'react-intl';
 
 function isUrl(str) {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -91,13 +92,13 @@ render() {
 
     const actions = [
                         <FlatButton
-                            label="Cancel"
+                            label={<FormattedMessage id="cancel" />}
                             primary={true}
                             onTouchTap={toggleDialog}
                         />,
                         <FlatButton
                             type="submit"
-                            label="Submit"
+                            label={<FormattedMessage id="submit" />}
                             primary={true}
                             disabled={!valid}
                             onTouchTap={handleSubmit}
@@ -116,7 +117,7 @@ render() {
 
                 {/* DIALOG */}                
 				<Dialog
-					title="Add something"
+					title={<FormattedMessage id="add_something" />}
 					actions={actions} 
 					modal={true}
 					open={node.dialogIsOpen}
