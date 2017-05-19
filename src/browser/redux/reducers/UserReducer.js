@@ -1,30 +1,40 @@
 import { isEmpty } from 'lodash'
 import { Map } from 'immutable'
 
-const emptyUserObject = {
+const emptyUserObject = Map({
 	id: '',
 	image: '',
 	username: '',
 	vk_id: '',
 	facebook_id: '',
 	twitter_id: '',
-}
+})
 
 const initialState = Map({
 	...emptyUserObject,
 	loginIsOpen: false,
-	isFetching: false,
+	loading: false,
+	fetchedUser: emptyUserObject
 })
 
 export default (state = initialState, { type, payload }) => {
 	switch(type) {
 		case 'FETCHING_IN_PROGRESS':
-			return state.set('isFetching', true)
+			return state.set('loading', true)
 		case 'RECIEVE_CURRENT_USER':
 			return state.merge({
 				...payload,
-				isFetching: false,
-				loginIsOpen: isEmpty(payload) && state.get('isFetching') && state.get('loginIsOpen')
+				loading: false,
+				loginIsOpen: isEmpty(payload) && state.get('loading') && state.get('loginIsOpen')
+			})
+		case 'RECIEVE_FETCHED_USER':
+			return state.mergeDeep({
+				loading: false,				
+				fetchedUser: payload
+			})
+		case 'REMOVE_FETCHED_USER':
+			return state.mergeDeep({
+				fetchedUser: emptyUserObject
 			})
 		case 'REMOVE_CURRENT_USER':
 			return state.merge(emptyUserObject)
