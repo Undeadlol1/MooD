@@ -1,9 +1,9 @@
-var path = require('path')
 var webpack = require('webpack');
-var merge = require('webpack-merge');
-var commonConfig = require('./common.config.js')
-var nodeExternals = require('webpack-node-externals');
 var WebpackShellPlugin = require('webpack-shell-plugin');
+var nodeExternals = require('webpack-node-externals');
+var path = require('path')
+var commonConfig = require('./common.config.js')
+var merge = require('webpack-merge');
 
 var stats = {
     hash: false,

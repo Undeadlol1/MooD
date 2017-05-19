@@ -17,7 +17,6 @@ var commonConfig = require('./common.config.js')
 const NODE_ENV = JSON.stringify(process.env.NODE_ENV)
 const isDevelopment = NODE_ENV === 'development'
 const isTest = NODE_ENV === 'test'
-const API_URL = JSON.stringify('http://127.0.0.1:3000/api/')
 
 const clientProductionPlugins = isDevelopment ? [] : [
     // new webpack.optimize.DedupePlugin(), //dedupe similar code 
@@ -44,11 +43,11 @@ var serverConfig = merge(commonConfig, {
         new webpack.DefinePlugin({ // <-- key to reducing React's size
             'process.env': {
                 NODE_ENV,
-                API_URL,
                 'BROWSER': false,
                 'isBrowser': false,
                 'SERVER': true,
                 'isServer': true,
+                'API_URL': isDevelopment || isTest ? JSON.stringify('http://127.0.0.1:3000/api/') : undefined,
             }
         }),
     ],
@@ -80,11 +79,11 @@ var clientConfig = merge(commonConfig, {
         new webpack.DefinePlugin({ // <-- key to reducing React's size
             'process.env': {
                 NODE_ENV,
-                API_URL,
                 'BROWSER': true,
                 'isBrowser': true,
                 'SERVER': false,
                 'isServer': false,
+                'API_URL': isDevelopment || isTest ? JSON.stringify('http://127.0.0.1:3000/api/') : undefined,
             }
         }),
         ...clientProductionPlugins
