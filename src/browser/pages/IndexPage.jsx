@@ -34,9 +34,6 @@ export default class IndexPage extends Component {
 
     @injectProps
     render({loading, moods, currentPage, totalPages, dispatch, location}) {
-        // return 	loading
-                // ?   <Loading />
-                // :	<RouteTransition
 		return  <RouteTransition				
 						pathname={location.pathname}
 						{...presets.pop}

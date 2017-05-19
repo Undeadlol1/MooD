@@ -9,6 +9,7 @@ import { TextField } from 'redux-form-material-ui'
 import { checkStatus, parseJSON } from'../redux/actions/actionHelpers'
 import slugify from 'slug'
 import store from '../redux/store'
+import { FormattedMessage } from 'react-intl';
 
 @reduxForm({
 	form: 'MoodsInsert',
@@ -49,7 +50,7 @@ export default class MoodsInsert extends Component {
 	    return  <form onSubmit={handleSubmit(insertMood)}>
 					<Row>
 						<Col xs={12}>
-							<Field name="name" component={TextField} hidden={asyncValidating} hintText="Add your own mood!" fullWidth />
+							<Field name="name" component={TextField} hidden={asyncValidating} hintText={<FormattedMessage id="add_your_own_mood" />} fullWidth />
 						</Col>
 					</Row>
 		        </form>

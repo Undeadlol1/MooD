@@ -1,3 +1,4 @@
+// @ts-check
 import { createAction, createActions } from 'redux-actions'
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
 import { toastr } from 'react-redux-toastr'
@@ -37,7 +38,6 @@ export const fetchingError = createAction('FETCHING_ERROR', reason => reason)
 export const unloadMood = createAction('UNLOAD_MOOD')
 
 export const fetchMoods = (pageNumber = 1) => dispatch => {
-	console.log('fetchMoods')
 	dispatch(fetchingInProgress())
 	fetch(moodsUrl + (pageNumber ? '/' + pageNumber : ''))
 		.then(checkStatus)		

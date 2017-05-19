@@ -5,7 +5,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
-import FontAwesome from 'react-fontawesome'
+import { FormattedMessage } from 'react-intl';
 
 // TODO add comments
 
@@ -26,17 +26,18 @@ class LoginLogoutButton extends Component {
 	render() {
 		const { userId, logout, toggleDialog, inline, fullWidth, ...rest } = this.props
 		const isLoggedIn = userId
+		const label = <FormattedMessage id={isLoggedIn ? "logout" : "login"} />
 
 		if (inline) return <span
 								onClick={isLoggedIn ? logout : toggleDialog}
 								style={{ display: 'block', textAlign: "center" }}
 								{...rest}
 							>
-								{isLoggedIn ? "logout" : "login"}
+								{label}
 							</span>
 		
 		return <RaisedButton
-					label={ isLoggedIn ? "logout" : "login"}
+					label={label}
 					onClick={isLoggedIn ? logout : toggleDialog}
 					{ ...rest } />
 	}

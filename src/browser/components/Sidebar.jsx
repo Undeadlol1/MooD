@@ -5,9 +5,10 @@ import MenuItem from 'material-ui/MenuItem';
 import React, { Component } from 'react'
 import LoginLogoutButton from './LoginLogoutButton'
 import { toggleSidebar } from '../redux/actions/GlobalActions'
+import { FormattedMessage } from 'react-intl';
 
 @connect(
-	({ global: { sidebarIsOpen } }, ownProps) => ({ sidebarIsOpen, ...ownProps }),
+	({ user, global: { sidebarIsOpen } }, ownProps) => ({ user, sidebarIsOpen, ...ownProps }),
     (dispatch, ownProps) => ({
         toggleSidebar() {
             dispatch(toggleSidebar())
@@ -16,11 +17,17 @@ import { toggleSidebar } from '../redux/actions/GlobalActions'
 )
 export default class Sidebar extends Component {
 	render() {
-		const { sidebarIsOpen, toggleSidebar } = this.props
+		const { user, sidebarIsOpen, toggleSidebar } = this.props
+		const username = user.get('username')
 		return 	<Drawer className="Sidebar" docked={false} open={sidebarIsOpen} onRequestChange={toggleSidebar}>
+					{username &&
+						<MenuItem>
+							<Link onClick={toggleSidebar} to={`users/${username}`}><FormattedMessage id="profile" /></Link>
+						</MenuItem>
+					}
 					<MenuItem onClick={toggleSidebar}><LoginLogoutButton inline fullWidth /></MenuItem>
-					<MenuItem><Link onClick={toggleSidebar} to="search">search</Link></MenuItem>
-					{/*<MenuItem><Link onClick={toggleSidebar} to="about">about</Link></MenuItem>*/}
+					<MenuItem><Link onClick={toggleSidebar} to="search"><FormattedMessage id="search" /></Link></MenuItem>
+					{/*<MenuItem><Link onClick={toggleSidebar} to="about"><FormattedMessage id="about" /></Link></MenuItem>*/}
 				</Drawer>
 	}
 }
