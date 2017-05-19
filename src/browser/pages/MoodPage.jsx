@@ -63,9 +63,12 @@ class MoodPage extends Component {
 					</Video>
 		}
 
-		return 	<RouteTransition {...presets.slideLeft} pathname={location.pathname} className="MoodPage">
-					{dom}
-				</RouteTransition>
+		return 	<div className="MoodPage">
+					{/*<NavBar className='NavBar--sticky' />			*/}
+					<RouteTransition {...presets.slideLeft} pathname={location.pathname} className="MoodPage">
+						{dom}
+					</RouteTransition>
+				</div>
 	}
 }
 
