@@ -14,15 +14,11 @@ var commonConfig = require('./common.config.js')
 // TODO
 // https://survivejs.com/webpack/optimizing/minifying/#enabling-a-performance-budget
 
-const isDevelopment = process.env.NODE_ENV === 'development'
-const isTest = process.env.NODE_ENV === 'test'
+const NODE_ENV = JSON.stringify(process.env.NODE_ENV)
+const isDevelopment = NODE_ENV === 'development'
+const isTest = NODE_ENV === 'test'
 
 const clientProductionPlugins = isDevelopment ? [] : [
-    new webpack.DefinePlugin({ // <-- key to reducing React's size
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
-    }),
     // new webpack.optimize.DedupePlugin(), //dedupe similar code 
     // new webpack.optimize.UglifyJsPlugin(), //minify everything
     new BabiliPlugin(),
@@ -46,6 +42,7 @@ var serverConfig = merge(commonConfig, {
     plugins: [
         new webpack.DefinePlugin({ // <-- key to reducing React's size
             'process.env': {
+                NODE_ENV,
                 'BROWSER': false,
                 'isBrowser': false,
                 'SERVER': true,
@@ -81,11 +78,12 @@ var clientConfig = merge(commonConfig, {
         // TODO this will be overriden in production!!!
         new webpack.DefinePlugin({ // <-- key to reducing React's size
             'process.env': {
+                NODE_ENV,
                 'BROWSER': true,
                 'isBrowser': true,
                 'SERVER': false,
                 'isServer': false,
-                'API_URL': isDevelopment || isTest ? JSON.stringify('http://127.0.0.1:3000/api/') : undefined,                             
+                'API_URL': isDevelopment || isTest ? JSON.stringify('http://127.0.0.1:3000/api/') : undefined,
             }
         }),
         ...clientProductionPlugins
