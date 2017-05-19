@@ -19,7 +19,6 @@ import store from './redux/store'
 import ReduxToastr from 'react-redux-toastr' // TODO do i even use this?
 import routesConfig from './routes'
 import Translator from './containers/Translator'
-import { FormattedMessage } from 'react-intl';
 
 // STYLES
 if (process.env.BROWSER) require('./styles.scss');
@@ -37,12 +36,6 @@ class App extends Component {
               <ReduxProvider store={store}>
                 <Translator>
                   <div>
-                    <h1>
-                      <FormattedMessage
-                          id="test"
-                          defaultMessage={`THis is a default message!`}
-                      />
-                    </h1>
                     {
                       process.env.BROWSER
                       ? <Router history={browserHistory} routes={routesConfig}/>
