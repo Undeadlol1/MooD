@@ -67,7 +67,6 @@ import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { match } from 'react-router'
 import routes from '../browser/routes'
-// import App from '../browser/app.jsx'
 
 // all routes are processed client side via react-router
 app.get('/*', function(req, res) {
@@ -104,7 +103,6 @@ app.get('/*', function(req, res) {
 // export app to use in test suits
 export default app.listen(port, () => {
     if (process.env.NODE_ENV != 'test') {
-      console.log('env', process.env)
       console.info(`Environment is: ${process.env.NODE_ENV}!`)
       console.info(`Server listening on port ${port}!`)
     }
