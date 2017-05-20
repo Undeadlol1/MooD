@@ -29,13 +29,32 @@ if (process.env.SERVER) {
 // }
 }
 
-export default class Translator extends Component {
+// placeholder to be able to export function later down the code
+// because this function only being defined in "render" method
+let translate = () => {}
+
+class Translator extends Component {
     render() {
         const language = navigator.languages
                             ? navigator.languages[0]
                             : (navigator.language || navigator.userLanguage)
+        /**
+         * translates message
+         * (does not work with variables, simply returns a string of provided id)
+         * @export
+         * @param {String} id key in object with translation strings
+         * @returns {String}
+         */
+        translate = function translate(id) {
+            return messages[language][id]
+        }
+
         return  <IntlProvider locale={language} messages={messages[language]}>
                     {this.props.children}
                 </IntlProvider>
     }
 }
+
+export { translate }
+
+export default Translator
