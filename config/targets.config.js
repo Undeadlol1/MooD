@@ -14,31 +14,26 @@ var commonConfig = require('./common.config.js')
 // TODO
 // https://survivejs.com/webpack/optimizing/minifying/#enabling-a-performance-budget
 
-const isDevelopment = process.env.NODE_ENV === 'development'
-const isProduction = process.env.NODE_ENV === 'production'
-const isTest = process.env.NODE_ENV === 'test'
-
-var productionConfig = {}
+const NODE_ENV = process.env.NODE_ENV
+const isDevelopment = NODE_ENV === 'development'
+const isProduction = NODE_ENV === 'production'
+const isTest = NODE_ENV === 'test'
 
 const serverVariables =  {
-                            'BROWSER': false,
-                            'isBrowser': false,
-                            'SERVER': true,
-                            'isServer': true,
-                            'API_URL': isDevelopment || isTest ? 'http://127.0.0.1:3000/api/' : undefined,
+                            NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+                            BROWSER: false,
+                            isBrowser: false,
+                            SERVER: true,
+                            isServer: true,
                         }
                         
 const clientVariables =  {
-                            'BROWSER': true,
-                            'isBrowser': true,
-                            'SERVER': false,
-                            'isServer': false,
-                            'API_URL': isDevelopment || isTest ? 'http://127.0.0.1:3000/api/' : undefined,
+                            NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+                            BROWSER: true,
+                            isBrowser: true,
+                            SERVER: false,
+                            isServer: false,
                         }
-
-if (isProduction) {
-    productionConfig = require('../production.json')
-}
 
 const clientProductionPlugins = isDevelopment ? [] : [
     // new webpack.optimize.DedupePlugin(), //dedupe similar code 
@@ -50,7 +45,7 @@ const clientProductionPlugins = isDevelopment ? [] : [
 
 var serverConfig = merge(commonConfig, {
     name: 'server',
-    target: 'node',  
+    target: 'node',
     node: {
         __filename: true,
         __dirname: true 
@@ -63,7 +58,7 @@ var serverConfig = merge(commonConfig, {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': JSON.stringify(extend(serverVariables, productionConfig))
+            'process.env': serverVariables
         }),
     ],
     // this is important. Without nodeModules in "externals" bundle will throw and error
@@ -92,7 +87,7 @@ var clientConfig = merge(commonConfig, {
         }),
         // TODO this will be overriden in production!!!
         new webpack.DefinePlugin({
-            'process.env': JSON.stringify(extend(clientVariables, productionConfig))
+            'process.env': clientVariables,
 
         }),
         ...clientProductionPlugins
