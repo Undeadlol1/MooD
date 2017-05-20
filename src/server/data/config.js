@@ -1,6 +1,5 @@
-// load production values to process.env
-require('dotenv').config()
 var config = require('../../../config')
+
 module.exports = {
   "development": {
     "username": "root",

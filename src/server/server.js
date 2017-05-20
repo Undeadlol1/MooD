@@ -1,5 +1,3 @@
-// load production values to process.env
-require('dotenv').config()
 // this prevents babel to parse css as javascript
 import csshook from 'css-modules-require-hook/preset'
 import path from 'path'
