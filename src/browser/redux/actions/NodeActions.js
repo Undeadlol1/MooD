@@ -1,10 +1,11 @@
 import selectn from 'selectn'
 import { createAction, createActions } from 'redux-actions'
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
+import { API_URL } from '../../../../config'
 
-const moodsUrl = process.env.API_URL + 'moods/'
-const nodesUrl = process.env.API_URL + 'nodes/'
-const decisionsUrl = process.env.API_URL + 'decisions/'
+const moodsUrl = API_URL + 'moods/'
+const nodesUrl = API_URL + 'nodes/'
+const decisionsUrl = API_URL + 'decisions/'
 
 // // TODO add types
 // export const recieveNode = createAction('RECIEVE_NODE') // , node => node

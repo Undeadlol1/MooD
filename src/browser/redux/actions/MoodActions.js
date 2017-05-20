@@ -2,8 +2,9 @@
 import { createAction, createActions } from 'redux-actions'
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
 import { toastr } from 'react-redux-toastr'
+import { API_URL } from '../../../../config'
 
-const moodsUrl = process.env.API_URL + 'moods/'
+const moodsUrl = API_URL + 'moods/'
 
 // export const { recieveMood, recieveMoods, fetchingInProgress, fetchingError } = createActions({
 //   recieveMood: mood => mood, // object => object
