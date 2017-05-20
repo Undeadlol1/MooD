@@ -7,8 +7,8 @@
   "license": "MIT",
   "scripts": {
     "test": "clear; NODE_ENV=test webpack --config ./config/tests.config.js --display-error-details --hide-modules",
-    "production": "git pull; yarn; NODE_ENV=production sequelize db:migrate; NODE_ENV=production webpack --config ./config/targets.config.js; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit"
     "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/targets.config.js --display-error-details --hide-modules\" \"nodemon --watch dist dist/server.js\"",
+    "production": "git pull; yarn; NODE_ENV=production sequelize db:migrate; NODE_ENV=production webpack --config ./config/targets.config.js --display-error-details; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit;"
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
