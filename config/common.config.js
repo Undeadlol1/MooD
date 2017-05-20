@@ -17,9 +17,6 @@ var extractSass = new ExtractTextPlugin({
 
 const developmentPlugins = isDevelopment ? [
     new WebpackNotifierPlugin({alwaysNotify: false}),
-    new webpack.DefinePlugin({ // TODO
-            'process.env.NODE_ENV': JSON.stringify('development')
-    }),
     new FriendlyErrorsWebpackPlugin(),
 ] : []
 
