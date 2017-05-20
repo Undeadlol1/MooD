@@ -10,6 +10,7 @@ import { checkStatus, parseJSON } from'../redux/actions/actionHelpers'
 import slugify from 'slug'
 import store from '../redux/store'
 import { FormattedMessage } from 'react-intl';
+import { translate } from '../containers/Translator'
 
 @reduxForm({
 	form: 'MoodsInsert',
@@ -17,7 +18,7 @@ import { FormattedMessage } from 'react-intl';
 		return fetch('/api/moods/mood/' + slugify(values.name))
 				.then(parseJSON)
 				.then(result => {
-					if (result) throw { name: 'This mood already exist!' } 
+					if (result) throw { name: translate('this_mood_already_exists') } 
 					else return
 				})
     },
@@ -25,8 +26,8 @@ import { FormattedMessage } from 'react-intl';
 		let errors = {}
 		const user = store.getState().user.get('id')
 
-		if (!user) errors.name = 'Please login'
-		if (!values.name) errors.name = "Name can't be empty"
+		if (!user) errors.name = translate('please_login')
+		if (!values.name) errors.name = translate('name_cant_be_empty')
 		
 		return errors
 	},

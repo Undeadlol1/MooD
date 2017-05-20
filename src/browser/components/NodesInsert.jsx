@@ -7,10 +7,8 @@ import { If } from './Utils.jsx'
 import { insertNode, actions } from '../redux/actions/NodeActions'
 import { toggleControls } from '../redux/actions/GlobalActions'
 import { assignIn as extend } from 'lodash'
-
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
-// import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import {white} from 'material-ui/styles/colors';
 import ContentAdd from 'material-ui/svg-icons/content/add'
@@ -19,6 +17,7 @@ import { TextField } from 'redux-form-material-ui'
 import { history } from 'react-router';
 import store from '../redux/store'
 import { FormattedMessage } from 'react-intl';
+import { translate } from '../containers/Translator'
 
 function isUrl(str) {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -38,10 +37,9 @@ function isUrl(str) {
 	validate({url}, second) {
 		let errors = {}
         const user = store.getState().user.get('id')
-
-		if (!user) errors.url = 'Please login'
-        if (!url) errors.url = "Url can't be empty"
-        else if (url && !isUrl(url)) errors.url = 'Something wrong with this url'
+		if (!user) errors.url = translate('please_login')
+        if (!url) errors.url = translate('url_cant_be_empty')
+        else if (url && !isUrl(url)) errors.url = translate('something_wrong_with_this_url')
 
 		return errors
 	}
