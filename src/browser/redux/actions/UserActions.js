@@ -1,9 +1,12 @@
 import { checkStatus, parseJSON } from'./actionHelpers'
 import { createAction } from 'redux-actions'
 import selectn from 'selectn'
+import { API_URL } from '../../../../config'
 
-const authUrl = process.env.API_URL + 'auth/'
-const usersUrl = process.env.API_URL + 'users/'
+const authUrl = API_URL + 'auth/'
+const usersUrl = API_URL + 'users/'
+console.log('authUrl', authUrl)
+console.log('usersUrl', usersUrl)
 
 /**
  * dispatch succesfully fetched user object
