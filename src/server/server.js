@@ -20,8 +20,9 @@ import 'source-map-support/register' // do we actually need this?
 import morgan from 'morgan'
 import helmet from 'helmet'
 import createLocaleMiddleware from 'express-locale';
+import { PORT, SESSION_KEY } from '../../config'
 
-const port = process.env.PORT || 3000,
+const port = PORT || 3000,
       app = express(),
       publicUrl = path.resolve('./dist', 'public'), // TODO: or use server/public?
       cookieExpires = 100 * 60 * 24 * 100 // 100 days
@@ -42,7 +43,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieSession({
   name: 'session',
-  keys: [process.env.SESSION_KEY || 'keyboard cat'],
+  keys: [SESSION_KEY || 'keyboard cat'],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
 app.use(passport.initialize())
