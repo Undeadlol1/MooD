@@ -35,9 +35,24 @@ let translate = () => {}
 
 class Translator extends Component {
     render() {
-        const language = navigator.languages
-                            ? navigator.languages[0]
-                            : (navigator.language || navigator.userLanguage)
+        let language;
+
+        function detectLanguage() {
+            // TODO refator everything using this function
+        }
+
+        // Different browsers have the user locale defined
+        // on different fields on the `navigator` object, so we make sure to account
+        // for these different by checking all of them
+        const browsersLanguage = 	navigator
+                                    ? (navigator.languages && navigator.languages[0])
+                                    || navigator.language
+                                    || navigator.userLanguage
+                                                        : ''
+        // Split locales with a region code (ie. 'en-EN' to 'en')
+        const languageWithoutRegionCode = browsersLanguage.toLowerCase().split(/[_-]+/)[0];
+        if (!messages.hasOwnProperty(languageWithoutRegionCode)) language = 'ru'
+        else language = languageWithoutRegionCode
         /**
          * translates message
          * (does not work with variables, simply returns a string of provided id)
