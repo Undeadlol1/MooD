@@ -29,6 +29,8 @@ export default Router()
 
       if (!MoodId) return res.boom.notFound()
 
+      console.log('nodes', await Node.findAll({where: {MoodId}, raw: true}))
+
       /* USER IS NOT LOGGED IN */
       // if (!UserId) {
         if(previousNode) {

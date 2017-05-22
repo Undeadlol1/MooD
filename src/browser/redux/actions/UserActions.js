@@ -5,8 +5,6 @@ import { API_URL } from '../../../../config'
 
 const authUrl = API_URL + 'auth/'
 const usersUrl = API_URL + 'users/'
-console.log('authUrl', authUrl)
-console.log('usersUrl', usersUrl)
 
 /**
  * dispatch succesfully fetched user object
