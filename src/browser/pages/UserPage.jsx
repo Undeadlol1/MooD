@@ -23,7 +23,7 @@ import { FormattedMessage } from 'react-intl';
 			username,
 			loading: user.get('loading'),
 			fetchedUser: user.get('fetchedUser'),
-			isOwnPage: username == params.username,
+			isOwnPage: username.toLowerCase() == params.username.toLowerCase(),
 		}
 	},
 	(dispatch, {params}) => ({
