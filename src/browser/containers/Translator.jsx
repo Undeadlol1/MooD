@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { IntlProvider, addLocaleData } from 'react-intl'
 import enData from 'react-intl/locale-data/en'
 import ruData from 'react-intl/locale-data/ru'
+import cookies from 'cookies-js'
 import en from '../i18n/en'
 import ru from '../i18n/ru'
 
@@ -34,21 +35,41 @@ if (process.env.SERVER) {
 let translate = () => {}
 
 class Translator extends Component {
+    /*
+        Sometimes req.locale.language and navigator.language are not the same.
+        So, we are setting up 'locale' cookie in browsers language preference
+        Then we will use this info as main language preference
+    */
+    componentWillMount() {
+        if (process.env.BROWSER && !cookies.get('locale')) {
+            cookies.set('locale', this.detectLanguage())
+        }
+    }
+    /**
+     * get navigator.language or cookies.locale
+     * @returns String (ie. 'en', or 'en-EN')
+     * @memberOf Translator
+     */
+    detectLanguage() {
+        if (process.env.BROWSER) {
+            const localeCookie = cookies.get('locale')
+            if (localeCookie) return localeCookie
+        }
+        return navigator
+                ? (navigator.languages && navigator.languages[0])
+                || navigator.language
+                || navigator.userLanguage
+                : ''                
+    }
+
     render() {
         let language;
-
-        function detectLanguage() {
-            // TODO refator everything using this function
-        }
 
         // Different browsers have the user locale defined
         // on different fields on the `navigator` object, so we make sure to account
         // for these different by checking all of them
-        const browsersLanguage = 	navigator
-                                    ? (navigator.languages && navigator.languages[0])
-                                    || navigator.language
-                                    || navigator.userLanguage
-                                                        : ''
+        const browsersLanguage = this.detectLanguage()
+
         // Split locales with a region code (ie. 'en-EN' to 'en')
         const languageWithoutRegionCode = browsersLanguage.toLowerCase().split(/[_-]+/)[0];
         if (!messages.hasOwnProperty(languageWithoutRegionCode)) language = 'ru'
