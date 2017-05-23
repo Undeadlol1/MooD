@@ -7,7 +7,7 @@ export default {
     cancel: 'Отмена',
     submit: 'Отправить',
     name_cant_be_empty: "Имя не может быть пустым",
-    please_login: 'Пожалуйста, залогиньтесь',
+    please_login: 'Пожалуйста, войдите',
     url_cant_be_empty: "Url не может быть пустым",
     this_mood_already_exists: 'Настроение с таким именем уже существует!',
     something_wrong_with_this_url: 'Что-то не так с этим url',
