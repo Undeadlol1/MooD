@@ -2,13 +2,16 @@ import React, { Component } from 'react'
 import { IntlProvider, addLocaleData } from 'react-intl'
 import enData from 'react-intl/locale-data/en'
 import ruData from 'react-intl/locale-data/ru'
+import ukData from 'react-intl/locale-data/uk'
+import { connect } from 'react-redux';
 import cookies from 'cookies-js'
 import en from '../i18n/en'
 import ru from '../i18n/ru'
+import uk from '../i18n/uk'
 
-addLocaleData([...enData, ...ruData]);
+addLocaleData([...enData, ...ruData, ...ukData]);
 
-const messages = { en, ru }
+const messages = { en, ru, uk }
 
 if (process.env.SERVER) {
 // https://formatjs.io/guides/runtime-environments/#server
@@ -34,6 +37,13 @@ if (process.env.SERVER) {
 // because this function only being defined in "render" method
 let translate = () => {}
 
+@connect(
+	({user}, ownProps) => {
+        const userSettingsLocale = user.getIn(['Profile', 'language'])
+        // const userSettingsLocale = user.toJS()
+		return { userSettingsLocale, ...ownProps}
+    }
+)
 class Translator extends Component {
     /*
         Sometimes req.locale.language and navigator.language are not the same.
@@ -42,7 +52,7 @@ class Translator extends Component {
     */
     componentWillMount() {
         if (process.env.BROWSER && !cookies.get('locale')) {
-            cookies.set('locale', this.detectLanguage())
+            cookies.set('locale', this.detectBrowserLanguage())
         }
     }
     /**
@@ -50,7 +60,7 @@ class Translator extends Component {
      * @returns String (ie. 'en', or 'en-EN')
      * @memberOf Translator
      */
-    detectLanguage() {
+    detectBrowserLanguage() {
         if (process.env.BROWSER) {
             const localeCookie = cookies.get('locale')
             if (localeCookie) return localeCookie
@@ -65,13 +75,14 @@ class Translator extends Component {
     render() {
         let language;
 
+        const {userSettingsLocale} = this.props
         // Different browsers have the user locale defined
         // on different fields on the `navigator` object, so we make sure to account
         // for these different by checking all of them
-        const browsersLanguage = this.detectLanguage()
+        const preferedLanguage = userSettingsLocale || this.detectBrowserLanguage()
 
         // Split locales with a region code (ie. 'en-EN' to 'en')
-        const languageWithoutRegionCode = browsersLanguage.toLowerCase().split(/[_-]+/)[0];
+        const languageWithoutRegionCode = preferedLanguage.toLowerCase().split(/[_-]+/)[0];
         if (!messages.hasOwnProperty(languageWithoutRegionCode)) language = 'ru'
         else language = languageWithoutRegionCode
         /**
@@ -84,8 +95,8 @@ class Translator extends Component {
         translate = function translate(id) {
             return messages[language][id]
         }
-
-        return  <IntlProvider locale={language} messages={messages[language]}>
+        // "key" prop is needed to change language dynamically
+        return  <IntlProvider locale={language} messages={messages[language]} key={language}>
                     {this.props.children}
                 </IntlProvider>
     }
