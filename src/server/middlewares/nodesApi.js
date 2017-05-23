@@ -38,14 +38,16 @@ export default Router()
             This function checks ratings and modifies them to decimal point with Date.now()
           */
           async function normalizeRating() {
-            if ((previousNode.rating % 1) == 0) {
+            if (previousNode.rating == '0.00000000000000000' && (previousNode.rating % 1) == 0) {
               console.log('previousNode.rating', previousNode.rating)
               console.log('after point', previousNode.rating % 1)
               console.log('point test', (Number(previousNode.rating + '.' + Date.now())) % 1)
               console.warn('rating is not normal!')
               console.info('Normalizing...')
               const id = previousNode.id
-              const newRating = Number(previousNode.rating + '.' + Date.now())
+              const newRating = previousNode.rating == '0.00000000000000000'
+                                ? Number(0 + '.' + Date.now())
+                                : Number(previousNode.rating + '.' + Date.now())
               await Node.update({rating: newRating}, {where: {id}})
               await Decision.update({NodeRating: newRating}, {where: {NodeId: id}})
             }
