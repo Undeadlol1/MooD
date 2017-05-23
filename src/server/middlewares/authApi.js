@@ -1,7 +1,7 @@
 import { Strategy as VKontakteStrategy } from "passport-vkontakte"
 import { Strategy as TwitterStrategy } from "passport-twitter"
 import { Strategy as LocalStrategy } from "passport-local"
-import { User } from '../data/models'
+import { User, Profile } from '../data/models'
 import passport from "passport"
 import express from "express"
 import selectn from 'selectn'
@@ -41,7 +41,8 @@ passport.use(new VKontakteStrategy(
           display_name: profile.displayName,
           // email: params.email,
           image: selectn('photos[0].value', profile), // TODO make image migration
-        }, 
+        },
+        include: [Profile]
         // raw: true
       })
       .then(function (result) {
@@ -66,7 +67,8 @@ passport.use(new TwitterStrategy({
         username: profile.username,
         display_name: profile.username,
         image: selectn('photos[0].value', profile), // TODO make image migration
-      }, 
+      },
+      include: [Profile],      
       raw: true
     })
     .then(function (result) {
@@ -118,8 +120,9 @@ passport.use('local-signup', new LocalStrategy({
                   User.create({
                     username,
                     image: '/userpic.png',
-                    password: User.generateHash(password)
-                  })
+                    password: User.generateHash(password),
+                    Profile: {}
+                  }, {include: [Profile]})
                   .then(newUser => done(null, newUser))
                   .catch(error => {
                     console.error(error)
@@ -141,10 +144,12 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(id, done) {
     User
-    .findById(id)
-    .then((user) => {
-      done(null, (selectn('dataValues', user)))
+    .findById(id, {
+      raw: true,
+      nest: true,
+      include: [Profile]
     })
+    .then((user) => done(null, user))
     .catch(done);
 });
 
@@ -173,7 +178,6 @@ router
   }))
 
   .get('/logout', function(req, res){
-    // console.log('req.user', req.user)
     if (req.user) {
       req.logout();
       res.end();
