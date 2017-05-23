@@ -7,7 +7,7 @@ const { isEqual } = require('lodash')
 const extend = require('lodash/assignIn')
 const { parseUrl } = require('../../shared/parsers.js')
 const userFixtures = require('../data/fixtures/users.js')
-const { User, Mood, Node, Decision } = require('../data/models/index.js')
+const { User, Mood, Node, Decision, Profile } = require('../data/models/index.js')
 chai.should()
 
 const urls = [
@@ -48,12 +48,16 @@ before(function() {
 
     const moods = [],
           nodes = [],
+          profiles = [],
           decisions = [],
           createdUsers = []
 
     const usersWithHashedPassword = userFixtures.map(user => {
-        user.password = User.generateHash(user.password)
-        return user
+        // create new object to avoid object mutablity
+        // (user.password = "some" overrides fixture data)
+        const newUser = Object.assign({}, user);
+        newUser.password = User.generateHash(newUser.password)
+        return newUser
     })
 
     // create users
@@ -62,14 +66,18 @@ before(function() {
         .then(() => User.findAll())
         // create moods fixtures array
         .each(user => {
-            const name = uniqid()
-            createdUsers.push(user)      
-            moods.push({
-                name,
-                slug: slugify(name),
-                UserId: user.get('id'),
-            })
+            const   name = uniqid(),
+                    language = 'ru',
+                    slug = slugify(name),
+                    UserId = user.get('id')
+            createdUsers.push(user)
+            profiles.push({UserId, language})
+            moods.push({name, UserId, slug})
         })
+        // create profiles
+        .then(() => Profile.bulkCreate(profiles))
+        // .then(() => Profile.findAll({where: {}, raw: true}))
+        // .then(profiles => console.log('profiles', profiles))
         // create moods
         .then(() => Mood.bulkCreate(moods))
         .then(() => Mood.findAll({where: {}}))
@@ -114,6 +122,7 @@ before(function() {
 after(async function() {
     try {
         User.destroy({ where: {} })
+        Profile.destroy({ where: {} })
         Mood.destroy({ where: {} })
         Node.destroy({ where: {} })
         Decision.destroy({ where: {} })
@@ -131,11 +140,13 @@ describe('fixture data setup', function() {
             const users = await User.findAll({raw: true})
             const moods = await Mood.findAll({raw: true})
             const nodes = await Node.findAll({raw: true})
+            const profiles = await Profile.findAll({raw: true})
             const decisions = await Decision.findAll({raw: true})
 
             expect(users.length).to.be.equal(10)
             expect(moods.length).to.be.equal(10)
             expect(nodes.length).to.be.equal(100) // 10 moods * 10 nodes
+            expect(profiles.length).to.be.equal(10)
             expect(decisions.length).to.be.equal(1000) // 10 moods * 10 nodes * 10 decisions
             
             moods.forEach(mood => {
