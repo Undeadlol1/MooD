@@ -2,21 +2,31 @@ import chai, { assert } from 'chai'
 import request from 'supertest'
 import server from '../../server.js'
 import { User } from '../../data/models'
+import select from 'selectn'
+
 chai.should();
 
-const   username = 'somename',
-        password = 'somepassword'
+const user = request.agent(server)   
+
+/**
+ * @export
+ * @param {String} username 
+ * @param {String} password 
+ * @returns request agent function
+ */
+export function loginUser(username, password) {
+    return user
+        .post('/api/auth/login')
+        .send({ username, password })
+        .expect(302)
+        .then(result => user)
+}
 
 export default describe('Authethication tests', function() {
-    const user = request.agent(server)
     
-    function loginUser() {
-        return user
-            .post('/api/auth/login')
-            .send({ username, password })
-            .expect(302)
-            .then(result => result)
-    }    
+    const   username = 'somename',
+            password = 'somepassword'
+
     
     before(function() {
         // TODO add logout? to test proper user login?
@@ -40,7 +50,7 @@ export default describe('Authethication tests', function() {
     // TODO test if password is incorrect
 
     it('login user', function() {
-        return loginUser()
+        return loginUser(username, password)
     })
 
     it('get logged in user', async function() {
@@ -50,7 +60,8 @@ export default describe('Authethication tests', function() {
                 .expect(200)
                 .expect('Content-Type', /json/)
                 .then(function(res) {
-                    assert(res.body && res.body.id, 'res.body must have an id')
+                    assert(select('body.id', res), 'must have an id')
+                    assert(select('body.Profile.id', res), 'must have a profile')
                 })
         }
         catch (error) {
@@ -60,7 +71,7 @@ export default describe('Authethication tests', function() {
     })
 
     it('logout user', function(done) { // TODO move this to previous function?
-        loginUser()
+        loginUser(username, password)
         // TODO test logout more properly
         user
             .get('/api/auth/logout')
