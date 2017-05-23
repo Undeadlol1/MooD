@@ -1,6 +1,12 @@
 import { isEmpty } from 'lodash'
 import { Map } from 'immutable'
 
+const emptyProfileObject = Map({
+	id: '',
+	language: '',
+	UserId: '',
+})
+
 const emptyUserObject = Map({
 	id: '',
 	image: '',
@@ -8,6 +14,7 @@ const emptyUserObject = Map({
 	vk_id: '',
 	facebook_id: '',
 	twitter_id: '',
+	Profile: emptyProfileObject,
 })
 
 const initialState = Map({

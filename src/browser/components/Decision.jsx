@@ -72,7 +72,7 @@ class Decision extends Component {
 					onDragStop={this.handleSubmit.bind(this)}
 					value={this.state.rating || decision && decision.rating || 0} />
 
-		return  <p className="range-field Decision" {...rest}>
+		/*return  <p className="range-field Decision" {...rest}>
 				  <input
 					  max="5"
 					  min="-5"
@@ -82,7 +82,7 @@ class Decision extends Component {
 					  onMouseUp={this.handleSubmit.bind(this)}
 					  value={this.state.rating || decision && decision.rating || 0}
 				   />
-				</p>
+				</p>*/
 	}
 }
 

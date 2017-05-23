@@ -32,6 +32,28 @@ export default Router()
       /* USER IS NOT LOGGED IN */
       // if (!UserId) {
         if(previousNode) {
+          /*
+            after migrating ratings to decimal point (in order to make them unique),
+            not all of them changed properly.
+            This function checks ratings and modifies them to decimal point with Date.now()
+          */
+          async function normalizeRating() {
+            if (previousNode.rating == '0.00000000000000000' && (previousNode.rating % 1) == 0) {
+              console.log('previousNode.rating', previousNode.rating)
+              console.log('after point', previousNode.rating % 1)
+              console.log('point test', (Number(previousNode.rating + '.' + Date.now())) % 1)
+              console.warn('rating is not normal!')
+              console.info('Normalizing...')
+              const id = previousNode.id
+              const newRating = previousNode.rating == '0.00000000000000000'
+                                ? Number(0 + '.' + Date.now())
+                                : Number(previousNode.rating + '.' + Date.now())
+              await Node.update({rating: newRating}, {where: {id}})
+              await Decision.update({NodeRating: newRating}, {where: {NodeId: id}})
+            }
+          }
+          await normalizeRating()
+
           response = await Node.findOne({
                               where: {
                                 MoodId,

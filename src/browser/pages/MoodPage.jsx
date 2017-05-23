@@ -41,12 +41,11 @@ class MoodPage extends Component {
 	}
 
 	render() {
+		let dom;
 		const { mood, node, location, params, controlsAreShown, toggleHeader, ...rest } = this.props
-		console.warn('MAKE MIGRAIONS FOR NODES AND DECISIONS RATING \n or this wont work properly')
-		console.log('{node.url}', node.url)
+
 		if (process.env.BROWSER && (mood.loading || node.loading)) return <Loading />
 
-		let dom;
 		if (!node.contentId) {
 
 			dom = 	<div className="MoodPage--empty">

@@ -23,7 +23,7 @@ import { FormattedMessage } from 'react-intl';
 			username,
 			loading: user.get('loading'),
 			fetchedUser: user.get('fetchedUser'),
-			isOwnPage: username == params.username,
+			isOwnPage: username.toLowerCase() == params.username.toLowerCase(),
 		}
 	},
 	(dispatch, {params}) => ({
@@ -35,8 +35,8 @@ export default class UserPage extends Component {
 	componentWillMount() { this.props.fetchUser() }
 
     @injectProps
-    render({user, loading, location, username}) {
-		return  <RouteTransition				
+    render({loading, location, username, isOwnPage}) {
+		return  <RouteTransition
 						{...presets.pop}
 						pathname={location.pathname}
 					>
@@ -45,7 +45,7 @@ export default class UserPage extends Component {
 							process.env.BROWSER && loading
 							? <Loading />
 							: <div>
-								<ChangeLanguageForm />
+								{isOwnPage ? <ChangeLanguageForm /> : null}
 								<h2>{username}</h2>
 								<Avatar size={300} src={`https://api.adorable.io/avatars/285/${username}.png`} />
 							 </div> 

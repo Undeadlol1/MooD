@@ -82,11 +82,14 @@ app.get('/*', function(req, res) {
         }
         // render website content
         else if (renderProps) {
-          const language = req.locale.language          
+          // sometimes request language and browser language are not the same
+          // so we use browsers language (storred in cookie) as primary preference
+          const cookieLocale = req.cookies.locale
+          const requestLocale = req.locale.language
+          const language = cookieLocale || requestLocale
+          global.navigator = global.navigator || {language};
           // supply userAgent for material ui prefixer in ssr
           // http://stackoverflow.com/a/38100609
-          // global.navigator = global.navigator || {};
-          global.navigator = global.navigator || {language};
           global.navigator.userAgent = req.headers['user-agent'] || 'all';
 
           // render App to string

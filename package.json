@@ -6,6 +6,7 @@
   "author": "undeadlol1",
   "license": "MIT",
   "scripts": {
+    "migrate": "NODE_ENV=test sequelize db:migrate; NODE_ENV=development sequelize db:migrate",
     "test": "clear; NODE_ENV=test webpack --config ./config/tests.config.js --display-error-details --hide-modules",
     "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/targets.config.js --display-error-details --hide-modules\" \"nodemon --watch dist dist/server.js\"",
     "production": "git pull; yarn; NODE_ENV=production sequelize db:migrate; NODE_ENV=production webpack --config ./config/targets.config.js --display-error-details; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit;"
@@ -19,6 +20,7 @@
     "classnames": "^2.2.5",
     "cookie-parser": "^1.4.3",
     "cookie-session": "^2.0.0-beta.1",
+    "cookies-js": "^1.2.3",
     "css-modules-require-hook": "^4.0.6",
     "errorhandler": "^1.5.0",
     "es6-promise": "^4.1.0",

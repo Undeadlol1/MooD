@@ -1,12 +1,10 @@
-import { checkStatus, parseJSON } from'./actionHelpers'
+import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
 import { createAction } from 'redux-actions'
 import selectn from 'selectn'
 import { API_URL } from '../../../../config'
 
 const authUrl = API_URL + 'auth/'
 const usersUrl = API_URL + 'users/'
-console.log('authUrl', authUrl)
-console.log('usersUrl', usersUrl)
 
 /**
  * dispatch succesfully fetched user object
@@ -56,4 +54,20 @@ export const fetchUser = username => dispatch => {
 		.then(parseJSON)
 		.then(user => dispatch(recieveFetchedUser((user))))
 		.catch(err => console.error('fetchUser failed!', err)) // TODO add client side error handling
+}
+/**
+ * update user profile
+ * @param {String} username user identifier
+ * @param {Object} body profile attributes to update
+ */
+export const updateUser = (username, body) => dispatch => {
+	// dispatch(fetchingInProgress())
+	fetch(
+		`${usersUrl}user/${username}`,
+		headersAndBody({...body}, 'PUT')
+	)
+		.then(checkStatus)
+		.then(parseJSON)
+		.then(user => dispatch(recieveCurrentUser((user))))
+		.catch(err => console.error('updateUser failed!', err))
 }

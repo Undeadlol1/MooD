@@ -1,53 +1,56 @@
 // TODO rework all of this
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router'
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-flexbox-grid'
-import { insertMood } from '../redux/actions/MoodActions'
+import { updateUser } from '../redux/actions/UserActions'
 import { TextField, SelectField } from 'redux-form-material-ui'
-import { checkStatus, parseJSON } from'../redux/actions/actionHelpers'
-import slugify from 'slug'
 import MenuItem from 'material-ui/MenuItem'
-import Avatar from 'material-ui/Avatar'
-import store from '../redux/store'
 import { FormattedMessage } from 'react-intl';
+import cookies from 'cookies-js'
+import { translate } from '../containers/Translator'
 
 @reduxForm({
 	form: 'ChangeLanguageForm',
-	validate(values) {
-		let errors = {}
-		const user = store.getState().user.get('id')
-
-		if (!user) errors.name = 'Please login'
-		if (!values.name) errors.name = "Name can't be empty"
-		
-		return errors
-	},
-	asyncBlurFields: [ 'name' ]
+	validate(values) {return {}}
 })
 @connect(
-	(state, ownProps) => ({...ownProps}),
+	({user}, ownProps) => {
+		const username = user.get('username')
+		return ({username, ...ownProps})
+	},
     (dispatch, ownProps) => ({
-        insertMood({name}) {
-			// function insertSucces(slug) {
-			// 	ownProps.reset()				
-			// 	browserHistory.push('/mood/' + slug);
-			// }
-            // dispatch(insertMood(name, insertSucces))
+        changeLanguage(username, language) {
+			cookies.set('locale', language)
+            dispatch(
+				updateUser(username, {language})
+			)
         }
     })
 )
 export default class ChangeLanguageForm extends Component {
+	handleChange = (event, language) => {
+		console.log(event, language)
+		const {changeLanguage, username} = this.props
+		changeLanguage(username, language)
+	}
+
 	render() {
-		const { insertMood, handleSubmit, asyncValidating } = this.props
-	    return  <form onSubmit={handleSubmit(insertMood)}>
+		const { changeLanguage } = this.props
+		const labelText = translate("choose_your_language")
+	    return  <form>
 					<Row>
 						<Col xs={12}>
-							<Field name="plan" component={SelectField} hintText={<FormattedMessage id="choose_your_language" />}>
-								<MenuItem value="ru" primaryText="Русский"/>
-								<MenuItem value="en" primaryText="English"/>
+							<Field
+								name="language"
+								component={SelectField}
+								onChange={this.handleChange}
+								floatingLabelText={labelText}
+							>
+								<MenuItem value="ru" primaryText="Русский" />
+								<MenuItem value="en" primaryText="English" />
+								<MenuItem value="uk" primaryText="Українська" />
 							</Field>
 						</Col>
 					</Row>

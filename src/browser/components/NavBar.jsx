@@ -12,7 +12,8 @@ import { toggleSidebar, toggleControls } from '../redux/actions/GlobalActions'
 @connect(
     ({ user, global  }, ownProps) => {
         const { controlsAreShown, headerIsShown } = global
-        return { controlsAreShown, headerIsShown, user, ...ownProps }
+        const username = user.get('username') && user.get('username').toLowerCase()
+        return { controlsAreShown, headerIsShown, username, ...ownProps }
     },
     (dispatch, ownProps) => ({
         toggleSidebar() {
@@ -22,11 +23,12 @@ import { toggleSidebar, toggleControls } from '../redux/actions/GlobalActions'
 )
 class NavBar extends Component {
     render() {
-        const { user, headerIsShown, controlsAreShown, className, toggleSidebar, children, ...rest } = this.props
+        const { username, headerIsShown, controlsAreShown, className, toggleSidebar, children, ...rest } = this.props
         const titleLink = <Link to="/" className="NavBar__home-link">MooD</Link>
-        const username = user.get('username')
-        const loginButton = user.get('id')
-                            ? <Link to={`/users/${username}`}> <Avatar className="NavBar__avatar" src={`https://api.adorable.io/avatars/285/${username}.png`} /></Link>
+        const loginButton = username
+                            ? <Link to={`/users/${username}`}>
+                                <Avatar className="NavBar__avatar" src={`https://api.adorable.io/avatars/285/${username}.png`} />
+                              </Link>
                             : <LoginLogoutButton />
 
         return  <header className={'NavBar ' + className} {...rest}>
