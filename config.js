@@ -1,8 +1,8 @@
 try {
     var node_env = process.env.NODE_ENV
-    // there is no need for special config for testing,
-    // just use 'development' instead
-    if (node_env == 'test') node_env = 'development'
+    // use "development" config if nothing is specified,
+    // also use "development" for tests
+    if (!node_env || node_env == 'test') node_env = 'development'
     var config = require('./' + node_env + '.json')
 }
 catch (error) {
