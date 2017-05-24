@@ -14,23 +14,36 @@ var stats = {
 };
 
 var clientConfig =  merge(commonConfig, {
-    watch: true,    
+    stats,
+    watch: true,
+    externals: {
+        // "jsdom": "window",
+        // "cheerio": "window"
+    },
     devtool: 'cheap-module-source-map',
     target: 'web',
-    entry: [path.resolve('mocha!', __dirname, '../', 'src/browser/test/entry.js')],
+    entry: [path.resolve('mocha!', __dirname, '../', 'src/browser/test/browser.tests.entry.js')],
     output : {
         publicPath: '/',
         filename: 'client.test.js',        
         path     : path.join(__dirname, '..', 'dist')        
     },
-    stats
+    // nodeExternals required for client because some modules throw errors otherwise
+    externals: [nodeExternals({
+        whitelist: ['webpack/hot/dev-server', /^lodash/, 'react-router-transition/src/presets']
+    })],
 });
 
 var serverConfig =   merge(commonConfig, {
+    stats,
     watch: true,
+    externals: {
+        // "jsdom": "window",
+        // "cheerio": "window"
+    },
     devtool: 'cheap-module-source-map',
     target: 'node',  
-    entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/server/test/entry.js')],
+    entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/server/test/server.tests.entry.js')],
     node: {
         __filename: true,
         __dirname: true 
@@ -57,9 +70,8 @@ var serverConfig =   merge(commonConfig, {
     // this is important. Without nodeModules in "externals" bundle will throw and error
     // bundling for node requires modules not to be packed on top of bundle, but to be found via "require"
     externals: [nodeExternals({
-        whitelist: ['jquery', 'webpack/hot/dev-server', /^lodash/, 'react-router-transition/src/presets'] // TODO remove jquery
+        whitelist: ['webpack/hot/dev-server', /^lodash/, 'react-router-transition/src/presets']
     })],
-    stats
 });
 
 module.exports = [clientConfig, serverConfig]

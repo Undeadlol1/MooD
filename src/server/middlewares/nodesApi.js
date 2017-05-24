@@ -1,12 +1,47 @@
 import { Node, Mood, Decision, User } from '../data/models'
 import { mustLogin } from '../services/permissions'
-import { assignIn as extend } from 'lodash'
 import { parseUrl } from '../../shared/parsers'
+import { YOUTUBE_KEY } from '../../../config'
+import { assignIn as extend } from 'lodash'
 import sequelize from "sequelize"
 import { Router } from "express"
 
+// var YouTube = require('youtube-node');
+
+// var youTube = new YouTube();
+
+// youTube.setKey(YOUTUBE_KEY);
+
+// youTube.search('World War z Trailer', 5, function(error, result) {
+//   if (error) {
+//     console.log(error);
+//   }
+//   else {
+//     console.log('result', JSON.stringify(result, null, 2));
+//   }
+// });
+
 // routes
 export default Router()
+
+  // get node for async validation in node adding form
+  .get('/validate/:MoodId/:contentId', async function(req, res) {
+    try {
+      const { MoodId, contentId } = req.params
+
+      if (!contentId || !MoodId) return res.boom.badRequest('invalid query')
+
+      const node = await Node.findOne({
+                          raw: true,
+                          where: { MoodId, contentId },
+                        })
+      res.json(node || {})
+    } catch (error) {
+      console.error(error);
+      res.boom.internal(error)
+    }
+  })
+
   .get('/:moodSlug/:nodeId?', async function({ params, user }, res) {
     /*
       If user is NOT logged in:

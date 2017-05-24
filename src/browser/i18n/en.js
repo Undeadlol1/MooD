@@ -16,4 +16,5 @@ export default {
     add_your_own_mood: 'Add your own mood!',
     choose_your_language: 'Choose your language',
     currently_zero_content_here: 'Currently zero content here',
+    this_video_already_exists_please_no_duplicates: 'This video already added! Please don\'t add duplicates.',
 }
