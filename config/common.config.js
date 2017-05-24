@@ -74,6 +74,10 @@ var baseConfig = {
         ...developmentPlugins
     ],
     resolve: {
+        alias: {
+            browser: path.join(__dirname, '/../', 'src/browser/'),
+            server : path.join(__dirname, '/../', 'src/server/'),
+        },
         enforceModuleExtension: false,
         extensions: ['.js', '.jsx'],
     }
