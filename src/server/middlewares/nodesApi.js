@@ -7,6 +7,25 @@ import { Router } from "express"
 
 // routes
 export default Router()
+
+  // get node for async validation in node adding form
+  .get('/validate/:MoodId/:contentId', async function(req, res) {
+    try {
+      const { MoodId, contentId } = req.params
+
+      if (!contentId || !MoodId) return res.boom.badRequest('invalid query')
+
+      const node = await Node.findOne({
+                          raw: true,
+                          where: { MoodId, contentId },
+                        })
+      res.json(node || {})
+    } catch (error) {
+      console.error(error);
+      res.boom.internal(error)
+    }
+  })
+
   .get('/:moodSlug/:nodeId?', async function({ params, user }, res) {
     /*
       If user is NOT logged in:

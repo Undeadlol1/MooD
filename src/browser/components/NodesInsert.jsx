@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { parseUrl } from '../../shared/parsers.js'
 import { If } from './Utils.jsx'
 import { insertNode, actions } from '../redux/actions/NodeActions'
 import { toggleControls } from '../redux/actions/GlobalActions'
-import { assignIn as extend } from 'lodash'
+import { assignIn as extend, isEmpty } from 'lodash'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
@@ -18,6 +17,7 @@ import { history } from 'react-router';
 import store from '../redux/store'
 import { FormattedMessage } from 'react-intl';
 import { translate } from '../containers/Translator'
+import { parseJSON, checkStatus } from'../redux/actions/actionHelpers'
 
 function isUrl(str) {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -31,23 +31,31 @@ function isUrl(str) {
 
 @reduxForm({
 	form: 'NodesInsert',
-    // asyncValidate(values) { // TODO add check if node already exists
-    //     fetch('api')
-    // },
+	asyncValidate(values, dispatch, props) {
+        const {contentId} = parseUrl(values.url),
+              moodId = store.getState().mood.get('id'),
+              errorText = translate('this_video_already_exists_please_no_duplicates')
+		return fetch(`/api/nodes/validate/${moodId}/${contentId}`)
+				.then(parseJSON)
+				.then(node => {
+					if (!isEmpty(node)) throw { url: errorText }
+					else return
+                })
+    },
+    asyncBlurFields: [ 'url' ],
 	validate({url}, second) {
 		let errors = {}
         const user = store.getState().user.get('id')
 		if (!user) errors.url = translate('please_login')
         if (!url) errors.url = translate('url_cant_be_empty')
         else if (url && !isUrl(url)) errors.url = translate('something_wrong_with_this_url')
-
 		return errors
 	}
 })
 @connect(
 	// stateToProps
-	({mood, node, decision, loading, global}, ownProps) => {
-        return ({mood, node, decision, loading, global, ...ownProps})},
+	({mood, node}, ownProps) => 
+    ({mood, node, ...ownProps}),
 	// dispatchToProps
     (dispatch, ownProps) => ({
         insertNode(formValues) {
@@ -85,21 +93,24 @@ export default class NodesInsert extends Component {
   toggleDialog = () => this.setState({open: !this.state.open})
 
 render() {
-	const { node, handleSubmit, onSubmit, insertNode, valid, toggleDialog, toggleControls, submitting } = this.props
+	const { handleSubmit, onSubmit, insertNode, valid, toggleDialog, toggleControls, submitting, asyncValidating } = this.props
     const { state, props } = this
+    const isDisabled = asyncValidating == 'url' || submitting
 
     const actions = [
                         <FlatButton
-                            label={<FormattedMessage id="cancel" />}
                             primary={true}
                             onTouchTap={toggleDialog}
+                            label={translate("cancel")}
+                            disabled={isDisabled}
                         />,
                         <FlatButton
                             type="submit"
-                            label={<FormattedMessage id="submit" />}
                             primary={true}
                             disabled={!valid}
                             onTouchTap={handleSubmit}
+                            label={translate("submit")}
+                            disabled={isDisabled}
                         />
                     ]
 
@@ -115,15 +126,15 @@ render() {
 
                 {/* DIALOG */}                
 				<Dialog
-					title={<FormattedMessage id="add_something" />}
+					title={translate("add_something")}
 					actions={actions} 
 					modal={true}
-					open={node.dialogIsOpen}
+					open={props.node.dialogIsOpen}
 					onRequestClose={toggleDialog}
                     //onMouseEnter={toggleControls.bind(this, true)} // on mouseEnter?
 					//onMouseLeave={toggleControls.bind(this, false)}
 				>
-                    <Field name="url" component={TextField} hintText="Url" disabled={submitting} autoFocus fullWidth />
+                    <Field name="url" component={TextField} hintText="Url" disabled={isDisabled} autoFocus fullWidth />
 				</Dialog>
                 
 	        </Form>
