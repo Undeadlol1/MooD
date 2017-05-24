@@ -14,9 +14,8 @@ var extractSass = new ExtractTextPlugin({
     disable: isDevelopment // TODO
 });
 
-
 const developmentPlugins = isDevelopment ? [
-    new WebpackNotifierPlugin({alwaysNotify: false}),
+    // new WebpackNotifierPlugin({alwaysNotify: false}),
     new FriendlyErrorsWebpackPlugin(),
 ] : []
 
@@ -30,13 +29,21 @@ var baseConfig = {
                 test: /\.json$/,
                 use: 'json-loader'
             },
+            {
+                test: /\.xml$/,
+                loader: 'xml-loader'
+            },
             { 
                 test   : /.jsx?$/,
                 loader : 'babel-loader',
                 exclude: /node_modules/,
             },
+            {
+                test: /\.(svg|png|ico)$/,
+                loader: "file-loader"
+            },
             { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
-            { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
+            { test: /\.(ttf|eot|svg|png|ico)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
             {
                 test: /\.css$/,
                 include: path.resolve(__dirname, '../', 'node_modules'), // oops, this also includes flexboxgrid
