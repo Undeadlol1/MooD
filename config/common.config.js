@@ -26,6 +26,10 @@ var baseConfig = {
     watch: isDevelopment,
     module : {
         loaders: [
+            {
+                test: /\.json$/,
+                use: 'json-loader'
+            },
             { 
                 test   : /.jsx?$/,
                 loader : 'babel-loader',
