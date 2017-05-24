@@ -22,7 +22,7 @@ var clientConfig =  merge(commonConfig, {
     },
     devtool: 'cheap-module-source-map',
     target: 'web',
-    entry: [path.resolve('mocha!', __dirname, '../', 'src/browser/test/entry.js')],
+    entry: [path.resolve('mocha!', __dirname, '../', 'src/browser/test/browser.tests.entry.js')],
     output : {
         publicPath: '/',
         filename: 'client.test.js',        
@@ -43,7 +43,7 @@ var serverConfig =   merge(commonConfig, {
     },
     devtool: 'cheap-module-source-map',
     target: 'node',  
-    entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/server/test/entry.js')],
+    entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/server/test/server.tests.entry.js')],
     node: {
         __filename: true,
         __dirname: true 
