@@ -1,9 +1,25 @@
 import { Node, Mood, Decision, User } from '../data/models'
 import { mustLogin } from '../services/permissions'
-import { assignIn as extend } from 'lodash'
 import { parseUrl } from '../../shared/parsers'
+import { YOUTUBE_KEY } from '../../../config'
+import { assignIn as extend } from 'lodash'
 import sequelize from "sequelize"
 import { Router } from "express"
+
+// var YouTube = require('youtube-node');
+
+// var youTube = new YouTube();
+
+// youTube.setKey(YOUTUBE_KEY);
+
+// youTube.search('World War z Trailer', 5, function(error, result) {
+//   if (error) {
+//     console.log(error);
+//   }
+//   else {
+//     console.log('result', JSON.stringify(result, null, 2));
+//   }
+// });
 
 // routes
 export default Router()
