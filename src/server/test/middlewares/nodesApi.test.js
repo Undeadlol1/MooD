@@ -7,9 +7,11 @@ import slugify from 'slug'
 import { uniq } from 'lodash'
 import colors from 'colors'
 import users from '../../data/fixtures/users'
+import { stringify } from 'query-string'
 chai.use(require('chai-datetime'));
 chai.should();
 
+// TODO check this constants
 const   user = request.agent(server),
         username = users[0].username,
         password = users[0].password,
@@ -131,6 +133,7 @@ export default describe('/nodes API', function() {
             throw new Error(error)
         }
     })
+    
 
     // it('changes Decision properly', async function() {
     //     await login()

@@ -6,24 +6,10 @@ import { assignIn as extend } from 'lodash'
 import sequelize from "sequelize"
 import { Router } from "express"
 
-// var YouTube = require('youtube-node');
-
-// var youTube = new YouTube();
-
-// youTube.setKey(YOUTUBE_KEY);
-
-// youTube.search('World War z Trailer', 5, function(error, result) {
-//   if (error) {
-//     console.log(error);
-//   }
-//   else {
-//     console.log('result', JSON.stringify(result, null, 2));
-//   }
-// });
-
 // routes
 export default Router()
 
+  // TODO: rework to query instead of params
   // get node for async validation in node adding form
   .get('/validate/:MoodId/:contentId', async function(req, res) {
     try {

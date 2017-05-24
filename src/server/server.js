@@ -12,6 +12,7 @@ import moodsApi from './middlewares/moodsApi'
 import nodesApi from './middlewares/nodesApi'
 import usersApi from './middlewares/usersApi'
 import decisionsApi from './middlewares/decisionsApi'
+import externalsApi from './middlewares/externalsApi'
 import { mustLogin } from './services/permissions'
 import authorization, { passport } from './middlewares/authApi'
 import 'source-map-support/register' // do we actually need this?
@@ -37,6 +38,7 @@ app.use(helmet()) // security
 app.use(createLocaleMiddleware())
 app.use(express.static(publicUrl))
 app.use(cookieParser())
+app.set('query parser', 'simple');
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieSession({
@@ -54,6 +56,7 @@ app.use('/api/users', usersApi)
 app.use('/api/moods', moodsApi)
 app.use('/api/nodes', nodesApi)
 app.use('/api/decisions', decisionsApi)
+app.use('/api/externals', externalsApi)
 
 /* SEND HTML FOR SPA */
 // set handlebars as templating engine
