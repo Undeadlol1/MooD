@@ -1,16 +1,18 @@
+// dependencies
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import Loading from '../components/Loading'
-import MoodsList from '../components/MoodsList'
-import MoodsInsert from '../components/MoodsInsert'
-import MoodsFind from '../components/MoodsFind'
-import YoutubeSearch from '../components/YoutubeSearch'
-import { Grid } from 'react-flexbox-grid';
 import { injectProps } from 'relpers'
-import { connect } from 'react-redux';
-import { fetchMoods } from '../redux/actions/MoodActions'
-import { RouteTransition } from 'react-router-transition';
-import presets from 'react-router-transition/src/presets';
+import { connect } from 'react-redux'
+import { Grid } from 'react-flexbox-grid'
+import { RouteTransition } from 'react-router-transition'
+import presets from 'react-router-transition/src/presets'
+// project files
+import { fetchMoods } from 'browser/redux/actions/MoodActions'
+import Loading from 'browser/components/Loading'
+import MoodsFind from 'browser/components/MoodsFind'
+import MoodsList from 'browser/components/MoodsList'
+import MoodsInsert from 'browser/components/MoodsInsert'
+import YoutubeSearch from 'browser/components/YoutubeSearch'
 
 @connect(
 	({ global, mood }) => ({
