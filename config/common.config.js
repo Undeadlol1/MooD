@@ -6,6 +6,7 @@ var WebpackNotifierPlugin = require('webpack-notifier');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+var HappyPack = require('happypack');
 
 var isDevelopment = process.env.NODE_ENV === "development"
 
@@ -17,6 +18,9 @@ var extractSass = new ExtractTextPlugin({
 const developmentPlugins = isDevelopment ? [
     // new WebpackNotifierPlugin({alwaysNotify: false}),
     new FriendlyErrorsWebpackPlugin(),
+    new HappyPack({
+        loaders: [ 'babel-loader' ],
+    })
 ] : []
 
 var baseConfig = {
@@ -35,7 +39,7 @@ var baseConfig = {
             },
             { 
                 test   : /.jsx?$/,
-                loader : 'babel-loader',
+                loader : 'happypack/loader',
                 exclude: /node_modules/,
             },
             {
@@ -63,10 +67,10 @@ var baseConfig = {
     },
     plugins: [
         // new BundleAnalyzerPlugin({analyzerMode: 'static',}), // TODO do not include this in production
-        new CopyWebpackPlugin([{
-            from: 'src/server/public',
-            to: 'public'
-        }]),
+        // new CopyWebpackPlugin([{
+        //     from: 'src/server/public',
+        //     to: 'public'
+        // }]),
         new ExtractTextPlugin({
             filename: "styles.css",
             disable: isDevelopment // TODO check if this works properly

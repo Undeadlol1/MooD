@@ -67,3 +67,4 @@ typings/
 dist/
 .tmp/
 production.json
+.happypack/
