@@ -8,7 +8,7 @@
   "scripts": {
     "migrate": "NODE_ENV=test sequelize db:migrate; NODE_ENV=development sequelize db:migrate",
     "test": "clear; NODE_ENV=test webpack --config ./config/tests.config.js --display-error-details --hide-modules",
-    "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/targets.config.js --display-error-details --hide-modules\" \"nodemon --watch dist dist/server.js\"",
+    "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/targets.config.js --display-error-details --hide-modules\" \"nodemon dist/server.js\"",
     "production": "git pull; yarn; NODE_ENV=production sequelize db:migrate; NODE_ENV=production webpack --config ./config/targets.config.js --display-error-details; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit;"
   },
   "dependencies": {
@@ -87,6 +87,7 @@
     "browser-sync-webpack-plugin": "^1.1.4",
     "chai": "^3.5.0",
     "chai-datetime": "^1.4.1",
+    "chai-enzyme": "^0.7.1",
     "colors": "^1.1.2",
     "concurrently": "^3.4.0",
     "copy-webpack-plugin": "^4.0.1",
