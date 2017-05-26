@@ -18,4 +18,5 @@ export default {
     currently_zero_content_here: 'Currently zero content here',
     
     page_not_found: 'Page not found',
+    list_is_empty: 'List is empty',
 }

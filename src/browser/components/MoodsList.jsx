@@ -7,6 +7,7 @@ import { fetchMoods } from '../redux/actions/MoodActions'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import selectn from 'selectn'
+import { translate } from '../containers/Translator'
 
 @connect(
 	// stateToProps
@@ -44,7 +45,7 @@ class MoodsList extends Component {
 						<ul className="collection">
 							<li className="collection-item center-align">
 								<b>
-									<i>Список пуст...</i>
+									<i>{translate('list_is_empty')}...</i>
 								</b>
 							</li>
 						</ul>

@@ -18,4 +18,5 @@ export default {
     currently_zero_content_here: 'Пока контента нет',
     
     page_not_found: 'Страница не найдена',
+    list_is_empty: 'Список пуст',
 }
