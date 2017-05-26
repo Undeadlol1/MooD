@@ -10,6 +10,7 @@ var HappyPack = require('happypack');
 
 var isTest = process.env.NODE_ENV === "test"
 var isDevelopment = process.env.NODE_ENV === "development"
+var isProduction = process.env.NODE_ENV === "production"
 
 var extractSass = new ExtractTextPlugin({
     filename: "styles.css",
@@ -19,9 +20,6 @@ var extractSass = new ExtractTextPlugin({
 const developmentPlugins = isDevelopment || isTest ? [
     // new WebpackNotifierPlugin({alwaysNotify: false}),
     new FriendlyErrorsWebpackPlugin(),
-    new HappyPack({
-        loaders: [ 'babel-loader' ],
-    })
 ] : []
 
 var baseConfig = {
@@ -71,6 +69,9 @@ var baseConfig = {
         //     from: 'src/server/public',
         //     to: 'public'
         // }]),
+        new HappyPack({
+            loaders: [ 'babel-loader' ],
+        }),
         new ExtractTextPlugin({
             filename: "styles.css",
             disable: isDevelopment // TODO check if this works properly
