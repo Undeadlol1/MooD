@@ -16,4 +16,6 @@ export default {
     add_your_own_mood: 'Add your own mood!',
     choose_your_language: 'Choose your language',
     currently_zero_content_here: 'Currently zero content here',
+    
+    page_not_found: 'Page not found',
 }
