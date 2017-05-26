@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router'
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import { Row, Col } from 'react-flexbox-grid'
+import { Row, Col } from 'react-styled-flexboxgrid'
 import { insertMood } from '../redux/actions/MoodActions'
 import { TextField } from 'redux-form-material-ui'
 import { checkStatus, parseJSON } from'../redux/actions/actionHelpers'

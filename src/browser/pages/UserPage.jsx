@@ -6,13 +6,12 @@ import MoodsInsert from '../components/MoodsInsert'
 import MoodsFind from '../components/MoodsFind'
 import YoutubeSearch from '../components/YoutubeSearch'
 import ChangeLanguageForm from '../components/ChangeLanguageForm'
-import { Grid } from 'react-flexbox-grid';
 import { injectProps } from 'relpers'
 import { connect } from 'react-redux';
 import { fetchUser } from '../redux/actions/UserActions'
 import { RouteTransition } from 'react-router-transition';
 import presets from 'react-router-transition/src/presets';
-import { Row, Col } from 'react-flexbox-grid'
+import { Grid, Row, Col } from 'react-styled-flexboxgrid'
 import Avatar from 'material-ui/Avatar'
 import { FormattedMessage } from 'react-intl';
 

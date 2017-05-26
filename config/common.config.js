@@ -35,7 +35,6 @@ var baseConfig = {
             { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
             {
                 test: /\.css$/,
-                include: path.resolve(__dirname, '../', 'node_modules'), // oops, this also includes flexboxgrid
                 loader: 'style-loader!css-loader?modules',
             },
             {

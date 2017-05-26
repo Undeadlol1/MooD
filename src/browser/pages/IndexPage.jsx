@@ -5,7 +5,7 @@ import MoodsList from '../components/MoodsList'
 import MoodsInsert from '../components/MoodsInsert'
 import MoodsFind from '../components/MoodsFind'
 import YoutubeSearch from '../components/YoutubeSearch'
-import { Grid } from 'react-flexbox-grid';
+import { Grid } from 'react-styled-flexboxgrid';
 import { injectProps } from 'relpers'
 import { connect } from 'react-redux';
 import { fetchMoods } from '../redux/actions/MoodActions'
