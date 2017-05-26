@@ -39,9 +39,11 @@ const clientProductionPlugins = isDevelopment ? [] : [
     // new webpack.optimize.DedupePlugin(), //dedupe similar code 
     // new webpack.optimize.UglifyJsPlugin(), //minify everything
     new BabiliPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin()//Merge chunks 
+    new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks 
+    new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor.js',
+    }),
 ]
-
 
 var serverConfig = merge(commonConfig, {
     name: 'server',
@@ -82,9 +84,6 @@ var clientConfig = merge(commonConfig, {
         path     : path.join(__dirname, '..', 'dist', 'public'),
     },
     plugins: [ // TODO MAKE SURE PLUGINS ARE ACTUALLY INCLUDED IN CONFIG
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor.js',
-        }),
         // TODO this will be overriden in production!!!
         new webpack.DefinePlugin({
             'process.env': clientVariables,
@@ -92,13 +91,6 @@ var clientConfig = merge(commonConfig, {
         }),
         ...clientProductionPlugins
     ],
-    // resolving is currently disable due to wrong modules resolving on lunix machines (might be because of babel, but unlikely)
-    // resolve: {
-    //     alias: {
-    //         pages       : path.join(__dirname, '/../', 'src/browser/pages/'),
-    //         components  : path.join(__dirname, '/../', 'src/browser/components/'),
-    //     },
-    // }
 });
 
 module.exports = [serverConfig, clientConfig]

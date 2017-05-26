@@ -6,7 +6,7 @@ import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-styled-flexboxgrid'
 import { insertMood } from '../redux/actions/MoodActions'
 import { TextField } from 'redux-form-material-ui'
-import { checkStatus, parseJSON } from'../redux/actions/actionHelpers'
+import { parseJSON } from'../redux/actions/actionHelpers'
 import slugify from 'slug'
 import store from '../redux/store'
 import { FormattedMessage } from 'react-intl';

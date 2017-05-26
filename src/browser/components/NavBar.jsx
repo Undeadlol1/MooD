@@ -27,7 +27,7 @@ class NavBar extends Component {
         const titleLink = <Link to="/" className="NavBar__home-link">MooD</Link>
         const loginButton = username
                             ? <Link to={`/users/${username}`}>
-                                <Avatar className="NavBar__avatar" src={`https://api.adorable.io/avatars/285/${username}.png`} />
+                                <Avatar className="NavBar__avatar" src={`https://api.adorable.io/avatars/100/${username}.png`} />
                               </Link>
                             : <LoginLogoutButton />
 

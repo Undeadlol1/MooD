@@ -46,7 +46,7 @@ export default class UserPage extends Component {
 							: <div>
 								{isOwnPage ? <ChangeLanguageForm /> : null}
 								<h2>{username}</h2>
-								<Avatar size={300} src={`https://api.adorable.io/avatars/285/${username}.png`} />
+								<Avatar size={300} src={`https://api.adorable.io/avatars/300/${username}.png`} />
 							 </div> 
 						}
 					</Grid>						

@@ -19,4 +19,5 @@ export default {
     
     page_not_found: 'Page not found',
     list_is_empty: 'List is empty',
+    this_video_already_exists_please_no_duplicates: 'This video already added! Please don\'t add duplicates.',
 }
