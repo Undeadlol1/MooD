@@ -1,4 +1,4 @@
-import { Grid } from 'react-flexbox-grid';
+import { Grid } from 'react-styled-flexboxgrid';
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';

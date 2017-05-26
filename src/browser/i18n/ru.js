@@ -16,5 +16,8 @@ export default {
     add_your_own_mood: 'Создать настроение!',
     choose_your_language: 'Выберите ваш язык',
     currently_zero_content_here: 'Пока контента нет',
+    
+    page_not_found: 'Страница не найдена',
+    list_is_empty: 'Список пуст',
     this_video_already_exists_please_no_duplicates: 'Это видео уже добавлено! Пожалуйста, не добавляйте дубликатов.',
 }

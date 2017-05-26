@@ -3,13 +3,17 @@ import { IntlProvider, addLocaleData } from 'react-intl'
 import enData from 'react-intl/locale-data/en'
 import ruData from 'react-intl/locale-data/ru'
 import ukData from 'react-intl/locale-data/uk'
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 import cookies from 'cookies-js'
 import en from '../i18n/en'
 import ru from '../i18n/ru'
 import uk from '../i18n/uk'
 
 addLocaleData([...enData, ...ruData, ...ukData]);
+
+const DEFAULT_LANGUAGE = 'en'
+
+// TODO refactor everything
 
 const messages = { en, ru, uk }
 
@@ -35,7 +39,9 @@ if (process.env.SERVER) {
 
 // placeholder to be able to export function later down the code
 // because this function only being defined in "render" method
-let translate = () => {}
+let translate = id => {
+    return messages[DEFAULT_LANGUAGE][id]
+}
 
 @connect(
 	({user}, ownProps) => {

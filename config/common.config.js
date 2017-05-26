@@ -8,6 +8,7 @@ var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var HappyPack = require('happypack');
 
+var isTest = process.env.NODE_ENV === "test"
 var isDevelopment = process.env.NODE_ENV === "development"
 
 var extractSass = new ExtractTextPlugin({
@@ -15,7 +16,7 @@ var extractSass = new ExtractTextPlugin({
     disable: isDevelopment // TODO
 });
 
-const developmentPlugins = isDevelopment ? [
+const developmentPlugins = isDevelopment || isTest ? [
     // new WebpackNotifierPlugin({alwaysNotify: false}),
     new FriendlyErrorsWebpackPlugin(),
     new HappyPack({
@@ -50,7 +51,6 @@ var baseConfig = {
             { test: /\.(ttf|eot|svg|png|ico)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
             {
                 test: /\.css$/,
-                include: path.resolve(__dirname, '../', 'node_modules'), // oops, this also includes flexboxgrid
                 loader: 'style-loader!css-loader?modules',
             },
             {

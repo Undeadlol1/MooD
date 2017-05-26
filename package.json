@@ -8,7 +8,7 @@
   "scripts": {
     "migrate": "NODE_ENV=test sequelize db:migrate; NODE_ENV=development sequelize db:migrate",
     "test": "clear; NODE_ENV=test webpack --config ./config/tests.config.js --display-error-details --hide-modules",
-    "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/targets.config.js --display-error-details --hide-modules\" \"nodemon --watch dist dist/server.js\"",
+    "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/targets.config.js --display-error-details --hide-modules\" \"nodemon dist/server.js\"",
     "production": "git pull; yarn; NODE_ENV=production sequelize db:migrate; NODE_ENV=production webpack --config ./config/targets.config.js --display-error-details; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit;"
   },
   "dependencies": {
@@ -28,7 +28,6 @@
     "express-boom": "^2.0.0",
     "express-locale": "^1.0.1",
     "express-session": "^1.15.1",
-    "flexboxgrid": "^6.3.1",
     "font-awesome": "^4.7.0",
     "helmet": "^3.6.0",
     "immutable": "^3.8.1",
@@ -46,7 +45,6 @@
     "react": "^15.5.4",
     "react-click-outside": "^2.2.0",
     "react-dom": "^15.4.2",
-    "react-flexbox-grid": "^1.1.3",
     "react-fontawesome": "^1.5.0",
     "react-imageloader": "^2.1.0",
     "react-input-range": "^1.1.0",
@@ -55,6 +53,7 @@
     "react-redux-toastr": "^6.2.6",
     "react-router": "^3.0.2",
     "react-router-transition": "^0.1.1",
+    "react-styled-flexboxgrid": "^1.1.2",
     "react-tap-event-plugin": "^2.0.1",
     "react-ultimate-pagination-material-ui": "^1.0.0",
     "react-youtube": "^7.3.0",
@@ -68,6 +67,7 @@
     "selectn": "^1.1.2",
     "sequelize": "^3.30.2",
     "slug": "^0.9.1",
+    "styled-components": "^2.0.0",
     "youtube-node": "^1.3.0"
   },
   "devDependencies": {
@@ -90,6 +90,7 @@
     "browser-sync-webpack-plugin": "^1.1.4",
     "chai": "^3.5.0",
     "chai-datetime": "^1.4.1",
+    "chai-enzyme": "^0.7.1",
     "colors": "^1.1.2",
     "concurrently": "^3.4.0",
     "copy-webpack-plugin": "^4.0.1",

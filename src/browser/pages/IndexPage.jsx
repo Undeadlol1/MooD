@@ -1,9 +1,9 @@
 // dependencies
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { Grid } from 'react-styled-flexboxgrid';
 import { injectProps } from 'relpers'
 import { connect } from 'react-redux'
-import { Grid } from 'react-flexbox-grid'
 import { RouteTransition } from 'react-router-transition'
 import presets from 'react-router-transition/src/presets'
 // project files
