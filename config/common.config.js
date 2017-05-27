@@ -22,10 +22,18 @@ const developmentPlugins = isDevelopment || isTest ? [
     new FriendlyErrorsWebpackPlugin(),
 ] : []
 
+var stats = {
+    hash: false,
+    chunks: false,
+    modules: false,
+    version: false,
+    children: false,
+};
+
 var baseConfig = {
     context: path.resolve(__dirname, '../'),
     devtool: 'cheap-module-source-map',
-    watch: isDevelopment,
+    watch: isDevelopment || isTest,
     module : {
         loaders: [
             {
