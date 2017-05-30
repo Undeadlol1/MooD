@@ -42,7 +42,7 @@ const clientProductionPlugins = isDevelopment ? [] : [
     new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks 
     new webpack.optimize.CommonsChunkPlugin(
         { name: 'vendor.js' },
-        Infinity, // <-- the way to avoid "webpackJsonp is not defined"
+        Infinity // <-- the way to avoid "webpackJsonp is not defined"
     ),
 ]
 
