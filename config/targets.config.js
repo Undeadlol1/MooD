@@ -76,7 +76,7 @@ var clientConfig = merge(commonConfig, {
     target: 'web',
     entry  : {
         'vendor.js': ['react', 'redux', 'react-redux', 'redux-form', 'material-ui'], // TODO MAKE SURE TREE SHAKING WORKS HERE
-        'scripts.js': './src/browser/app.jsx',
+        'scripts.js': './src/browser/App.jsx',
         // 'styles.css': './src/browser/styles.scss',
     },
     output : {
