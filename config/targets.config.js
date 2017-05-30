@@ -40,10 +40,10 @@ const clientProductionPlugins = isDevelopment ? [] : [
     // new webpack.optimize.UglifyJsPlugin(), //minify everything
     new BabiliPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks 
-    new webpack.optimize.CommonsChunkPlugin(
-        { name: 'vendor.js' },
-        Infinity // <-- the way to avoid "webpackJsonp is not defined"
-    ),
+    new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor.js',
+        minChunks: Infinity, // <-- the way to avoid "webpackJsonp is not defined"
+    }),
 ]
 
 var serverConfig = merge(commonConfig, {
