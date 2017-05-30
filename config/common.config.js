@@ -46,7 +46,8 @@ var baseConfig = {
             },
             { 
                 test   : /.jsx?$/,
-                loader : 'happypack/loader',
+                // loader : 'happypack/loader',
+                loader : 'babel-loader',
                 exclude: /node_modules/,
             },
             {
@@ -77,9 +78,9 @@ var baseConfig = {
         //     from: 'src/server/public',
         //     to: 'public'
         // }]),
-        new HappyPack({
-            loaders: [ 'babel-loader' ],
-        }),
+        // new HappyPack({
+        //     loaders: [ 'babel-loader' ],
+        // }),
         new ExtractTextPlugin({
             filename: "styles.css",
             disable: isDevelopment // TODO check if this works properly
