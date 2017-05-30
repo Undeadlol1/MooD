@@ -93,7 +93,7 @@ app.get('/*', function(req, res) {
           global.navigator.userAgent = req.headers['user-agent'] || 'all';
 
           // render App to string
-          const App = require('../browser/App.jsx').default
+          const App = require('browser/App.jsx').default
           const markup = renderToString(<App {...renderProps} />);
           // send string to handlebars template
           res.render('index', { markup });
