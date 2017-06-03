@@ -33,17 +33,10 @@ class App extends Component {
                   <div>
                     {
                       process.env.BROWSER
-                      ? <Router history={browserHistory} routes={routesConfig}/>
+                      ? <Router history={browserHistory} routes={routesConfig} />
                       : <RouterContext {...this.props} />
                     }
-                    <ReduxToastr
-                      timeOut={4000}
-                      newestOnTop={false}
-                      preventDuplicates={true}
-                      position="top-left"
-                      transitionIn="fadeIn"
-                      transitionOut="fadeOut"
-                      progressBar />
+                    <ReduxToastr position="top-left" progressBar />
                   </div>
                 </Translator>
               </ReduxProvider>

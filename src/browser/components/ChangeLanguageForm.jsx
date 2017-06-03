@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import { Row, Col } from 'react-flexbox-grid'
+import { Row, Col } from 'react-styled-flexboxgrid'
 import { updateUser } from '../redux/actions/UserActions'
 import { TextField, SelectField } from 'redux-form-material-ui'
 import MenuItem from 'material-ui/MenuItem'
@@ -31,8 +31,7 @@ import { translate } from '../containers/Translator'
 )
 export default class ChangeLanguageForm extends Component {
 	handleChange = (event, language) => {
-		console.log(event, language)
-		const {changeLanguage, username} = this.props
+		const {username} = this.props
 		changeLanguage(username, language)
 	}
 

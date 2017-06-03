@@ -27,10 +27,12 @@ class LoginLogoutButton extends Component {
 		const { userId, logout, toggleDialog, inline, fullWidth, ...rest } = this.props
 		const isLoggedIn = userId
 		const label = <FormattedMessage id={isLoggedIn ? "logout" : "login"} />
+		const className = 'LoginLogoutButton'
 
 		if (inline) return <span
+								className={className}
 								onClick={isLoggedIn ? logout : toggleDialog}
-								style={{ display: 'block', textAlign: "center" }}
+								style={{display: 'block', textAlign: "center"}}
 								{...rest}
 							>
 								{label}
@@ -38,6 +40,7 @@ class LoginLogoutButton extends Component {
 		
 		return <RaisedButton
 					label={label}
+					className={className}
 					onClick={isLoggedIn ? logout : toggleDialog}
 					{ ...rest } />
 	}

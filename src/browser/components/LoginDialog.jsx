@@ -5,6 +5,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome'
+import { translate } from '../containers/Translator'
 
 @connect(
 	({ user }) => ({ loginIsOpen: user.get('loginIsOpen') }),
@@ -25,7 +26,7 @@ export default class LoginDialog extends Component {
 
 		return <Dialog
 					open={loginIsOpen}
-					title="Please login"
+					title={translate('please_login')}
 					className="LoginDialog"
 					onRequestClose={toggleDialog}
 				>	

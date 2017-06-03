@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Row, Col } from 'react-flexbox-grid'
+import { Row, Col } from 'react-styled-flexboxgrid'
 import { connect } from 'react-redux';
 import Loading from '../components/Loading'
 import NodesInsert from '../components/NodesInsert'

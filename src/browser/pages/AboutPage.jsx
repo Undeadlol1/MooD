@@ -1,6 +1,6 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
-import { Grid, Row, Col } from 'react-flexbox-grid'
+import { Grid, Row, Col } from 'react-styled-flexboxgrid'
 
 // TODO write more about website
 class AboutPage extends React.Component {

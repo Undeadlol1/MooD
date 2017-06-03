@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Loading from '../components/Loading'
 import MoodsList from '../components/MoodsList'
 import MoodsFind from '../components/MoodsFind'
-import { Grid } from 'react-flexbox-grid';
+import { Grid } from 'react-styled-flexboxgrid';
 import { injectProps } from 'relpers'
 import { connect } from 'react-redux';
 import { fetchMoods } from '../redux/actions/MoodActions'

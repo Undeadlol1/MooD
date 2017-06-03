@@ -5,20 +5,14 @@ var path = require('path')
 var commonConfig = require('./common.config.js')
 var merge = require('webpack-merge');
 
-var stats = {
-    hash: false,
-    chunks: false,
-    modules: false,
-    version: false,
-    children: false,
-};
-
 var clientConfig =  merge(commonConfig, {
-    stats,
-    watch: true,
+    // copy+paste from
+    // https://semaphoreci.com/community/tutorials/testing-react-components-with-enzyme-and-mocha
     externals: {
-        // "jsdom": "window",
-        // "cheerio": "window"
+        "jsdom": "window",
+        "cheerio": "window",
+        "react/lib/ReactContext": true,
+        "react/lib/ExecutionEnvironment": true,
     },
     devtool: 'cheap-module-source-map',
     target: 'web',
@@ -35,12 +29,6 @@ var clientConfig =  merge(commonConfig, {
 });
 
 var serverConfig =   merge(commonConfig, {
-    stats,
-    watch: true,
-    externals: {
-        // "jsdom": "window",
-        // "cheerio": "window"
-    },
     devtool: 'cheap-module-source-map',
     target: 'node',  
     entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/server/test/server.tests.entry.js')],
@@ -52,15 +40,6 @@ var serverConfig =   merge(commonConfig, {
         filename: 'server.test.js',
         path     : path.join(__dirname, '..', 'dist'),
         libraryTarget: "commonjs", // ????
-    },
-    module: {
-        loaders: [
-            {
-                test: /\.jsx?$/,
-                loaders: ['babel-loader'],
-                exclude: /node_modules/,                
-            }
-        ],
     },
     plugins: [
         new WebpackShellPlugin({
