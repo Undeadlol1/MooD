@@ -103,7 +103,7 @@ class Translator extends Component {
         }
         // "key" prop is needed to change language dynamically
         return  <IntlProvider locale={language} messages={messages[language]} key={language}>
-                    {this.props.children}
+                    <div>{this.props.children}</div>
                 </IntlProvider>
     }
 }

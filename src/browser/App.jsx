@@ -30,14 +30,12 @@ class App extends Component {
     return  <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
               <ReduxProvider store={store}>
                 <Translator>
-                  <div>
                     {
                       process.env.BROWSER
                       ? <Router history={browserHistory} routes={routesConfig} />
                       : <RouterContext {...this.props} />
                     }
                     <ReduxToastr position="top-left" progressBar />
-                  </div>
                 </Translator>
               </ReduxProvider>
             </MuiThemeProvider>
