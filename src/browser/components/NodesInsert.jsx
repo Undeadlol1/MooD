@@ -22,18 +22,22 @@ import { isUrl } from 'shared/validators'
 
 @reduxForm({
 	form: 'NodesInsert',
+    // check if node already exists or not
 	asyncValidate(values, dispatch, props) {
-        const {contentId} = parseUrl(values.url),
-              moodId = store.getState().mood.get('id'),
-              errorText = translate('this_video_already_exists_please_no_duplicates')
-		return fetch(`/api/nodes/validate/${moodId}/${contentId}`)
+		return fetch(`/api/nodes/validate`
+                     + `/${store.getState().mood.get('id')}`
+                     + `/${parseUrl(values.url).contentId}`
+                )
 				.then(parseJSON)
 				.then(node => {
-					if (!isEmpty(node)) throw { url: errorText }
+					if (!isEmpty(node)) throw {
+                        url: translate('this_video_already_exists_please_no_duplicates')
+                    }
 					else return
                 })
     },
     asyncBlurFields: [ 'url' ],
+    // validate user and url
 	validate({url}, second) {
 		let errors = {}
         const user = store.getState().user.get('id')
@@ -61,10 +65,6 @@ import { isUrl } from 'shared/validators'
             dispatch(actions.toggleDialog())
         },
         toggleControls(boolean) {
-			// setTimeout(() => {
-			// 	dispatch(toggleControls(boolean))
-			// }, 1000);
-			console.log('toggleControls', boolean);
 			dispatch(toggleControls(boolean))
 		},
     })
@@ -122,8 +122,6 @@ render() {
 					modal={true}
 					open={props.node.dialogIsOpen}
 					onRequestClose={toggleDialog}
-                    //onMouseEnter={toggleControls.bind(this, true)} // on mouseEnter?
-					//onMouseLeave={toggleControls.bind(this, false)}
 				>
                     <Field name="url" component={TextField} hintText="Url" disabled={isDisabled} autoFocus fullWidth />
 				</Dialog>
