@@ -31,7 +31,7 @@ import { translate } from '../containers/Translator'
 )
 export default class ChangeLanguageForm extends Component {
 	handleChange = (event, language) => {
-		const {username} = this.props
+		const {username, changeLanguage} = this.props
 		changeLanguage(username, language)
 	}
 
