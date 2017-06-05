@@ -50,14 +50,25 @@ export default describe('/nodes API', function() {
 
     it('POST node', async function() {
         const mood = await Mood.findOne({order: 'rand()'})
-        return user
-            .post('/api/nodes')
-            .send({ moodSlug: mood.slug, url })
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .then(function(res) { 
-                res.body.url.should.be.equal(url)
-            })
+        const contentId = 'Seh57NRnAVA'
+        const moodSlug = mood.slug
+        function postNode(body) {
+            return user
+                    .post('/api/nodes')
+                    .send(body)
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                    .then(res => res.body)
+        }
+        const withUrlResponse = await postNode({moodSlug, url})
+        withUrlResponse.url.should.be.equal(url)
+        const withoutUrlResponse = await postNode({
+                                            moodSlug,
+                                            contentId,
+                                            type: 'video',
+                                            provider: 'youtube',
+                                        })
+        withoutUrlResponse.contentId = contentId
     })
 
     function getNextNode(slug, previousNodeId = "") {

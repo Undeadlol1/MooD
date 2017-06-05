@@ -198,13 +198,14 @@ export default Router()
       2. Create a Decision for every User corresponding with this NodeId
     */
     try {
-      const MoodId = await Mood.findIdBySlug(body.moodSlug)
+      const MoodId = body.MoodId || await Mood.findIdBySlug(body.moodSlug)
+      const url = body.url || 'https://www.youtube.com/watch?v=' + body.contentId
       extend(
         body,
-        { MoodId, UserId: user.id },
-        parseUrl(body.url).contentId,
+        { url, MoodId, UserId: user.id },
+        // url is optional if 'provider' and 'contentId' is provided
+        body.url ? parseUrl(body.url).contentId : {},
       )
-
       const node   = await Node.create(body)
       const users  = await User.findAll()
 
