@@ -22,6 +22,8 @@ const initialState = 	{
 							error: '',
 							loading: true,
 							dialogIsOpen: false,
+							searchIsActive: false, // TODO do i need this?
+							searchedVideos: [],
 							...nodeStructure
 						}
 						
@@ -42,6 +44,12 @@ export default (state = initialState, {type, payload}) => {
 			break
 		case 'UNLOAD_NODE':
 			newState = Object.assign({}, state, nodeStructure)
+			break
+		case 'RECIEVE_SEARCHED_VIDEOS':
+			newState = Object.assign({}, state, {
+				searchIsActive: false,
+				searchedVideos: payload
+			})
 			break
 	}
 
