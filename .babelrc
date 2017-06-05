@@ -1,4 +1,5 @@
 {
+  // TODO "compact": false,
   "presets": [
     [ "es2015", { modules: false } ], "stage-3", "react", "node6",
     //, {
