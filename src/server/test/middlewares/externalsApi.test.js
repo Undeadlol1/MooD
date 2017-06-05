@@ -15,7 +15,7 @@ const   user = request.agent(server)
 
 export default describe('/externals API', function() {
     
-    before(async function() {
+    before(function() {
         // TODO add logout? to test proper user login?
         // Kill supertest server in watch mode to avoid errors
         server.close()
@@ -34,13 +34,16 @@ export default describe('/externals API', function() {
                 await user.get(`${route}?`).expect(400)
             })
             it('gets response properly', async function() {
-                const query = stringify({query: 'javascript'})
+                const query = stringify({query: 'highly suspect'})
                 await user
                         .get(`${route}?${query}`)
                         .expect(200)
                         .expect('Content-Type', /json/)
                         .then(({body}) => {
-                            expect(body.items.length).to.be.equal(3)
+                            expect(body.length).to.be.equal(3)
+                            body.map(video => {
+                                return expect(video.id.videoId).to.be.an('string')
+                            })
                         })
             })
         } catch (error) {
