@@ -11,17 +11,19 @@ import YouTube from 'youtube-node'
 
 const youTube = new YouTube();
 youTube.setKey(YOUTUBE_KEY);
+youTube.addParam('type', 'video')
+youTube.addParam('videoEmbeddable', true)
 
 // routes
 export default Router()
   .get('/search', async function(req, res) {
     try {
-      const selector = req.query
+      const selector = req.query.query // TODO rework this ✏️
       if (!selector || isEmpty(selector)) return res.boom.badRequest('invalid query')
       youTube.search(selector, 3,
         (error, result) => {
           if (error) throw error
-          else res.json(result)
+          else res.json(result.items)
       });
     } catch (error) {
       console.error(error);
