@@ -2,26 +2,20 @@ import selectn from 'selectn'
 import { createAction, createActions } from 'redux-actions'
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
 import { API_URL } from '../../../../config'
+import { stringify } from 'query-string'
 
 const moodsUrl = API_URL + 'moods/'
 const nodesUrl = API_URL + 'nodes/'
 const decisionsUrl = API_URL + 'decisions/'
-
-// // TODO add types
-// export const recieveNode = createAction('RECIEVE_NODE') // , node => node
-
-// export const fetchingInProgress = createAction('FETCHING_IN_PROGRESS')
-
-// export const toggleDialog = createAction('TOGGLE_DIALOG')
-
-// export const fetchingError = createAction('FETCHING_ERROR', reason => reason)
+const externalsUrl = API_URL + 'externals/search/'
 
 export const actions = createActions({
   TOGGLE_DIALOG: () => null,
   RECIEVE_NODE: node => node,
   FETCHING_IN_PROGRESS: () => null,
   FETCHING_ERROR: reason => reason,
-  UNLOAD_NODE: () => null 
+  UNLOAD_NODE: () => null,
+  RECIEVE_SEARCHED_VIDEOS: videos => videos,
 })
 
 /**
@@ -78,4 +72,18 @@ export const changeRating = payload => (dispatch, getState) => {
 	if (!payload.NodeId) payload.NodeId = selectn('node.id', getState()) // TODO rework this
 	fetch(decisionsUrl, headersAndBody(payload))
 		.then(checkStatus)
+}
+
+/**
+ * search youtube videos by string
+ * @param {String} query 
+ */
+export const youtubeSearch = query => (dispatch, getState) => {
+	fetch(externalsUrl + '?' + stringify({query}))
+		.then(checkStatus)
+		.then(parseJSON)
+		.then(data => {
+			dispatch(actions.recieveSearchedVideos(data))
+		})
+		.catch(err => console.error('youtubeSearch failed!', err))
 }

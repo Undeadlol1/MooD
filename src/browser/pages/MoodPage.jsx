@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Row, Col } from 'react-styled-flexboxgrid'
 import { connect } from 'react-redux';
 import Loading from '../components/Loading'
-import NodesInsert from '../components/NodesInsert'
+import NodesInsert from '../containers/NodesInsertContainer'
 import Decision from '../components/Decision.jsx'
 import Video from '../components/Video.jsx'
 import NavBar from '../components/NavBar'

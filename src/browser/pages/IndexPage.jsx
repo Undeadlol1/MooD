@@ -41,11 +41,6 @@ export default class IndexPage extends Component {
 						{...presets.pop}
 					>
 					<Grid className="IndexPage">
-						{/*<YoutubeSearch />*/}
-						{/*<MoodsFind />*/}
-						{/*
-							TODO try this
-							import ImageLoader from 'react-imageloader'; */}
 						<MoodsInsert />						
 						{
 							process.env.BROWSER && loading

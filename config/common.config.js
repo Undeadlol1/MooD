@@ -91,6 +91,7 @@ var baseConfig = {
         alias: {
             browser: path.join(__dirname, '/../', 'src/browser/'),
             server : path.join(__dirname, '/../', 'src/server/'),
+            shared : path.join(__dirname, '/../', 'src/shared/'),
         },
         enforceModuleExtension: false,
         extensions: ['.js', '.jsx'],
