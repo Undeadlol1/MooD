@@ -18,7 +18,7 @@ import store from '../redux/store'
 import { FormattedMessage } from 'react-intl';
 import { translate } from '../containers/Translator'
 import { parseJSON, checkStatus } from '../redux/actions/actionHelpers'
-import { isUrl } from 'shared/validators'
+import isUrl from 'is-url'
 
 @reduxForm({
 	form: 'NodesInsert',
