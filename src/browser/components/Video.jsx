@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import YouTube from 'react-youtube'
-import { toggleState } from '../components/Utils'
-import { fetchNode } from '../redux/actions/NodeActions'
-import { toggleControls, openControls, closeControls } from '../redux/actions/GlobalActions'
-
-const { object, string } = PropTypes
+import { connect } from 'react-redux'
+import { fetchNode } from 'browser/redux/actions/NodeActions'
+import { toggleControls, openControls, closeControls } from 'browser/redux/actions/GlobalActions'
 
 @connect(
-	({node, global: {controlsAreShown}}, ownProps) => {
-		return ({node, controlsAreShown, ...ownProps})
+	({node, global}, ownProps) => {
+		const {contentId} = node,
+			  {controlsAreShown} = global
+		return ({contentId, controlsAreShown, ...ownProps})
 	},
 	(dispatch, ownProps) => ({
 		openControls() {
@@ -19,11 +17,8 @@ const { object, string } = PropTypes
 		closeControls() {
 			dispatch(closeControls())
 		},
+		// TODO remove this? 💀
 		toggleControls(boolean) {
-			// setTimeout(() => {
-			// 	dispatch(toggleControls(boolean))
-			// }, 1000);
-			console.log('toggleControls', boolean);
 			dispatch(toggleControls(boolean))
 		},
 		requestNewVideo(params) {
@@ -32,8 +27,16 @@ const { object, string } = PropTypes
     })
 )
 export default class Video extends Component {
+	timeout = null
+	watchMouseMove = () => {
+		clearTimeout(this.timeout)
+		this.timeout = setTimeout(() => {
+			this.props.closeControls()
+		}, 3000)
+	}
+
 	render() {
-		const 	{node, controlsAreShown, contentId, slug, rating, toggleControls, requestNewVideo, className, ...rest} = this.props,
+		const 	{controlsAreShown, requestNewVideo, className, ...rest} = this.props,
 				{props, state} = this,
 				opts = {
 					height: '100%',
@@ -45,29 +48,21 @@ export default class Video extends Component {
 		return 	<section
 					className={"Video " + className}
 					// TODO add comments about iframe!!!
-					// onMouseEnter={props.openContorls} // on mouseEnter?
+					onMouseMove={this.watchMouseMove}
 					onMouseLeave={props.closeControls}
 					onMouseOver={props.openControls}
-					onMouseMove={this.test}
 				>
 					<YouTube
 						opts={opts}
-						videoId={node.contentId}
-						// styles={{pointerEvents: 'none', zIndex: '-123231'}}
-						// onEnd={requestNewVideo.bind(this, {rating, contentId, slug, userId})} // rework this parameters and function
-						// onError={requestNewVideo.bind(this, {rating, contentId, slug, userId})} // rework this parameters  and function
-						onEnd={requestNewVideo}
+						videoId={props.contentId}
+						onEnd={requestNewVideo} // TODO add rating?
 						onError={requestNewVideo}
 						/>
 					<div
 						hidden={controlsAreShown}
 						className="Video__controls"
-						// onMouseEnter={toggleControls}						
-						// onMouseOver={toggleControls.bind(this, true)}
 					>
-	    				{/*{controlsAreShown ? props.children : null}*/}
 						<div hidden={!controlsAreShown}>{props.children}</div>
-						{/* controlsAreShown */}
 					</div>
 				</section>
 	}
