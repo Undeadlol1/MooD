@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import FontAwesome from 'react-fontawesome'
+import { assignIn as extendObject } from 'lodash'
 
 class Icon extends Component {
     state = {
@@ -16,10 +17,11 @@ class Icon extends Component {
     render() {
         const { size, style, hoverIcon, ...rest } = this.props
         const iconOptions = {
-                                name: this.state.currentIcon,
                                 size: size || "2x",
-                                style: style || {color: 'white'}
+                                name: this.state.currentIcon,
+                                style: extendObject({color: 'white'}, style),
                             }
+
         return  <FontAwesome
                     {...rest}
                     {...iconOptions}
