@@ -13,6 +13,7 @@ import { toggleHeader } from '../redux/actions/GlobalActions'
 import { RouteTransition } from 'react-router-transition';
 import presets from 'react-router-transition/src/presets';
 import { FormattedMessage } from 'react-intl';
+import { translate } from 'browser/containers/Translator'
 
 @connect(
 	({ node, mood, global: { controlsAreShown } }, ownProps) => {
@@ -49,8 +50,9 @@ class MoodPage extends Component {
 		if (!node.contentId) {
 
 			dom = 	<div className="MoodPage--empty">
-						<NavBar className='NavBar--sticky' />				
-						<h1 className="MoodPage__header"><FormattedMessage id="currently_zero_content_here" /></h1>
+						<NavBar className='NavBar--sticky' />
+						{/* TODO remove h1 (use css instead) */}
+						<h1 className="MoodPage__header">{translate("currently_zero_content_here")}</h1>
 						<NodesInsert moodSlug={params.moodSlug} />
 					</div>
 		}
