@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types';
-import Slider from 'material-ui/Slider';
-import { injectProps } from 'relpers';
-import { connect } from 'react-redux';
-import { changeRating } from '../redux/actions/NodeActions'
-import InputRange from 'react-input-range';
 import selectn from 'selectn'
+import PropTypes from 'prop-types'
+import { injectProps } from 'relpers'
+import { connect } from 'react-redux'
+import Slider from 'material-ui/Slider'
+import InputRange from 'react-input-range'
+import Icon from 'browser/components/Icon'
+import { changeRating } from '../redux/actions/NodeActions'
 
 // TODO rework this. This is a mess
 
@@ -23,10 +24,6 @@ import selectn from 'selectn'
 class Decision extends Component {
 
 	state = { rating: 0 } // do i need this?
-
-	// componentWillReceiveProps(nextProps) {
-	// 	this.setState({ rating: nextProps.decision ? nextProps.decision.rating : 0 })
-	// }
 
 	// TODO get rid of this?
 	changeRating(event, rating) {
@@ -47,42 +44,13 @@ class Decision extends Component {
 		})
 	}
 
-	// @injectProps
 	render() {
-		const { decision,  changeRating, ...rest } = this.props
-		const styles = { width: '100%' }
-		// console.log(this.props);
-		// console.log('content && content.rating', content && content.rating);
-		/*return (
-				<InputRange
-					maxValue={20}
-					minValue={0}
-					style={styles}
-					className="Decision"
-					value={this.state.value}
-					onChange={rating => this.setState({ rating })} />
-				);*/
-		return 	<Slider
-					max={5}
-					min={-5}
-					step={1}
-					style={styles}
-					className="Decision"
-					onChange={this.changeRating.bind(this)}
-					onDragStop={this.handleSubmit.bind(this)}
-					value={this.state.rating || decision && decision.rating || 0} />
-
-		/*return  <p className="range-field Decision" {...rest}>
-				  <input
-					  max="5"
-					  min="-5"
-					  type="range"
-					  style={styles}
-					  onChange={this.changeRating.bind(this)}
-					  onMouseUp={this.handleSubmit.bind(this)}
-					  value={this.state.rating || decision && decision.rating || 0}
-				   />
-				</p>*/
+		const { decision, className, changeRating, ...rest } = this.props
+		return 	<div className={'Decision ' + className}>
+					<Icon name="thumbs-up" hoverIcon='thumbs-o-up' />
+					<Icon name="step-forward" />
+					<Icon name="thumbs-down" hoverIcon='thumbs-o-down' />
+				</div>
 	}
 }
 

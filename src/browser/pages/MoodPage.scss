@@ -7,10 +7,11 @@
 		position: relative;
 	}
 	.MoodPage__decision {
-		position: absolute;
+		// position: absolute;
+		// transform: translateY(-50%);
+		top: 48.5%;
 		width: 100%;
-		top: 50%;
-		transform: translateY(-50%);
+		text-align: center;
 	}
 	.NodesInsert {
 		right: 70px;
