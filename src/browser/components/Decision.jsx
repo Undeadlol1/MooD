@@ -45,6 +45,7 @@ class Decision extends Component {
 	}
 
 	render() {
+		return null
 		const { decision, className, changeRating, ...rest } = this.props
 		return 	<div className={'Decision ' + className}>
 					<Icon name="thumbs-up" hoverIcon='thumbs-o-up' />
