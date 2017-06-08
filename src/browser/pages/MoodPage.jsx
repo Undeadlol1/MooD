@@ -16,8 +16,8 @@ import { FormattedMessage } from 'react-intl';
 import { translate } from 'browser/containers/Translator'
 
 @connect(
-	({ node, mood, global: { controlsAreShown } }, ownProps) => {
-		return { mood, node, controlsAreShown, ...ownProps}
+	({ node, mood }, ownProps) => {
+		return { mood, node, ...ownProps}
 	}, // TODO rework "node" state because it is store in 'mood' now
 	(dispatch, ownProps) => ({ // TODO remove this and use dispatch directly?
 		fetchMood: (slug) => dispatch(fetchMood(slug)),
@@ -43,7 +43,7 @@ class MoodPage extends Component {
 
 	render() {
 		let dom;
-		const { mood, node, location, params, controlsAreShown, toggleHeader, ...rest } = this.props
+		const { mood, node, location, params, toggleHeader, ...rest } = this.props
 
 		if (process.env.BROWSER && (mood.loading || node.loading)) return <Loading />
 

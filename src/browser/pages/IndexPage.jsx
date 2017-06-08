@@ -15,7 +15,7 @@ import MoodsInsert from 'browser/components/MoodsInsert'
 import YoutubeSearch from 'browser/components/YoutubeSearch'
 
 @connect(
-	({ global, mood }) => ({
+	({ mood }) => ({
 		moods: mood.get('moods'),
 		loading: mood.get('loading'),
 		totalPages: mood.get('totalPages'), // TODO rework this?

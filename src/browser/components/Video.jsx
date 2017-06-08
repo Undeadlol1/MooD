@@ -7,7 +7,7 @@ import { toggleControls, openControls, closeControls } from 'browser/redux/actio
 @connect(
 	({node, global}, ownProps) => {
 		const {contentId} = node,
-			  {controlsAreShown} = global
+			  controlsAreShown = global.get('controlsAreShown')
 		return ({contentId, controlsAreShown, ...ownProps})
 	},
 	(dispatch, ownProps) => ({

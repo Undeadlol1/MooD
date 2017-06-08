@@ -5,15 +5,14 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import LoginLogoutButton from './LoginLogoutButton'
 import { toggleSidebar, toggleControls } from '../redux/actions/GlobalActions'
-// import classnames from 'classnames'
 
-// import { gql, graphql } from 'react-apollo';
-// @graphql(gql`query current_user { id }`)
 @connect(
     ({ user, global  }, ownProps) => {
-        const { controlsAreShown, headerIsShown } = global
-        const username = user.get('username') && user.get('username').toLowerCase()
-        return { controlsAreShown, headerIsShown, username, ...ownProps }
+        return {
+            ...ownProps,
+            headerIsShown: global.get('headerIsShown'),
+            username: user.get('username') && user.get('username').toLowerCase(), // TODO this lowercase addition is ugly
+        }
     },
     (dispatch, ownProps) => ({
         toggleSidebar() {
@@ -23,7 +22,7 @@ import { toggleSidebar, toggleControls } from '../redux/actions/GlobalActions'
 )
 class NavBar extends Component {
     render() {
-        const { username, headerIsShown, controlsAreShown, className, toggleSidebar, children, ...rest } = this.props
+        const { username, headerIsShown, className, toggleSidebar, children, ...rest } = this.props
         const titleLink = <Link to="/" className="NavBar__home-link">MooD</Link>
         const loginButton = username
                             ? <Link to={`/users/${username}`}>

@@ -5,10 +5,14 @@ import MenuItem from 'material-ui/MenuItem';
 import React, { Component } from 'react'
 import LoginLogoutButton from './LoginLogoutButton'
 import { toggleSidebar } from '../redux/actions/GlobalActions'
-import { FormattedMessage } from 'react-intl';
+import { translate } from 'browser/containers/Translator'
 
 @connect(
-	({ user, global: { sidebarIsOpen } }, ownProps) => ({ user, sidebarIsOpen, ...ownProps }),
+	({ user, global }, ownProps) => ({
+		user,
+		...ownProps,
+		sidebarIsOpen: global.get('sidebarIsOpen'),
+	}),
     (dispatch, ownProps) => ({
         toggleSidebar() {
             dispatch(toggleSidebar())
@@ -22,12 +26,12 @@ export default class Sidebar extends Component {
 		return 	<Drawer className="Sidebar" docked={false} open={sidebarIsOpen} onRequestChange={toggleSidebar}>
 					{username &&
 						<MenuItem>
-							<Link onClick={toggleSidebar} to={`users/${username}`}><FormattedMessage id="profile" /></Link>
+							<Link onClick={toggleSidebar} to={`users/${username}`}>{translate("profile")}</Link>
 						</MenuItem>
 					}
 					<MenuItem onClick={toggleSidebar}><LoginLogoutButton inline fullWidth /></MenuItem>
-					<MenuItem><Link onClick={toggleSidebar} to="search"><FormattedMessage id="search" /></Link></MenuItem>
-					{/*<MenuItem><Link onClick={toggleSidebar} to="about"><FormattedMessage id="about" /></Link></MenuItem>*/}
+					<MenuItem><Link onClick={toggleSidebar} to="search">{translate("search")}</Link></MenuItem>
+					{/*<MenuItem><Link onClick={toggleSidebar} to="about">{translate("about")}</Link></MenuItem>*/}
 				</Drawer>
 	}
 }

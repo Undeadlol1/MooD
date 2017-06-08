@@ -16,8 +16,8 @@ let timeout = null
 	({ user, global }, ownProps) => ({
 		user,
 		...ownProps,
-		loginIsOpen: global.loginIsOpen,
-		headerIsShown: global.headerIsShown
+		loginIsOpen: global.get('loginIsOpen'),
+		headerIsShown: global.get('headerIsShown'),
 	}),
 	(dispatch, ownProps) => ({
 		fetchCurrentUser() { // fetch user data on load
