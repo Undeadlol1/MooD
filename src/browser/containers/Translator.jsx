@@ -11,7 +11,7 @@ import uk from '../i18n/uk'
 
 addLocaleData([...enData, ...ruData, ...ukData]);
 
-const DEFAULT_LANGUAGE = 'en'
+const DEFAULT_LANGUAGE = 'ru'
 
 // TODO refactor everything
 
@@ -75,7 +75,7 @@ class Translator extends Component {
                 ? (navigator.languages && navigator.languages[0])
                 || navigator.language
                 || navigator.userLanguage
-                : ''                
+                : DEFAULT_LANGUAGE
     }
 
     render() {
