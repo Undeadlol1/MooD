@@ -5,6 +5,22 @@ var path = require('path')
 var commonConfig = require('./common.config.js')
 var merge = require('webpack-merge');
 
+const serverVariables =  {
+                            NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+                            BROWSER: false,
+                            isBrowser: false,
+                            SERVER: true,
+                            isServer: true,
+                        }
+
+const clientVariables =  {
+                            NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+                            BROWSER: true,
+                            isBrowser: true,
+                            SERVER: false,
+                            isServer: false,
+                        }
+
 var clientConfig =  merge(commonConfig, {
     // copy+paste from
     // https://semaphoreci.com/community/tutorials/testing-react-components-with-enzyme-and-mocha
@@ -22,6 +38,11 @@ var clientConfig =  merge(commonConfig, {
         filename: 'client.test.js',        
         path     : path.join(__dirname, '..', 'dist')        
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env': clientVariables
+        }),
+    ],
     // nodeExternals required for client because some modules throw errors otherwise
     externals: [nodeExternals({
         whitelist: ['webpack/hot/dev-server', /^lodash/, 'react-router-transition/src/presets']
@@ -44,6 +65,9 @@ var serverConfig =   merge(commonConfig, {
     plugins: [
         new WebpackShellPlugin({
             onBuildEnd: "mocha dist/*.test.js --opts ./mocha.opts" //onBuildEnd //onBuildExit
+        }),
+        new webpack.DefinePlugin({
+            'process.env': serverVariables
         }),
     ],
     // this is important. Without nodeModules in "externals" bundle will throw and error
