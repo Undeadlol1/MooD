@@ -4,3 +4,4 @@
   --watch
   --no-exit
   --require mocha-clean
+  --timeout 5000
