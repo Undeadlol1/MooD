@@ -19,7 +19,7 @@ var extractSass = new ExtractTextPlugin({
 
 const developmentPlugins = isDevelopment || isTest ? [
     // new WebpackNotifierPlugin({alwaysNotify: false}),
-    new FriendlyErrorsWebpackPlugin(),
+    // new FriendlyErrorsWebpackPlugin(),
 ] : []
 
 var stats = {
