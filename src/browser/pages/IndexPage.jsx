@@ -53,8 +53,8 @@ connect(
 	({ mood }) => ({
 		moods: mood.get('moods'),
 		loading: mood.get('loading'),
-		totalPages: mood.get('totalPages'), // TODO rework this?
-		currentPage: mood.get('currentPage'), // TODO rework this?
+		totalPages: mood.get('totalPages'),
+		currentPage: mood.get('currentPage'),
 	}),
 	dispatch => ({
 		fetchMoods() {dispatch(fetchMoods())}
