@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { AppBar, Avatar } from 'material-ui'
-import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import LoginLogoutButton from './LoginLogoutButton'
-import { toggleSidebar, toggleControls } from '../redux/actions/GlobalActions'
+import { connect } from 'react-redux'
+import { AppBar, Avatar } from 'material-ui'
+import { actions } from 'browser/redux/actions/GlobalActions'
+import LoginLogoutButton from 'browser/components/LoginLogoutButton'
 
 @connect(
     ({ user, global  }, ownProps) => {
@@ -16,7 +16,7 @@ import { toggleSidebar, toggleControls } from '../redux/actions/GlobalActions'
     },
     (dispatch, ownProps) => ({
         toggleSidebar() {
-            dispatch(toggleSidebar())
+            dispatch(actions.toggleSidebar())
         }
     })
 )

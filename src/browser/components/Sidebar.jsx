@@ -4,7 +4,7 @@ import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import React, { Component } from 'react'
 import LoginLogoutButton from './LoginLogoutButton'
-import { toggleSidebar } from '../redux/actions/GlobalActions'
+import { actions } from '../redux/actions/GlobalActions'
 import { translate } from 'browser/containers/Translator'
 
 @connect(
@@ -15,7 +15,7 @@ import { translate } from 'browser/containers/Translator'
 	}),
     (dispatch, ownProps) => ({
         toggleSidebar() {
-            dispatch(toggleSidebar())
+            dispatch(actions.toggleSidebar())
         }
     })
 )

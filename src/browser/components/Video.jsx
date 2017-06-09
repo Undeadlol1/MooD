@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import YouTube from 'react-youtube'
 import { connect } from 'react-redux'
 import { fetchNode } from 'browser/redux/actions/NodeActions'
-import { toggleControls, openControls, closeControls } from 'browser/redux/actions/GlobalActions'
+import { actions } from 'browser/redux/actions/GlobalActions'
 
 @connect(
 	({node, global}, ownProps) => {
@@ -12,14 +12,10 @@ import { toggleControls, openControls, closeControls } from 'browser/redux/actio
 	},
 	(dispatch, ownProps) => ({
 		openControls() {
-			dispatch(openControls())
+			dispatch(actions.toggleControls(true))
 		},
 		closeControls() {
-			dispatch(closeControls())
-		},
-		// TODO remove this? 💀
-		toggleControls(boolean) {
-			dispatch(toggleControls(boolean))
+			dispatch(actions.toggleControls(false))
 		},
 		requestNewVideo(params) {
 			dispatch(fetchNode(ownProps.moodSlug))

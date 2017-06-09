@@ -8,8 +8,8 @@ import Decision from '../components/Decision.jsx'
 import Video from '../components/Video.jsx'
 import NavBar from '../components/NavBar'
 import { fetchMood, unloadMood } from '../redux/actions/MoodActions'
-import { fetchNode, actions } from '../redux/actions/NodeActions'
-import { toggleHeader } from '../redux/actions/GlobalActions'
+import { fetchNode, actions as nodeActions } from '../redux/actions/NodeActions'
+import { actions as globalActions } from '../redux/actions/GlobalActions'
 import { RouteTransition } from 'react-router-transition';
 import presets from 'react-router-transition/src/presets';
 import { FormattedMessage } from 'react-intl';
@@ -23,8 +23,8 @@ import { translate } from 'browser/containers/Translator'
 		fetchMood: (slug) => dispatch(fetchMood(slug)),
 	    fetchNode: (slug) => dispatch(fetchNode(slug)),
 	    unloadMood: () => dispatch(unloadMood()),
-	    unloadNode: () => dispatch(actions.unloadNode()),
-		toggleHeader: (boolean) => dispatch(toggleHeader(boolean))
+	    unloadNode: () => dispatch(nodeActions.unloadNode()),
+		toggleHeader: (boolean) => dispatch(globalActions.toggleHeader(boolean))
     })
 )
 class MoodPage extends Component {
@@ -43,7 +43,7 @@ class MoodPage extends Component {
 
 	render() {
 		let dom;
-		const { mood, node, location, params, toggleHeader, ...rest } = this.props
+		const { mood, node, location, params, ...rest } = this.props
 
 		if (process.env.BROWSER && (mood.loading || node.loading)) return <Loading />
 

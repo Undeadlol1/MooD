@@ -1,48 +1,19 @@
-import { checkStatus, parseJSON } from'./actionHelpers'
-import { createAction } from 'redux-actions'
-import selectn from 'selectn'
+import { createAction, createActions } from 'redux-actions'
 
-// TODO rework to {actions} via redux-actions?
+export const actions = createActions({
+	/**
+	 * @param {Boolean} payload value to set for headerIsShown
+	 */
+	TOGGLE_HEADER: boolean => boolean,
+	/**
+	 * @param {Boolean} payload value to set for sidebarIsOpen
+	 */
+	TOGGLE_SIDEBAR: boolean => boolean,
+	/**
+	 * @param {Boolean} payload value to set for controlsAreShown
+	 */
+	TOGGLE_CONTROLS: boolean => boolean,
+})
 
-/**
- * toggle header
- * @param {Boolean} payload value to set for headerIsShown
- */
-export const toggleHeader = payload => (dispatch, getState) => {
-	dispatch({payload, type: 'TOGGLE_SIDEBAR'})
-}
-/**
- * toggle dialog
- * @param {Boolean} payload value to set for loginIsOpen
- */
-export const toggleSidebar = payload => (dispatch, getState) => {
-	dispatch({payload, type: 'TOGGLE_SIDEBAR'})
-}
-/**
- * toggle controls
- * @param {Boolean} payload value to set for controlsAreShown
- */
-export const toggleControls = payload => (dispatch, getState) => {
-	dispatch({payload, type: 'TOGGLE_CONTROLS'})
-}
-
-// TODO check if next two functions are actually used
-/**
- * @param {Boolean} value value to set for controlsAreShown
- */
-export const openControls = value => (dispatch, getState) => { // TODO rename to "showControls"
-	dispatch({
-		type: 'TOGGLE_CONTROLS',
-		payload: true
-	})
-}
-/**
- * @param {Boolean} value value to set for controlsAreShown
- */
-export const closeControls = value => (dispatch, getState) => {
-	dispatch({
-		type: 'TOGGLE_CONTROLS',
-		payload: false
-	})
-}
-
+// TODO make this right
+// export default actions
