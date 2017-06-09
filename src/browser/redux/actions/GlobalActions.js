@@ -14,6 +14,3 @@ export const actions = createActions({
 	 */
 	TOGGLE_CONTROLS: boolean => boolean,
 })
-
-// TODO make this right
-// export default actions
