@@ -41,7 +41,7 @@ export default class IndexPage extends Component {
 						{...presets.pop}
 					>
 					<Grid className="IndexPage">
-						<MoodsInsert />						
+						<MoodsInsert />
 						{
 							process.env.BROWSER && loading
 							? <Loading />
