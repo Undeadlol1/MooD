@@ -14,7 +14,42 @@ import MoodsList from 'browser/components/MoodsList'
 import MoodsInsert from 'browser/components/MoodsInsert'
 import YoutubeSearch from 'browser/components/YoutubeSearch'
 
-@connect(
+export class IndexPage extends Component {
+
+	componentWillMount() { this.props.fetchMoods() }
+
+    @injectProps
+    render({loading, moods, currentPage, totalPages, location}) {
+		const isBrowser = process.env.BROWSER
+		return  <RouteTransition				
+						{...presets.pop}
+						className="IndexPage"
+						pathname={location.pathname}
+					>
+					<Grid>
+						<MoodsInsert />
+						<Loading condition={isBrowser && loading}>
+							<MoodsList
+								moods={moods}
+								currentPage={currentPage}
+								totalPages={totalPages} />
+						</Loading>
+					</Grid>
+				</RouteTransition>
+    }
+}
+
+IndexPage.propTypes = {
+	moods: PropTypes.object,
+	totalPages: PropTypes.number,
+	currentPage: PropTypes.number,
+	loading: PropTypes.bool.isRequired,
+	location: PropTypes.object.isRequired,
+	fetchMoods: PropTypes.func.isRequired,
+}
+
+export default
+connect(
 	({ mood }) => ({
 		moods: mood.get('moods'),
 		loading: mood.get('loading'),
@@ -24,32 +59,4 @@ import YoutubeSearch from 'browser/components/YoutubeSearch'
 	dispatch => ({
 		fetchMoods() {dispatch(fetchMoods())}
 	})
-)
-export default class IndexPage extends Component {
-
-	static propTypes = {
-		moods: PropTypes.object,
-		loading: PropTypes.bool
-	}
-
-	componentWillMount() { this.props.fetchMoods() }
-
-    @injectProps
-    render({loading, moods, currentPage, totalPages, dispatch, location}) {
-		return  <RouteTransition				
-						pathname={location.pathname}
-						{...presets.pop}
-					>
-					<Grid className="IndexPage">
-						<MoodsInsert />
-						{
-							process.env.BROWSER && loading
-							? <Loading />
-							: <div>
-								<MoodsList moods={moods} currentPage={currentPage} totalPages={totalPages} />
-							 </div> 
-						}
-					</Grid>						
-				</RouteTransition>
-    }
-}
+)(IndexPage)
