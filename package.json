@@ -93,6 +93,7 @@
     "chai": "^3.5.0",
     "chai-datetime": "^1.4.1",
     "chai-enzyme": "^0.7.1",
+    "chai-immutable": "^1.6.0",
     "colors": "^1.1.2",
     "concurrently": "^3.4.0",
     "copy-webpack-plugin": "^4.0.1",
