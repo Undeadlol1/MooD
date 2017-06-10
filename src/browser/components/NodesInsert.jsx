@@ -1,18 +1,15 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
-import FloatingActionButton from 'material-ui/FloatingActionButton'
-import ContentAdd from 'material-ui/svg-icons/content/add'
 import { Form, Field } from 'redux-form'
+import FlatButton from 'material-ui/FlatButton'
 import { TextField } from 'redux-form-material-ui'
 import { translate } from 'browser/containers/Translator'
+import ContentAdd from 'material-ui/svg-icons/content/add'
 import YoutubeSearch from 'browser/components/YoutubeSearch'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
 
 class NodesInsert extends Component {
-
-    state = { open: false }
-
     render() {
         const { props } = this
         const { handleSubmit, toggleDialog } = this.props
