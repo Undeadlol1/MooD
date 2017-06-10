@@ -1,42 +1,47 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { AppBar, Avatar } from 'material-ui'
-import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import LoginLogoutButton from './LoginLogoutButton'
-import { toggleSidebar, toggleControls } from '../redux/actions/GlobalActions'
-// import classnames from 'classnames'
+import { connect } from 'react-redux'
+import { AppBar, Avatar } from 'material-ui'
+import LoginLogoutButton from 'browser/components/LoginLogoutButton'
+import { toggleSidebar } from 'browser/redux/actions/GlobalActions'
 
-// import { gql, graphql } from 'react-apollo';
-// @graphql(gql`query current_user { id }`)
+const titleStyles = { color: 'rgb(48, 48, 48)' }
+const LoginLogoutButtonStyles = { marginTop: '5.5px' }
+
 @connect(
     ({ user, global  }, ownProps) => {
-        const { controlsAreShown, headerIsShown } = global
-        const username = user.get('username') && user.get('username').toLowerCase()
-        return { controlsAreShown, headerIsShown, username, ...ownProps }
-    },
-    (dispatch, ownProps) => ({
-        toggleSidebar() {
-            dispatch(toggleSidebar())
-        }
-    })
+        const username = user.get('username')
+                         && user.get('username').toLowerCase()
+        return { username, ...ownProps }
+    }
 )
 class NavBar extends Component {
     render() {
-        const { username, headerIsShown, controlsAreShown, className, toggleSidebar, children, ...rest } = this.props
-        const titleLink = <Link to="/" className="NavBar__home-link">MooD</Link>
+        const { username, className, children, dispatch, ...rest } = this.props
+        const titleLink =   <Link
+                                to="/"
+                                style={titleStyles}
+                                className="NavBar__home-link"
+                            >
+                                MooD
+                            </Link>
         const loginButton = username
                             ? <Link to={`/users/${username}`}>
-                                <Avatar className="NavBar__avatar" src={`https://api.adorable.io/avatars/100/${username}.png`} />
+                                <Avatar
+                                    className="NavBar__avatar"
+                                    src={`https://api.adorable.io/avatars/100/${username}.png`}
+                                />
                               </Link>
-                            : <LoginLogoutButton />
+                            : <LoginLogoutButton style={LoginLogoutButtonStyles} />
 
         return  <header className={'NavBar ' + className} {...rest}>
                     <AppBar
+                        {...rest}
                         title={titleLink}
                         iconElementRight={loginButton}
-                        onLeftIconButtonTouchTap={toggleSidebar}
-                        {...rest} />
+                        onLeftIconButtonTouchTap={() => dispatch(toggleSidebar())}
+                    />
                         {children}
                 </header>
     }
