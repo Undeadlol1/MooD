@@ -35,19 +35,18 @@ export const insertNode = payload => (dispatch, getState) => {
 }
 
 /**
- * fetch node using mood slug (url friendly name)
- * @param {String} moodSLug 
+ * fetch node using mood slug
+ * @param {String} slug mood slug (optional)
  */
-export const fetchNode = moodSLug => (dispatch, getState) => {
-	
+export const fetchNode = slug => (dispatch, getState) => {
+	const state = getState()
+	const nodeId = state.node.id
+	const moodSlug = slug || state.mood.get('slug')
+
 	dispatch(actions.fetchingInProgress())
 
-	const state = getState()
-	const slug = selectn('mood.slug', state) // rename to "moodSlug" in future and remove parameter from function
-	const nodeId = selectn('node.id', state)
-
 	fetch(
-		nodesUrl + (moodSLug || slug) + '/' + nodeId, 
+		nodesUrl + moodSlug + '/' + nodeId,
 		{ credentials: 'same-origin' }
 	)
 		.then(checkStatus)

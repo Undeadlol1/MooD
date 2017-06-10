@@ -13,7 +13,7 @@ import { toggleHeader } from '../redux/actions/GlobalActions'
 import { RouteTransition } from 'react-router-transition';
 import presets from 'react-router-transition/src/presets';
 import { FormattedMessage } from 'react-intl';
-import { translate } from 'browser/containers/Translator'
+import { translate as t } from 'browser/containers/Translator'
 
 @connect(
 	({ node, mood, global: { controlsAreShown } }, ownProps) => {
@@ -52,20 +52,19 @@ class MoodPage extends Component {
 			dom = 	<div className="MoodPage--empty">
 						<NavBar className='NavBar--sticky' />
 						{/* TODO remove h1 (use css instead) */}
-						<h1 className="MoodPage__header">{translate("currently_zero_content_here")}</h1>
-						<NodesInsert moodSlug={params.moodSlug} />
+						<h1 className="MoodPage__header">{t("currently_zero_content_here")}</h1>
+						<NodesInsert moodSlug={params.moodSlug} /> {/* TODO rework passing of moodSlug */}
 					</div>
 		}
 		else {
-			dom =  <Video className='MoodPage__video' moodSlug={params.moodSlug}> {/* TODO rework passing of moodSlug */}
+			dom =  <Video className='MoodPage__video'>
 						<NavBar className='NavBar--sticky' />
 						<Decision className='MoodPage__decision' />
-						<NodesInsert moodSlug={params.moodSlug} />																	
+						<NodesInsert moodSlug={params.moodSlug} /> {/* TODO rework passing of moodSlug */}
 					</Video>
 		}
 
 		return 	<div className="MoodPage">
-					{/*<NavBar className='NavBar--sticky' />			*/}
 					<RouteTransition {...presets.slideLeft} pathname={location.pathname} className="MoodPage">
 						{dom}
 					</RouteTransition>

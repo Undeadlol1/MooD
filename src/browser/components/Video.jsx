@@ -22,7 +22,7 @@ import { toggleControls, openControls, closeControls } from 'browser/redux/actio
 			dispatch(toggleControls(boolean))
 		},
 		requestNewVideo(params) {
-			dispatch(fetchNode(ownProps.moodSlug))
+			dispatch(fetchNode())
 		}
     })
 )
