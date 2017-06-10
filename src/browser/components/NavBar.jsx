@@ -6,6 +6,7 @@ import { AppBar, Avatar } from 'material-ui'
 import LoginLogoutButton from 'browser/components/LoginLogoutButton'
 import { toggleSidebar } from 'browser/redux/actions/GlobalActions'
 
+const titleStyles = { color: 'rgb(48, 48, 48)' }
 const LoginLogoutButtonStyles = { marginTop: '5.5px' }
 
 @connect(
@@ -18,7 +19,13 @@ const LoginLogoutButtonStyles = { marginTop: '5.5px' }
 class NavBar extends Component {
     render() {
         const { username, className, children, dispatch, ...rest } = this.props
-        const titleLink = <Link to="/" className="NavBar__home-link">MooD</Link>
+        const titleLink =   <Link
+                                to="/"
+                                style={titleStyles}
+                                className="NavBar__home-link"
+                            >
+                                MooD
+                            </Link>
         const loginButton = username
                             ? <Link to={`/users/${username}`}>
                                 <Avatar
