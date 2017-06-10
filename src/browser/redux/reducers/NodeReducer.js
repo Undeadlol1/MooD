@@ -3,6 +3,7 @@ const decisionStructure = {
 								UserId: '',
 								NodeId: '',
 								MoodId: '',
+								vote: null,
 								NodeRating: '',
 								nextViewAt: '',
 							}
