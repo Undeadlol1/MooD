@@ -4,7 +4,9 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { AppBar, Avatar } from 'material-ui'
 import LoginLogoutButton from 'browser/components/LoginLogoutButton'
-import { toggleControls } from 'browser/redux/actions/GlobalActions'
+import { toggleSidebar } from 'browser/redux/actions/GlobalActions'
+
+const LoginLogoutButtonStyles = { marginTop: '5.5px' }
 
 @connect(
     ({ user, global  }, ownProps) => {
@@ -24,7 +26,7 @@ class NavBar extends Component {
                                     src={`https://api.adorable.io/avatars/100/${username}.png`}
                                 />
                               </Link>
-                            : <LoginLogoutButton />
+                            : <LoginLogoutButton style={LoginLogoutButtonStyles} />
 
         return  <header className={'NavBar ' + className} {...rest}>
                     <AppBar
