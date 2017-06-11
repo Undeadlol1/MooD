@@ -41,8 +41,8 @@ import { parseJSON, checkStatus } from 'browser/redux/actions/actionHelpers'
 })
 @connect(
 	// stateToProps
-	({mood, node}, ownProps) => 
-    ({mood, node, ...ownProps}),
+	({mood, node: {dialogIsOpen}}, ownProps) =>
+    ({mood, dialogIsOpen, ...ownProps}),
 	// dispatchToProps
     (dispatch, ownProps) => ({
         insertNode(formValues) {
