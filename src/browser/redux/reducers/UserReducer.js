@@ -17,11 +17,11 @@ const emptyUserObject = Map({
 	Profile: emptyProfileObject,
 })
 
-const initialState = Map({
-	...emptyUserObject,
-	loginIsOpen: false,
+export const initialState = Map({
+	...emptyUserObject.toJS(),
 	loading: false,
-	fetchedUser: emptyUserObject
+	loginIsOpen: false,
+	fetchedUser: emptyUserObject,
 })
 
 export default (state = initialState, { type, payload }) => {
@@ -35,8 +35,8 @@ export default (state = initialState, { type, payload }) => {
 				loginIsOpen: isEmpty(payload) && state.get('loading') && state.get('loginIsOpen')
 			})
 		case 'RECIEVE_FETCHED_USER':
-			return state.mergeDeep({
-				loading: false,				
+			return state.set({
+				loading: false,
 				fetchedUser: payload
 			})
 		case 'REMOVE_FETCHED_USER':
@@ -44,7 +44,7 @@ export default (state = initialState, { type, payload }) => {
 				fetchedUser: emptyUserObject
 			})
 		case 'REMOVE_CURRENT_USER':
-			return state.merge(emptyUserObject)
+			return state.mergeWith(emptyUserObject)
 		case 'TOGGLE_LOGIN_DIALOG':
 			return state.set('loginIsOpen', payload)
 		default:
