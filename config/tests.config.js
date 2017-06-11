@@ -30,9 +30,8 @@ var clientConfig =  merge(commonConfig, {
         "react/lib/ReactContext": true,
         "react/lib/ExecutionEnvironment": true,
     },
-    devtool: 'cheap-module-source-map',
     target: 'web',
-    entry: [path.resolve('mocha!', __dirname, '../', 'src/browser/test/browser.tests.entry.js')],
+    entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/browser/test/browser.tests.entry.js')],
     output : {
         publicPath: '/',
         filename: 'client.test.js',        
@@ -50,8 +49,7 @@ var clientConfig =  merge(commonConfig, {
 });
 
 var serverConfig =   merge(commonConfig, {
-    devtool: 'cheap-module-source-map',
-    target: 'node',  
+    target: 'node',
     entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/server/test/server.tests.entry.js')],
     node: {
         __filename: true,
