@@ -58,9 +58,6 @@ export default describe('/decisions API', function() {
                         Number(node.rating) > 0
                         ? expect(body.NodeRating).above(node.rating)
                         : expect(body.NodeRating).below(node.rating)
-
-                        console.log('node.rating: ', node.rating);
-                        console.log('body.NodeRating: ', body.NodeRating);
                     })
         })
     })
