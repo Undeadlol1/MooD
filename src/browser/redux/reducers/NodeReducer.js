@@ -1,3 +1,4 @@
+// TODO add immutable
 const decisionStructure = {
 								rating: '',
 								UserId: '',
@@ -36,7 +37,9 @@ export default (state = initialState, {type, payload}) => {
 			newState = Object.assign({}, state, payload || initialState, {
 				loading: false
 			})
-			// if (!payload) newState = Object.assign({}, state, initialState)
+			break
+		case 'UPDATE_NODE':
+			newState = Object.assign({}, state, payload)
 			break
 		case 'TOGGLE_DIALOG':
 			newState = Object.assign({}, state, {

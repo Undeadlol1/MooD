@@ -4,17 +4,17 @@ import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
 import { API_URL } from '../../../../config'
 import { stringify } from 'query-string'
 
-const moodsUrl = API_URL + 'moods/'
 const nodesUrl = API_URL + 'nodes/'
 const decisionsUrl = API_URL + 'decisions/'
 const externalsUrl = API_URL + 'externals/search/'
 
 export const actions = createActions({
+  UNLOAD_NODE: () => null,
   TOGGLE_DIALOG: () => null,
   RECIEVE_NODE: node => node,
+  UPDATE_NODE: object => object,
   FETCHING_IN_PROGRESS: () => null,
   FETCHING_ERROR: reason => reason,
-  UNLOAD_NODE: () => null,
   RECIEVE_SEARCHED_VIDEOS: videos => videos,
 })
 
@@ -52,6 +52,7 @@ export const fetchNode = slug => (dispatch, getState) => {
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(data => {
+			console.log('data: ', data);
 			/*
 				unload node before assigning new one because
 				mutability does node load youtube video if node is the same
@@ -60,17 +61,6 @@ export const fetchNode = slug => (dispatch, getState) => {
 			dispatch(actions.recieveNode((data)))
 		})
 		.catch(err => console.error('fetchNode failed!', err))
-}
-
-/**
- * change Node's Decision rating
- * @param {Object} payload DecisionId:string and rating:number
- */
-export const changeRating = payload => (dispatch, getState) => {
-	// if (payload.rating <= 3) dispatch(requestNewVideo()) // TODO add this
-	if (!payload.NodeId) payload.NodeId = selectn('node.id', getState()) // TODO rework this
-	fetch(decisionsUrl, headersAndBody(payload))
-		.then(checkStatus)
 }
 
 /**
@@ -85,4 +75,24 @@ export const youtubeSearch = query => (dispatch, getState) => {
 			dispatch(actions.recieveSearchedVideos(data))
 		})
 		.catch(err => console.error('youtubeSearch failed!', err))
+}
+
+/**
+ * vote for node
+ * @param {Boolean} boolean value to set in Decision.vote
+ */
+export const vote = boolean => (dispatch, getState) => {
+	let payload = {}
+	payload.NodeId = getState().node.id
+	payload.vote = boolean
+	fetch(decisionsUrl, headersAndBody(payload))
+		.then(checkStatus)
+		.then(parseJSON)
+		.then(({vote}) => {
+			dispatch(actions.updateNode({vote}))
+		})
+		// TODO
+		// .catch(() => {
+		// 	dispatch(actions.voteFailure)
+		// })
 }
