@@ -8,8 +8,8 @@ import { parseUrl } from 'shared/parsers.js'
 import { assignIn as extend, isEmpty } from 'lodash'
 import NodesInsert from 'browser/components/NodesInsert'
 import { translate } from 'browser/containers/Translator'
-import { toggleControls } from 'browser/redux/actions/GlobalActions'
-import { insertNode, actions } from 'browser/redux/actions/NodeActions'
+import { actions } from 'browser/redux/actions/GlobalActions'
+import { insertNode } from 'browser/redux/actions/NodeActions'
 import { parseJSON, checkStatus } from 'browser/redux/actions/actionHelpers'
 
 @reduxForm({
@@ -41,8 +41,8 @@ import { parseJSON, checkStatus } from 'browser/redux/actions/actionHelpers'
 })
 @connect(
 	// stateToProps
-	({mood, node}, ownProps) => 
-    ({mood, node, ...ownProps}),
+	({mood, node: {dialogIsOpen}}, ownProps) =>
+    ({mood, dialogIsOpen, ...ownProps}),
 	// dispatchToProps
     (dispatch, ownProps) => ({
         insertNode(formValues) {
@@ -57,7 +57,7 @@ import { parseJSON, checkStatus } from 'browser/redux/actions/actionHelpers'
             dispatch(actions.toggleDialog())
         },
         toggleControls(boolean) {
-			dispatch(toggleControls(boolean))
+			dispatch(actions.toggleControls(boolean))
 		},
     })
 )

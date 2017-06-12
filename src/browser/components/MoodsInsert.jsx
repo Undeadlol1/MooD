@@ -8,9 +8,9 @@ import { insertMood } from '../redux/actions/MoodActions'
 import { TextField } from 'redux-form-material-ui'
 import { parseJSON } from'../redux/actions/actionHelpers'
 import slugify from 'slug'
-import store from '../redux/store'
+import store from 'browser/redux/store'
 import { FormattedMessage } from 'react-intl';
-import { translate } from '../containers/Translator'
+import { translate } from 'browser/containers/Translator'
 
 @reduxForm({
 	form: 'MoodsInsert',
@@ -51,7 +51,7 @@ export default class MoodsInsert extends Component {
 	    return  <form onSubmit={handleSubmit(insertMood)}>
 					<Row>
 						<Col xs={12}>
-							<Field name="name" component={TextField} hidden={asyncValidating} hintText={<FormattedMessage id="add_your_own_mood" />} fullWidth />
+							<Field name="name" component={TextField} hidden={asyncValidating} hintText={translate("add_your_own_mood")} fullWidth />
 						</Col>
 					</Row>
 		        </form>

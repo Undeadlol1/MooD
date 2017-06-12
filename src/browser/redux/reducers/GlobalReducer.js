@@ -1,32 +1,34 @@
+import { fromJS } from 'immutable'
+import { isBoolean } from 'lodash'
 // TODO this is a mess, reworking needed
-const initialState =	{
-							headerIsShown: true,
-							sidebarIsOpen: false,
-							controlsAreShown: false,
-							error: '', // never used atm
-                            loading: true, // change to null?
-                        }
+// TODO rename to UiReducer
+export const initialState =	fromJS({
+								headerIsShown: true,
+								sidebarIsOpen: false,
+								controlsAreShown: false,
+							})
 
 export default (state = initialState, { type, payload }) => {
-	let newState = state
-	
+	/**
+	 * toggle value in state
+	 * @param {any} selector value to update
+	 * @returns new state with updated field
+	 */
+	function toggleElement(selector) {
+		// event could passed to this function
+		const value = 	isBoolean(payload)
+						? payload
+						: !state.get(selector)
+		return state.set(selector, value)
+	}
 	switch(type) {
 		case 'TOGGLE_HEADER':
-			return 	Object.assign({},
-						state,
-						{ headerIsShown: payload }
-					)
+			return toggleElement('headerIsShown')
 		case 'TOGGLE_SIDEBAR':
-			return 	Object.assign({},
-						state,
-						{ sidebarIsOpen: payload }
-					)
+			return toggleElement('sidebarIsOpen')
 		case 'TOGGLE_CONTROLS':
-			return 	Object.assign({},
-						state,
-						{ controlsAreShown: payload }
-					)
+			return toggleElement('controlsAreShown')
+		default:
+			return state
 	}
-
-	return newState
 }
