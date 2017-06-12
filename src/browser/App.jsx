@@ -3,7 +3,7 @@ import 'es6-promise/auto'
 import 'isomorphic-fetch' // TODO move to server? or to webpack?
 // material-ui dependency
 import injectTapEventPlugin from 'react-tap-event-plugin'
-injectTapEventPlugin(); 
+injectTapEventPlugin();
 
 /* DEPENDENCIES */
 import React, { Component } from 'react';
@@ -12,7 +12,6 @@ import { Router, browserHistory, RouterContext } from 'react-router';
 import { Provider as ReduxProvider } from 'react-redux';
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import store from './redux/store'
-import ReduxToastr from 'react-redux-toastr'
 import routesConfig from './routes'
 import Translator from './containers/Translator'
 
@@ -35,7 +34,6 @@ class App extends Component {
                       ? <Router history={browserHistory} routes={routesConfig} />
                       : <RouterContext {...this.props} />
                     }
-                    <ReduxToastr position="top-left" progressBar />
                 </Translator>
               </ReduxProvider>
             </MuiThemeProvider>

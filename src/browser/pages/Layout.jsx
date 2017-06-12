@@ -1,14 +1,15 @@
-import { Grid } from 'react-styled-flexboxgrid';
 import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux';
-import { Link } from 'react-router';
-import NavBar from '../components/NavBar'
-import { fetchCurrentUser, logoutCurrentUser } from '../redux/actions/UserActions'
-import Sidebar from '../components/Sidebar'
-import LoginDialog from '../components/LoginDialog'
-import LoginLogoutButton from '../components/LoginLogoutButton'
 import selectn from 'selectn'
+import PropTypes from 'prop-types'
+import { Link } from 'react-router'
+import { connect } from 'react-redux'
+import ReduxToastr from 'react-redux-toastr'
+import NavBar from 'browser/components/NavBar'
+import { Grid } from 'react-styled-flexboxgrid'
+import Sidebar from 'browser/components/Sidebar'
+import LoginDialog from 'browser/components/LoginDialog'
+import LoginLogoutButton from 'browser/components/LoginLogoutButton'
+import { fetchCurrentUser, logoutCurrentUser } from 'browser/redux/actions/UserActions'
 
 let timeout = null
 
@@ -48,7 +49,7 @@ export default class Layout extends React.Component {
 	// 	$('body').css('background-color', 'rgb(48, 48, 48)')
 	// 	$('input[type=url]:focus:not([readonly])').css('box-shadow', 'none !important')
 	// }
-	
+
 	componentDidMount() {
 		this.props.fetchCurrentUser()
 	}
@@ -73,7 +74,7 @@ export default class Layout extends React.Component {
 		const currentPath = this.context.router.getCurrentPathname && this.context.router.getCurrentPathname()
 		const location = selectn('router.location.pathname', this.context)
 		const isMoodPage = location.includes('/mood/')
-		
+
 		// styles
 		const 	baseStyles = 	{
 									height: '100vh',
@@ -86,7 +87,7 @@ export default class Layout extends React.Component {
 									zIndex: '1',
 									width: '100%'
 								}
-								
+
 		return <div
 					className='Layout'
 					style={baseStyles}
@@ -102,6 +103,7 @@ export default class Layout extends React.Component {
 					</main>
 					<Sidebar />
 					<LoginDialog />
+					<ReduxToastr position="top-left" progressBar />
 				</div>
 	}
 }
