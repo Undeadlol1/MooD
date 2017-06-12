@@ -71,11 +71,12 @@ class Translator extends Component {
             const localeCookie = cookies.get('locale')
             if (localeCookie) return localeCookie
         }
-        return navigator
-                ? (navigator.languages && navigator.languages[0])
-                || navigator.language
-                || navigator.userLanguage
-                : DEFAULT_LANGUAGE
+        const ret = navigator
+                    ? (navigator.languages && navigator.languages[0])
+                    || navigator.language
+                    || navigator.userLanguage
+                    : DEFAULT_LANGUAGE
+        return ret || DEFAULT_LANGUAGE
     }
 
     render() {
