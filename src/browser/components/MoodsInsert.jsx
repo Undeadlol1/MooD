@@ -12,7 +12,21 @@ import store from 'browser/redux/store'
 import { FormattedMessage } from 'react-intl';
 import { translate } from 'browser/containers/Translator'
 
-@reduxForm({
+export class MoodsInsert extends Component {
+	render() {
+		const { insertMood, handleSubmit, asyncValidating } = this.props
+	    return  <form onSubmit={handleSubmit(insertMood)}>
+					<Row>
+						<Col xs={12}>
+							<Field name="name" component={TextField} hidden={asyncValidating} hintText={translate("add_your_own_mood")} fullWidth />
+						</Col>
+					</Row>
+		        </form>
+
+	}
+}
+// TODO reorganize this for better testing
+export default reduxForm({
 	form: 'MoodsInsert',
 	asyncValidate(values) { // TODO find a way to not use this thing!
 		return fetch('/api/moods/mood/' + slugify(values.name))
@@ -33,7 +47,7 @@ import { translate } from 'browser/containers/Translator'
 	},
 	asyncBlurFields: [ 'name' ]
 })
-@connect(
+(connect(
 	(state, ownProps) => ({...ownProps}),
     (dispatch, ownProps) => ({
         insertMood({name}) {
@@ -44,17 +58,4 @@ import { translate } from 'browser/containers/Translator'
             dispatch(insertMood(name, insertSucces))
         }
     })
-)
-export default class MoodsInsert extends Component {
-	render() {
-		const { insertMood, handleSubmit, asyncValidating } = this.props
-	    return  <form onSubmit={handleSubmit(insertMood)}>
-					<Row>
-						<Col xs={12}>
-							<Field name="name" component={TextField} hidden={asyncValidating} hintText={translate("add_your_own_mood")} fullWidth />
-						</Col>
-					</Row>
-		        </form>
-
-	}
-}
+)(MoodsInsert))
