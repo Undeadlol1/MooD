@@ -11,7 +11,7 @@ import { RouteTransition } from 'react-router-transition';
 import presets from 'react-router-transition/src/presets';
 
 @connect(
-	({ global, mood }) => {
+	({ mood }) => {
 		const 	{ moods, loading } = mood
 		const searchedMoods = mood.get('searchedMoods')
 		return 	{

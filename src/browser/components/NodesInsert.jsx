@@ -12,7 +12,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton'
 class NodesInsert extends Component {
     render() {
         const { props } = this
-        const { handleSubmit, toggleDialog } = this.props
+        const { handleSubmit, toggleDialog, dialogIsOpen } = this.props
         const isDisabled = props.asyncValidating == 'url' || props.submitting
 
         const actions = [
@@ -31,7 +31,7 @@ class NodesInsert extends Component {
                                 disabled={isDisabled}
                             />
                         ]
-
+// TODO this 'handlesubmit' just bugs me out
         return  <Form onSubmit={handleSubmit(props.insertNode)} className="NodesInsert">
                     
                     {/* BUTTON */}
@@ -46,8 +46,8 @@ class NodesInsert extends Component {
                     <Dialog
                         modal={true}
                         actions={actions} 
+                        open={dialogIsOpen}
                         onRequestClose={toggleDialog}
-                        open={props.node.dialogIsOpen}
                         title={translate("add_something")}
                     >
                         <Field
@@ -65,7 +65,9 @@ class NodesInsert extends Component {
 }
 
 NodesInsert.propTypes = {
-    moodSlug: PropTypes.string.isRequired
+    dialogIsOpen: PropTypes.bool.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    toggleDialog: PropTypes.func.isRequired,
 }
 
 export default NodesInsert

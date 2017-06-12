@@ -114,38 +114,38 @@ export default describe('/nodes API', function() {
         }
     })
 
-    describe('/validate/:MoodId/:contentId', async function() {
-        const route = '/api/nodes/validate/'
-        try {
-            it('fails without "MoodId"', async function() {
-                await user.get(route).expect(404)
-            })
-            it('fails without "contentId"', async function() {
-                const mood = await Mood.findOne({order: 'rand()'})
-                await user.get(route + mood.id).expect(404)
-            })
-            it('fails with "contentId" but no "MoodId', async function() {
-                const node = await Node.findOne({order: 'rand()'})
-                await user.get(route + "/" + node.id).expect(500)
-            })
-            it('gets response properly', async function() {
-                const mood = await Mood.findOne({order: 'rand()'})
-                const node = await Node.findOne({
-                                    order: 'rand()',
-                                    where: {MoodId: mood.id}})
-                await user
-                        .get(`${route}${mood.id}/${node.contentId}`)
-                        .expect(200)
-                        .expect('Content-Type', /json/)
-                        .then(({body}) => {
-                            expect(body.id).to.be.equal(node.id)
-                            expect(body.MoodId).to.be.equal(node.MoodId)
-                        })
-            })
-        } catch (error) {
-            throw new Error(error)
-        }
-    })
+    // describe('/validate/:MoodId/:contentId', async function() {
+    //     const route = '/api/nodes/validate/'
+    //     try {
+    //         it('fails without "MoodId"', async function() {
+    //             await user.get(route).expect(404)
+    //         })
+    //         it('fails without "contentId"', async function() {
+    //             const mood = await Mood.findOne({order: 'rand()'})
+    //             await user.get(route + mood.id).expect(404)
+    //         })
+    //         it('fails with "contentId" but no "MoodId', async function() {
+    //             const node = await Node.findOne({order: 'rand()'})
+    //             await user.get(route + "/" + node.id).expect(500)
+    //         })
+    //         it('gets response properly', async function() {
+    //             const mood = await Mood.findOne({order: 'rand()'})
+    //             const node = await Node.findOne({
+    //                                 order: 'rand()',
+    //                                 where: {MoodId: mood.id}})
+    //             await user
+    //                     .get(`${route}${mood.id}/${node.contentId}`)
+    //                     .expect(200)
+    //                     .expect('Content-Type', /json/)
+    //                     .then(({body}) => {
+    //                         expect(body.id).to.be.equal(node.id)
+    //                         expect(body.MoodId).to.be.equal(node.MoodId)
+    //                     })
+    //         })
+    //     } catch (error) {
+    //         throw new Error(error)
+    //     }
+    // })
 
 
     // TODO rework this

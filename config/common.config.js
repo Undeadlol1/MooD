@@ -19,7 +19,7 @@ var extractSass = new ExtractTextPlugin({
 
 const developmentPlugins = isDevelopment || isTest ? [
     // new WebpackNotifierPlugin({alwaysNotify: false}),
-    new FriendlyErrorsWebpackPlugin(),
+    // new FriendlyErrorsWebpackPlugin(),
 ] : []
 
 var stats = {
@@ -92,6 +92,7 @@ var baseConfig = {
             browser: path.join(__dirname, '/../', 'src/browser/'),
             server : path.join(__dirname, '/../', 'src/server/'),
             shared : path.join(__dirname, '/../', 'src/shared/'),
+            config : path.join(__dirname, '/../', 'config.js'),
         },
         enforceModuleExtension: false,
         extensions: ['.js', '.jsx'],

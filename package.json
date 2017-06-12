@@ -8,7 +8,7 @@
   "scripts": {
     "migrate": "NODE_ENV=test sequelize db:migrate; NODE_ENV=development sequelize db:migrate",
     "test": "clear; NODE_ENV=test webpack --config ./config/tests.config.js --display-error-details --hide-modules",
-    "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/targets.config.js --display-error-details --hide-modules\" \"nodemon dist/server.js\"",
+    "start": "npm rebuild node-sass; NODE_ENV=development concurrently \"webpack --config ./config/targets.config.js --display-error-details --hide-modules\" \"nodemon dist/server.js --watch dist/server.js\"",
     "production": "git pull; yarn; NODE_ENV=production sequelize db:migrate; NODE_ENV=production webpack --config ./config/targets.config.js --display-error-details; npm rebuild node-sass; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc'; pm2 monit;"
   },
   "dependencies": {
@@ -93,6 +93,7 @@
     "chai": "^3.5.0",
     "chai-datetime": "^1.4.1",
     "chai-enzyme": "^0.7.1",
+    "chai-immutable": "^1.6.0",
     "colors": "^1.1.2",
     "concurrently": "^3.4.0",
     "copy-webpack-plugin": "^4.0.1",
@@ -118,6 +119,7 @@
     "mocha-loader": "^1.1.1",
     "mocha-webpack": "^0.7.0",
     "morgan": "^1.8.1",
+    "nightmare": "^2.10.0",
     "node-sass": "^4.5.2",
     "nodemon": "^1.11.0",
     "pm2": "^2.4.4",
@@ -126,7 +128,8 @@
     "sequelize-cli": "^2.7.0",
     "shelljs": "^0.7.7",
     "shelljs-nodecli": "^0.1.1",
-    "source-map-support": "^0.4.11",
+    "sinon": "^2.3.4",
+    "source-map-support": "^0.4.15",
     "style-loader": "^0.13.2",
     "supertest": "^3.0.0",
     "transform-runtime": "^0.0.0",
