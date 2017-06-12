@@ -1,27 +1,26 @@
 // dependencies
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Grid } from 'react-styled-flexboxgrid';
-import { injectProps } from 'relpers'
 import { connect } from 'react-redux'
+import { Grid } from 'react-styled-flexboxgrid'
 import { RouteTransition } from 'react-router-transition'
 import presets from 'react-router-transition/src/presets'
 // project files
-import { fetchMoods } from 'browser/redux/actions/MoodActions'
 import Loading from 'browser/components/Loading'
 import MoodsFind from 'browser/components/MoodsFind'
 import MoodsList from 'browser/components/MoodsList'
 import MoodsInsert from 'browser/components/MoodsInsert'
 import YoutubeSearch from 'browser/components/YoutubeSearch'
+import { fetchMoods } from 'browser/redux/actions/MoodActions'
 
 export class IndexPage extends Component {
 
 	componentWillMount() { this.props.fetchMoods() }
 
-    @injectProps
-    render({loading, moods, currentPage, totalPages, location}) {
+    render() {
+		const {loading, moods, currentPage, totalPages, location} = this.props
 		const isBrowser = process.env.BROWSER
-		return  <RouteTransition				
+		return  <RouteTransition
 						{...presets.pop}
 						className="IndexPage"
 						pathname={location.pathname}
@@ -31,8 +30,8 @@ export class IndexPage extends Component {
 						<Loading condition={isBrowser && loading}>
 							<MoodsList
 								moods={moods}
-								currentPage={currentPage}
-								totalPages={totalPages} />
+								totalPages={totalPages}
+								currentPage={currentPage} />
 						</Loading>
 					</Grid>
 				</RouteTransition>
