@@ -7,6 +7,7 @@ import slugify from 'slug'
 import { uniq } from 'lodash'
 import colors from 'colors'
 import users from '../../data/fixtures/users'
+import { loginUser } from './auth.test'
 import { stringify } from 'query-string'
 chai.use(require('chai-datetime'));
 chai.should();
@@ -34,7 +35,7 @@ function login() {
 }
 
 export default describe('/nodes API', function() {
-    
+
     before(async function() {
         // TODO add logout? to test proper user login?
         // Kill supertest server in watch mode to avoid errors
@@ -80,7 +81,7 @@ export default describe('/nodes API', function() {
     }
 
     it('GET single node', async function() {
-        const mood = await Mood.findOne({order: 'rand()'})        
+        const mood = await Mood.findOne({order: 'rand()'})
         const node = await getNextNode(mood.slug)
         node.url.should.be.string
     })
@@ -91,6 +92,7 @@ export default describe('/nodes API', function() {
             const nodeIds = []
             for(var x = 0; x < 10; x++) {
                 const nextNode = await getNextNode(slug, nextNodeId)
+                // console.log('nextnode', nextNode)
                 nextNodeId = nextNode.id
                 nodeIds.push(nextNode.id)
             }
@@ -105,14 +107,13 @@ export default describe('/nodes API', function() {
             const mood = await Mood.findOne()
             const initialNode = await getNextNode(mood.slug)
             const nodeIds = await cycleThroughNodes(mood.slug, initialNode.id)
-            
+
             expect(uniq(nodeIds).length, 'unique nodes').to.be.above(6)
         } catch (error) {
             throw new Error(error)
         }
     })
 
-    console.warn('dont forget that this is broken');
     // describe('/validate/:MoodId/:contentId', async function() {
     //     const route = '/api/nodes/validate/'
     //     try {
@@ -138,45 +139,48 @@ export default describe('/nodes API', function() {
     //                     .expect('Content-Type', /json/)
     //                     .then(({body}) => {
     //                         expect(body.id).to.be.equal(node.id)
-    //                         exp11ect(body.MoodId).to.be.equal(node.MoodId)
+    //                         expect(body.MoodId).to.be.equal(node.MoodId)
     //                     })
     //         })
     //     } catch (error) {
     //         throw new Error(error)
     //     }
     // })
-    
 
-    // it('changes Decision properly', async function() {
-    //     await login()
 
-    //     const currentDate = new Date()
-    //     const mood = await Mood.findOne({order: 'rand()'})
-    //     const firstNode = await getNextNode(mood.slug)
+    // TODO rework this
+    // TODO do this (or nove this in decisionsApi.test?)
+    it('changes Decision properly', async function() {
+        await login()
 
-    //     // this is needed to make a change to firstNode
-    //     // (because node changes on second request to api)
-    //     await getNextNode(mood.slug, firstNode.id)
-        
-    //     const updatedDecision = await Decision.findById(firstNode.Decision.id)
-    //     expect(updatedDecision.position).to.not.be.equal("0")
-    //     expect(updatedDecision.lastViewAt).to.be.beforeTime(currentDate) // TODO is this true?        
-    //     // expect(updatedDecision.position > 0).to.be.true
-    // })
+        const currentDate = new Date()
+        const mood = await Mood.findOne({order: 'rand()'})
+        const firstNode = await getNextNode(mood.slug)
 
-    // it('nodes cycle properly for logged in user', async function() {
-    //     try {            
-    //         await login()
-            
-    //         const mood = await Mood.findOne({order: 'rand()'})
-    //         const node = await getNextNode(mood.slug)
-    //         const nodeIds = await cycleThroughNodes(mood.slug)
-            
-    //         expect(uniq(nodeIds), 'unique nodes').to.not.be.equal(1)       
-    //     } catch (error) {
-    //         console.error(error)
-    //         throw new Error(error)
-    //     }
-    // })
+        // this is needed to make a change to firstNode
+        // (because node changes on second request to api)
+        await getNextNode(mood.slug, firstNode.id)
+
+        const updatedDecision = await Decision.findById(firstNode.Decision.id)
+        // console.log('updatedDecision', updatedDecision.dataValues)
+        expect(updatedDecision.position).to.not.be.equal("0")
+        expect(updatedDecision.lastViewAt).to.be.beforeTime(currentDate) // TODO is this true?
+        // expect(updatedDecision.position > 0).to.be.true
+    })
+    // check this tests
+    it('nodes cycle properly for logged in user', async function() {
+        try {
+            await login()
+
+            const mood = await Mood.findOne({order: 'rand()'})
+            const node = await getNextNode(mood.slug)
+            const nodeIds = await cycleThroughNodes(mood.slug)
+
+            expect(uniq(nodeIds), 'unique nodes').to.not.be.equal(1)
+        } catch (error) {
+            console.error(error)
+            throw new Error(error)
+        }
+    })
 
 })

@@ -41,6 +41,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,      
       type: DataTypes.INTEGER,
       // unique: 'compositeIndex'
+    },
+    vote: {
+      allowNull: true,
+      type: DataTypes.BOOLEAN
     }
   }, {
     tableName: 'decisions',

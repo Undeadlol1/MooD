@@ -18,7 +18,7 @@ import { actions } from 'browser/redux/actions/GlobalActions'
 			dispatch(actions.toggleControls(false))
 		},
 		requestNewVideo(params) {
-			dispatch(fetchNode(ownProps.moodSlug))
+			dispatch(fetchNode())
 		}
     })
 )
