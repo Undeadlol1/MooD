@@ -119,6 +119,7 @@
     "mocha-loader": "^1.1.1",
     "mocha-webpack": "^0.7.0",
     "morgan": "^1.8.1",
+    "nightmare": "^2.10.0",
     "node-sass": "^4.5.2",
     "nodemon": "^1.11.0",
     "pm2": "^2.4.4",
