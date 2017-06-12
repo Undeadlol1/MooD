@@ -27,8 +27,9 @@ var clientConfig =  merge(commonConfig, {
     externals: {
         "jsdom": "window",
         "cheerio": "window",
-        "react/lib/ReactContext": true,
-        "react/lib/ExecutionEnvironment": true,
+        "react/addons": 'react',
+        "react/lib/ReactContext": 'react',
+        "react/lib/ExecutionEnvironment": 'react',
     },
     target: 'web',
     entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/browser/test/browser.tests.entry.js')],
