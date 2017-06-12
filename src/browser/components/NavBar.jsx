@@ -3,39 +3,45 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { AppBar, Avatar } from 'material-ui'
-import { actions } from 'browser/redux/actions/GlobalActions'
 import LoginLogoutButton from 'browser/components/LoginLogoutButton'
+import { toggleSidebar } from 'browser/redux/actions/GlobalActions'
+
+const titleStyles = { color: 'rgb(48, 48, 48)' }
+const LoginLogoutButtonStyles = { marginTop: '5.5px' }
 
 @connect(
     ({ user, global  }, ownProps) => {
-        return {
-            ...ownProps,
-            headerIsShown: global.get('headerIsShown'),
-            username: user.get('username') && user.get('username').toLowerCase(), // TODO this lowercase addition is ugly
-        }
-    },
-    (dispatch, ownProps) => ({
-        toggleSidebar() {
-            dispatch(actions.toggleSidebar())
-        }
-    })
+        const username = user.get('username')
+                         && user.get('username').toLowerCase()
+        return { username, ...ownProps }
+    }
 )
 class NavBar extends Component {
     render() {
-        const { username, headerIsShown, className, toggleSidebar, children, ...rest } = this.props
-        const titleLink = <Link to="/" className="NavBar__home-link">MooD</Link>
+        const { username, className, children, dispatch, ...rest } = this.props
+        const titleLink =   <Link
+                                to="/"
+                                style={titleStyles}
+                                className="NavBar__home-link"
+                            >
+                                MooD
+                            </Link>
         const loginButton = username
                             ? <Link to={`/users/${username}`}>
-                                <Avatar className="NavBar__avatar" src={`https://api.adorable.io/avatars/100/${username}.png`} />
+                                <Avatar
+                                    className="NavBar__avatar"
+                                    src={`https://api.adorable.io/avatars/100/${username}.png`}
+                                />
                               </Link>
-                            : <LoginLogoutButton />
+                            : <LoginLogoutButton style={LoginLogoutButtonStyles} />
 
         return  <header className={'NavBar ' + className} {...rest}>
                     <AppBar
+                        {...rest}
                         title={titleLink}
                         iconElementRight={loginButton}
-                        onLeftIconButtonTouchTap={toggleSidebar}
-                        {...rest} />
+                        onLeftIconButtonTouchTap={() => dispatch(toggleSidebar())}
+                    />
                         {children}
                 </header>
     }
