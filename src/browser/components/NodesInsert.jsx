@@ -34,7 +34,7 @@ class NodesInsert extends Component {
                                 disabled={isDisabled}
                             />
                         ]
-
+// TODO this 'handlesubmit' just bugs me out
         return  <Form onSubmit={handleSubmit(props.insertNode)} className="NodesInsert">
                     
                     {/* BUTTON */}
