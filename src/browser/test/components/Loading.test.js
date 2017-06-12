@@ -26,9 +26,12 @@ describe('<Loading />', () => {
   });
 
   it('renders children conditionaly', () => {
-    const loading = (condition) => shallow(<Loading condition={condition}>
-                                              <section></section>
-                                            </Loading>)
+    const loading = condition => (
+      shallow(
+        <Loading condition={condition}>
+          <section></section>
+        </Loading>
+    ))
     expect(loading(false).find('section')).to.have.length(1)
     expect(loading(true).find('section')).to.has.length(0)
   });
