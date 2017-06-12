@@ -92,6 +92,7 @@ var baseConfig = {
             browser: path.join(__dirname, '/../', 'src/browser/'),
             server : path.join(__dirname, '/../', 'src/server/'),
             shared : path.join(__dirname, '/../', 'src/shared/'),
+            config : path.join(__dirname, '/../', 'config.js'),
         },
         enforceModuleExtension: false,
         extensions: ['.js', '.jsx'],
