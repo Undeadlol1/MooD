@@ -33,7 +33,7 @@ export const fetchCurrentUser = () => dispatch => {
 export const logoutCurrentUser = () => dispatch => {
 	fetch(authUrl + 'logout', {credentials: 'same-origin'})
 		.then(checkStatus)
-		.then(() => dispatch(actions.removeCurrentUser())) // TODO refactor without arrow function?
+		.then(() => dispatch(removeCurrentUser())) // TODO refactor without arrow function?
 		.catch(err => console.error('logoutCurrentUser failed!', err))
 }
 /**
