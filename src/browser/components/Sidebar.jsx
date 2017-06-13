@@ -29,7 +29,7 @@ export default class Sidebar extends Component {
 							<Link onClick={toggleSidebar} to={`users/${username}`}>{translate("profile")}</Link>
 						</MenuItem>
 					}
-					<MenuItem onClick={toggleSidebar}><LoginLogoutButton inline fullWidth /></MenuItem>
+					<MenuItem onClick={toggleSidebar}><LoginLogoutButton inline /></MenuItem>
 					<MenuItem><Link onClick={toggleSidebar} to="search">{translate("search")}</Link></MenuItem>
 					{/*<MenuItem><Link onClick={toggleSidebar} to="about">{translate("about")}</Link></MenuItem>*/}
 				</Drawer>
