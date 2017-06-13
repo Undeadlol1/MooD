@@ -32,7 +32,7 @@ describe('user reducer', async () => {
   it('should handle REMOVE_CURRENT_USER action on initial state', () => {
     const action = actions.removeCurrentUser()
     const newState = reducer(undefined, action)
-    expect(newState).to.equal(initialState)
+    expect(newState.toJS()).to.deep.equal(initialState.toJS())
   });
 
   it('should handle RECIEVE_FETCHED_USER action on initial state', async () => {
