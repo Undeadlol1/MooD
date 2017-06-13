@@ -30,8 +30,7 @@ export async function updatePositionAndViews(decision) {
     // set lastViewAt, increment viewedAmount and set position
     const updatedDecision = await decision.update({
                                 // position: newPosition,
-                                // TODO was disabled because production database gave errors
-                                // lastViewAt: new Date(),
+                                lastViewAt: new Date(),
                                 viewedAmount: sequelize.literal('viewedAmount +1'),
                             })
 
