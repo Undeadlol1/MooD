@@ -30,7 +30,7 @@ export async function updatePositionAndViews(decision) {
     // set lastViewAt, increment viewedAmount and set position
     const updatedDecision = await decision.update({
                                 // position: newPosition,
-                                lastViewAt: new Date(),
+                                // lastViewAt: new Date(),
                                 viewedAmount: sequelize.literal('viewedAmount +1'),
                             })
 
