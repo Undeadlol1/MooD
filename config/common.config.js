@@ -7,7 +7,6 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var HappyPack = require('happypack');
-
 var isTest = process.env.NODE_ENV === "test"
 var isDevelopment = process.env.NODE_ENV === "development"
 var isProduction = process.env.NODE_ENV === "production"
@@ -28,12 +27,23 @@ var stats = {
     modules: false,
     version: false,
     children: false,
+    errorDetails: true,
+    timings: false,
 };
 
 var baseConfig = {
+    stats,
     context: path.resolve(__dirname, '../'),
-    devtool: 'cheap-module-source-map',
+    devtool: 'inline-eval-cheap-source-map', // seems like this is faster then 'cheap-module-source-map'
     watch: isDevelopment || isTest,
+    watchOptions: {
+        ignored: /node_modules/,
+        aggregateTimeout: 300,
+        poll: 1000,
+    },
+    // performance: {
+    //     hints: "error"
+    // },
     module : {
         loaders: [
             {
