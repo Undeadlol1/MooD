@@ -42,7 +42,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieSession({
   name: 'session',
-  keys: [SESSION_KEY || 'keyboard cat'],
   keys: [process.env.SESSION_KEY || 'keyboard cat'],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
