@@ -9,7 +9,7 @@ import { assignIn as extend, isEmpty } from 'lodash'
 import NodesInsert from 'browser/components/NodesInsert'
 import { translate } from 'browser/containers/Translator'
 import { actions } from 'browser/redux/actions/GlobalActions'
-import { insertNode } from 'browser/redux/actions/NodeActions'
+import { insertNode, actions as nodeActions } from 'browser/redux/actions/NodeActions'
 import { parseJSON, checkStatus } from 'browser/redux/actions/actionHelpers'
 
 @reduxForm({
@@ -54,7 +54,7 @@ import { parseJSON, checkStatus } from 'browser/redux/actions/actionHelpers'
             ownProps.reset()
         },
         toggleDialog() {
-            dispatch(actions.toggleDialog())
+            dispatch(nodeActions.toggleDialog())
         },
         toggleControls(boolean) {
 			dispatch(actions.toggleControls(boolean))
