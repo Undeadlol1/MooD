@@ -18,16 +18,6 @@ function colums(DataTypes) {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    /*
-      somehow even after dropping 'lastViewAt' in migration,
-      Sequelize does not remove the column.
-      This code is kept to avoid 'does not have default value' error
-    */
-    lastViewAt: {
-      allowNull: false,
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
     nextViewAt: DataTypes.DATE,
     NodeId: {
       allowNull: false,
@@ -54,7 +44,17 @@ function colums(DataTypes) {
       type: DataTypes.BOOLEAN
     }
   }
-  if (process.env.NODE_ENV == 'production' && process.env.URL !== "http://127.0.0.1:3000/") delete types.lastViewAt
+  if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == undefined) {
+    /* somehow even after dropping 'lastViewAt' in migration,
+      Sequelize does not remove the column.
+      This code is kept to avoid 'does not have default value' error
+    */
+    types.lastViewAt = {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    }
+  }
   return types
 }
 
