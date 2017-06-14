@@ -122,6 +122,7 @@
     "mocha.parallel": "^0.15.2",
     "morgan": "^1.8.1",
     "nightmare": "^2.10.0",
+    "nock": "^9.0.13",
     "node-sass": "^4.5.2",
     "nodemon": "^1.11.0",
     "parallel-webpack": "^1.6.1",
