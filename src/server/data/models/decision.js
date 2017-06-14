@@ -16,11 +16,16 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    // lastViewAt: {
-    //   allowNull: false,
-    //   type: DataTypes.DATE,
-    //   defaultValue: DataTypes.NOW,
-    // },
+    /*
+      somehow even after dropping 'lastViewAt' in migration,
+      Sequelize does not remove the column.
+      This code is kept to avoid 'does not have default value' error
+    */
+    lastViewAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
     nextViewAt: DataTypes.DATE,
     NodeId: {
       allowNull: false,

@@ -6,3 +6,5 @@
   --timeout 5000
   --prof
   --require mocha-clean
+  --retries 2
+  --bail

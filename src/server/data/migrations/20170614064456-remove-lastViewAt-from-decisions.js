@@ -2,6 +2,10 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
+    queryInterface.removeColumn('decisions', 'lastViewAt')
+  },
+
+  down: function (queryInterface, Sequelize) {
     queryInterface.addColumn(
       'decisions',
       'lastViewAt',
@@ -11,9 +15,5 @@ module.exports = {
         defaultValue: Sequelize.NOW,
       }
     )
-  },
-
-  down: function (queryInterface, Sequelize) {
-    queryInterface.removeColumn('decisions', 'lastViewAt')
   }
 };
