@@ -49,11 +49,11 @@ function colums(DataTypes) {
       Sequelize does not remove the column.
       This code is kept to avoid 'does not have default value' error
     */
-    types.lastViewAt = {
-      allowNull: false,
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    }
+    // types.lastViewAt = {
+    //   allowNull: false,
+    //   type: DataTypes.DATE,
+    //   defaultValue: DataTypes.NOW,
+    // }
   }
   return types
 }

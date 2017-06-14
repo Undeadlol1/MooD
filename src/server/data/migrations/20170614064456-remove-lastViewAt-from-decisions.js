@@ -2,11 +2,11 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    queryInterface.removeColumn('decisions', 'lastViewAt')
+    return queryInterface.removeColumn('decisions', 'lastViewAt')
   },
 
   down: function (queryInterface, Sequelize) {
-    queryInterface.addColumn(
+    return queryInterface.addColumn(
       'decisions',
       'lastViewAt',
       {

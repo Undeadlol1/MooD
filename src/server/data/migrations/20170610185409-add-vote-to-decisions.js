@@ -2,7 +2,7 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    queryInterface.addColumn(
+    return queryInterface.addColumn(
       'decisions',
       'vote',
       {
@@ -13,6 +13,6 @@ module.exports = {
   },
 
   down: function (queryInterface, Sequelize) {
-    queryInterface.removeColumn('decisions', 'vote')
+    return queryInterface.removeColumn('decisions', 'vote')
   }
 };
