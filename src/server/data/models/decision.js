@@ -16,11 +16,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    lastViewAt: {
-      allowNull: false,
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
+    // lastViewAt: {
+    //   allowNull: false,
+    //   type: DataTypes.DATE,
+    //   defaultValue: DataTypes.NOW,
+    // },
     nextViewAt: DataTypes.DATE,
     NodeId: {
       allowNull: false,
@@ -33,12 +33,12 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
     UserId: {
-      allowNull: false,      
+      allowNull: false,
       type: DataTypes.INTEGER,
       // unique: 'compositeIndex'
     },
     MoodId: {
-      allowNull: false,      
+      allowNull: false,
       type: DataTypes.INTEGER,
       // unique: 'compositeIndex'
     },
