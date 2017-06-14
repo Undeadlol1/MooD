@@ -37,8 +37,8 @@ class MoodPage extends Component {
 
 	componentWillUnmount() {
 		this.props.unloadMood()
-		this.props.unloadNode()		
-		this.props.toggleHeader(true)		
+		this.props.unloadNode()
+		this.props.toggleHeader(true)
 	}
 
 	render() {
@@ -65,6 +65,7 @@ class MoodPage extends Component {
 		}
 
 		return 	<div className="MoodPage">
+					{/* TODO add 'let header' here? */}
 					<RouteTransition {...presets.slideLeft} pathname={location.pathname} className="MoodPage">
 						{dom}
 					</RouteTransition>
@@ -76,9 +77,9 @@ MoodPage.propTypes = {
 	mood: PropTypes.object,
 	node: PropTypes.object,
 	// fetchMood: PropTypes.func.isRequred,
-	// fetchNode: PropTypes.func.isRequred,		
-	// unloadMood: PropTypes.func.isRequred,		
-	// unloadNode: PropTypes.func.isRequred,		
+	// fetchNode: PropTypes.func.isRequred,
+	// unloadMood: PropTypes.func.isRequred,
+	// unloadNode: PropTypes.func.isRequred,
 	// toggleHeader: PropTypes.func.isRequred,
 }
 

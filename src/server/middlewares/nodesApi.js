@@ -1,7 +1,6 @@
 import { Node, Mood, Decision, User } from '../data/models'
 import { mustLogin } from '../services/permissions'
 import { parseUrl } from '../../shared/parsers'
-import { YOUTUBE_KEY } from '../../../config'
 import { assignIn as extend } from 'lodash'
 import sequelize from "sequelize"
 import { Router } from "express"

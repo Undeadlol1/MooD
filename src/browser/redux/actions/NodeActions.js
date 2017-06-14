@@ -1,9 +1,9 @@
 import selectn from 'selectn'
 import { createAction, createActions } from 'redux-actions'
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
-import { API_URL } from '../../../../config'
 import { stringify } from 'query-string'
 
+const {API_URL} = process.env
 const nodesUrl = API_URL + 'nodes/'
 const decisionsUrl = API_URL + 'decisions/'
 const externalsUrl = API_URL + 'externals/search/'
@@ -20,13 +20,13 @@ export const actions = createActions({
 
 /**
  * create a node
- * @param {Object} payload content url 
+ * @param {Object} payload content url
  */
 export const insertNode = payload => (dispatch, getState) => {
 	dispatch(actions.fetchingInProgress())
 	fetch(nodesUrl, headersAndBody(payload))
-		.then(checkStatus)	
-		.then(parseJSON)		
+		.then(checkStatus)
+		.then(parseJSON)
 		.then(function(response) {
 			dispatch(actions.toggleDialog())
 			const {node} = getState()
@@ -65,7 +65,7 @@ export const fetchNode = slug => (dispatch, getState) => {
 
 /**
  * search youtube videos by string
- * @param {String} query 
+ * @param {String} query
  */
 export const youtubeSearch = query => (dispatch, getState) => {
 	fetch(externalsUrl + '?' + stringify({query}))

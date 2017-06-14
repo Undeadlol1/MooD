@@ -1,5 +1,3 @@
-var config = require('../../../config')
-
 module.exports = {
   "development": {
     "username": "root",
@@ -15,15 +13,15 @@ module.exports = {
     "database": "mood_test", // "database_test", TODO bring this back
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "logging": false    
+    "logging": false
   },
   "production": {
-    "username": config.DB_USER,
-    "password": config.DB_PASS,
-    "database": config.DB_NAME,
-    "host": config.DB_HOST,
-    "port": config.DB_PORT,
-    "dialect": config.DB_DIALECT,
-    "logging": false    
+    "username": process.env.DB_USER,
+    "password": process.env.DB_PASS,
+    "database": process.env.DB_NAME,
+    "host": process.env.DB_HOST,
+    "port": process.env.DB_PORT,
+    "dialect": process.env.DB_DIALECT,
+    "logging": false
   }
 }
