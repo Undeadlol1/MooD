@@ -1,3 +1,14 @@
+var config = process.env
+
+/*
+  Sometimes application uses this config outside of webpack
+    (migrations as an example).
+  Other times webpack compiles this file in code but we try to avoid requiring json files
+    manually because currently it causes endless recompiling
+  To avoid this, we need to require file manually only if it's neccesery
+*/
+if (config.dialect == undefined) config = require('../../../production.json')
+
 module.exports = {
   "development": {
     "username": "root",
@@ -16,12 +27,12 @@ module.exports = {
     "logging": false
   },
   "production": {
-    "username": process.env.DB_USER,
-    "password": process.env.DB_PASS,
-    "database": process.env.DB_NAME,
-    "host": process.env.DB_HOST,
-    "port": process.env.DB_PORT,
-    "dialect": process.env.DB_DIALECT,
+    "username": config.DB_USER,
+    "password": config.DB_PASS,
+    "database": config.DB_NAME,
+    "host": config.DB_HOST,
+    "port": config.DB_PORT,
+    "dialect": config.DB_DIALECT,
     "logging": false
   }
 }
