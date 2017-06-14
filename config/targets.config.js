@@ -6,10 +6,11 @@ var WebpackNotifierPlugin = require('webpack-notifier');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 // TODO webpack-build-notifier (seems better tgeb webpack-notifier)
 var merge = require('webpack-merge');
-const BabiliPlugin = require('babili-webpack-plugin');
+var BabiliPlugin = require('babili-webpack-plugin');
 var nodeExternals = require('webpack-node-externals');
 var extend = require('lodash/assignIn')
 var commonConfig = require('./common.config.js')
+var config = require('../config.js')
 
 // TODO
 // https://survivejs.com/webpack/optimizing/minifying/#enabling-a-performance-budget
@@ -19,27 +20,25 @@ const isDevelopment = NODE_ENV === 'development'
 const isProduction = NODE_ENV === 'production'
 const isTest = NODE_ENV === 'test'
 
-const serverVariables =  {
-                            NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+const serverVariables =  extend({
                             BROWSER: false,
                             isBrowser: false,
                             SERVER: true,
                             isServer: true,
-                        }
-                        
-const clientVariables =  {
-                            NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+                        }, config)
+
+const clientVariables =  extend({
                             BROWSER: true,
                             isBrowser: true,
                             SERVER: false,
                             isServer: false,
-                        }
+                        }, config)
 
 const clientProductionPlugins = isDevelopment ? [] : [
-    // new webpack.optimize.DedupePlugin(), //dedupe similar code 
+    // new webpack.optimize.DedupePlugin(), //dedupe similar code
     // new webpack.optimize.UglifyJsPlugin(), //minify everything
     new BabiliPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks 
+    new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks
     // new webpack.optimize.CommonsChunkPlugin({
     //     name: 'vendor.js',
     //     minChunks: Infinity, // <-- the way to avoid "webpackJsonp is not defined"
@@ -51,7 +50,7 @@ var serverConfig = merge(commonConfig, {
     target: 'node',
     node: {
         __filename: true,
-        __dirname: true 
+        __dirname: true
     },
     entry  : ['babel-polyfill', './src/server/server.js'],
     output : {
@@ -60,9 +59,7 @@ var serverConfig = merge(commonConfig, {
         libraryTarget: "commonjs",
     },
     plugins: [
-        new webpack.DefinePlugin({
-            'process.env': serverVariables
-        }),
+        new webpack.EnvironmentPlugin(serverVariables),
     ],
     // this is important. Without nodeModules in "externals" bundle will throw and error
     // bundling for node requires modules not to be packed on top of bundle, but to be found via "require"
@@ -86,13 +83,9 @@ var clientConfig = merge(commonConfig, {
     },
     plugins: [ // TODO MAKE SURE PLUGINS ARE ACTUALLY INCLUDED IN CONFIG
         // TODO this will be overriden in production!!!
-        new webpack.DefinePlugin({
-            'process.env': clientVariables,
-
-        }),
+        new webpack.EnvironmentPlugin(clientVariables),
         ...clientProductionPlugins
     ],
 });
 
 module.exports = [serverConfig, clientConfig]
- 

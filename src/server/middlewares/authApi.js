@@ -5,11 +5,11 @@ import { User, Profile } from '../data/models'
 import passport from "passport"
 import express from "express"
 import selectn from 'selectn'
-import { URL, VK_ID, VK_SECRET, TWITTTER_ID, TWITTER_SECRET } from '../../../config'
 
+const { URL, VK_ID, VK_SECRET, TWITTTER_ID, TWITTER_SECRET } = process.env
 /**
  * abstract user creation with different social media
- * 
+ *
  * @param {String} provider service name
  * @param {String} userId service's user id
  * @param {String} display_name user's public name
@@ -18,8 +18,8 @@ import { URL, VK_ID, VK_SECRET, TWITTTER_ID, TWITTER_SECRET } from '../../../con
  */
 function findOrCreateUser(provider, userId, display_name, image) { // TODO add username
   return  User.findOrCreate({
-            raw: true,    
-            where: {[provider]: userId}, 
+            raw: true,
+            where: {[provider]: userId},
             defaults: {image, display_name} // TODO make image migration
           })
             // TODO add callbacks
@@ -32,10 +32,10 @@ passport.use(new VKontakteStrategy(
     clientSecret: VK_SECRET || 'QjVr1JLVAXfVmZDJ6ws9',
     callbackURL:  (URL || "http://127.0.0.1:3000/") +  "api/auth/vkontakte/callback"
   },
-  function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) { 
-    // NOTE: params contain addition requested info    
+  function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) {
+    // NOTE: params contain addition requested info
       User.findOrCreate({
-        where: {vk_id: profile.id}, 
+        where: {vk_id: profile.id},
         defaults: {
           username: profile.username, // TODO this
           display_name: profile.displayName,
@@ -47,7 +47,7 @@ passport.use(new VKontakteStrategy(
       })
       .then(function (result) {
         const user = result[0]
-        done(null, user); 
+        done(null, user);
       })
       // .spread(user => done(null, user.get({plain: true})))
       .catch(done);
@@ -62,17 +62,17 @@ passport.use(new TwitterStrategy({
   },
   function(token, tokenSecret, profile, done) {
     User.findOrCreate({
-      where: {twitter_id: profile.id}, 
+      where: {twitter_id: profile.id},
       defaults: {
         username: profile.username,
         display_name: profile.username,
         image: selectn('photos[0].value', profile), // TODO make image migration
       },
-      include: [Profile],      
+      include: [Profile],
       raw: true
     })
     .then(function (result) {
-      done(null, result[0]); 
+      done(null, result[0]);
     })
     .catch(done);
   }
@@ -82,7 +82,7 @@ passport.use(new TwitterStrategy({
 passport.use('local-login', new LocalStrategy(
   function(username, password, done) {
         // console.log('request!!!1');
-        if(!username || !password) throw new Error('forgot credentials') // TODO this    
+        if(!username || !password) throw new Error('forgot credentials') // TODO this
     User.findOne({ where: { username }})
         .then(user => {
             if (!user) {

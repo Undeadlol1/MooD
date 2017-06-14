@@ -19,7 +19,6 @@ export default Router()
 
     const { id: UserId } = user
     const { NodeId, rating, vote } = body
-    console.log('body: ', body);
 
     try {
       const node = await Node.findById(NodeId)

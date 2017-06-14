@@ -1305,7 +1305,7 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
-bluebird@^2.10.2:
+bluebird@^2.10.2, bluebird@^2.9.34:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.11.0.tgz#534b9033c022c9579c56ba3b3e5a5caafbb650e1"
 
@@ -2067,9 +2067,9 @@ cross-env@^3.1.2:
     cross-spawn "^5.1.0"
     is-windows "^1.0.0"
 
-cross-env@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-4.0.0.tgz#16083862d08275a4628b0b243b121bedaa55dd80"
+cross-env@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-5.0.1.tgz#ff4e72ea43b47da2486b43a7f2043b2609e44913"
   dependencies:
     cross-spawn "^5.1.0"
     is-windows "^1.0.0"
@@ -5471,6 +5471,13 @@ mocha-webpack@^0.7.0:
     webpack-sources "^0.1.1"
     yargs "^4.8.0"
 
+mocha.parallel@^0.15.2:
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/mocha.parallel/-/mocha.parallel-0.15.2.tgz#28aed94ec3c00390a1f9868d14adb46f002a16b4"
+  dependencies:
+    bluebird "^2.9.34"
+    semaphore "^1.0.5"
+
 mocha@^3.2.0:
   version "3.4.2"
   resolved "https://registry.yarnpkg.com/mocha/-/mocha-3.4.2.tgz#d0ef4d332126dbf18d0d640c9b382dd48be97594"
@@ -7549,6 +7556,10 @@ selectn@^1.1.2:
     debug "^2.5.2"
     dotsplit.js "^1.0.3"
 
+semaphore@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/semaphore/-/semaphore-1.0.5.tgz#b492576e66af193db95d65e25ec53f5f19798d60"
+
 semver-diff@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/semver-diff/-/semver-diff-2.1.0.tgz#4bbb8437c8d37e4b0cf1a68fd726ec6d645d6d36"
@@ -8281,10 +8292,6 @@ tough-cookie@>=0.12.0, tough-cookie@>=2.3.0, tough-cookie@^2.3.2, tough-cookie@~
 tr46@~0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
-
-transform-runtime@^0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/transform-runtime/-/transform-runtime-0.0.0.tgz#e714d9b69211dd9537939d50e3aa5788c442b85c"
 
 traverse@^0.6.6:
   version "0.6.6"

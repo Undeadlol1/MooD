@@ -1,10 +1,9 @@
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
 import { createAction, createActions } from 'redux-actions'
 import selectn from 'selectn'
-import { API_URL } from '../../../../config'
 
-const authUrl = API_URL + 'auth/'
-const usersUrl = API_URL + 'users/'
+const authUrl = process.env.API_URL + 'auth/'
+const usersUrl = process.env.API_URL + 'users/'
 
 export const actions = createActions({
 	/**
