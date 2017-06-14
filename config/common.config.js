@@ -46,19 +46,20 @@ var baseConfig = {
     // },
     module : {
         loaders: [
+            // ⚠️ BEWARE .json files caused infinite recompiling in the past!⚠️
+            // {
+            //     test: /\.json$/,
+            //     use: 'json-loader'
+            // },
             {
-                test: /\.json$/,
-                use: 'json-loader'
+                test   : /.jsx?$/,
+                loader : 'happypack/loader',
+                // loader : 'babel-loader',
+                exclude: /node_modules/,
             },
             {
                 test: /\.xml$/,
                 loader: 'xml-loader'
-            },
-            { 
-                test   : /.jsx?$/,
-                // loader : 'happypack/loader',
-                loader : 'babel-loader',
-                exclude: /node_modules/,
             },
             {
                 test: /\.(svg|png|ico)$/,
@@ -88,9 +89,10 @@ var baseConfig = {
         //     from: 'src/server/public',
         //     to: 'public'
         // }]),
-        // new HappyPack({
-        //     loaders: [ 'babel-loader' ],
-        // }),
+        new HappyPack({
+            loaders: [ 'babel-loader' ],
+            verbose: false,
+        }),
         new ExtractTextPlugin({
             filename: "styles.css",
             disable: isDevelopment // TODO check if this works properly
@@ -102,7 +104,6 @@ var baseConfig = {
             browser: path.join(__dirname, '/../', 'src/browser/'),
             server : path.join(__dirname, '/../', 'src/server/'),
             shared : path.join(__dirname, '/../', 'src/shared/'),
-            config : path.join(__dirname, '/../', 'config.js'),
         },
         enforceModuleExtension: false,
         extensions: ['.js', '.jsx'],
@@ -110,4 +111,3 @@ var baseConfig = {
 };
 
 module.exports = baseConfig
- 
