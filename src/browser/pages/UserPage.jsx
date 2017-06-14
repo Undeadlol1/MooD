@@ -15,7 +15,37 @@ import { Grid, Row, Col } from 'react-styled-flexboxgrid'
 import Avatar from 'material-ui/Avatar'
 import { FormattedMessage } from 'react-intl';
 
-@connect(
+export class UserPage extends Component {
+	componentWillMount() { this.props.fetchUser() }
+    @injectProps
+    render({loading, location, username, isOwnPage}) {
+		return  <RouteTransition
+					{...presets.pop}
+					className="UserPage"
+					pathname={location.pathname}
+				>
+					<Grid>
+						<Loading condition={loading}>
+							<div>
+								{isOwnPage ? <ChangeLanguageForm /> : null}
+								<h2>{username}</h2>
+								<Avatar size={300} src={`https://api.adorable.io/avatars/300/${username}.png`} />
+							 </div>
+						</Loading>
+					</Grid>
+				</RouteTransition>
+    }
+}
+
+UserPage.propTypes = {
+	username: PropTypes.string,
+	loading: PropTypes.bool.isRequired,
+	isOwnPage: PropTypes.bool.isRequired,
+	fetchUser: PropTypes.func.isRequired,
+	location: PropTypes.object.isRequired,
+}
+
+export default connect(
 	({user}, {params}) => {
 		const username = user.getIn(['fetchedUser', 'username'])
 		return {
@@ -29,29 +59,3 @@ import { FormattedMessage } from 'react-intl';
 		fetchUser: () => dispatch(fetchUser(params.username)) // TOOD rework this
 	})
 )
-export default class UserPage extends Component {
-
-	componentWillMount() { this.props.fetchUser() }
-
-    @injectProps
-    render({loading, location, username, isOwnPage}) {
-		return  <RouteTransition
-						{...presets.pop}
-						pathname={location.pathname}
-					>
-					<Grid className="UserPage">
-						{
-							process.env.BROWSER && loading
-							? <Loading />
-							: <div>
-								{isOwnPage ? <ChangeLanguageForm /> : null}
-								<h2>{username}</h2>
-								<Avatar size={300} src={`https://api.adorable.io/avatars/300/${username}.png`} />
-							 </div> 
-						}
-					</Grid>						
-				</RouteTransition>
-    }
-}
-
-// TODO add propTypes
