@@ -1,6 +1,8 @@
 'use strict';
-module.exports = function(sequelize, DataTypes) {
-  var Decision = sequelize.define('Decision', {
+// THIS IS MESSED UP
+// TODO fix ASAP
+function colums(DataTypes) {
+  var types = {
     rating: {
       defaultValue: 0,
       allowNull: false,
@@ -51,7 +53,13 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.BOOLEAN
     }
-  }, {
+  }
+  if (process.env.NODE_ENV == 'production' && process.env.URL !== "http://127.0.0.1:3000/") delete types.lastViewAt
+  return types
+}
+
+module.exports = function(sequelize, DataTypes) {
+  var Decision = sequelize.define('Decision', colums(DataTypes), {
     tableName: 'decisions',
     freezeTableName: true,
     classMethods: {
