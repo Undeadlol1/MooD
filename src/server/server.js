@@ -3,6 +3,7 @@ import csshook from 'css-modules-require-hook/preset'
 import path from 'path'
 import express from 'express'
 import boom from 'express-boom' // "boom" library for express responses
+import compression from 'compression'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import errorhandler from 'errorhandler'
@@ -31,18 +32,10 @@ if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic
   app.use(morgan('dev')) // logger
 }
 
-// redirect .js files to .js.gz instead
-// TODO use express compression middleware instead?
-// TODO wrap around production variable?
-app.get('*.js', function (req, res, next) {
-  req.url = req.url + '.gz';
-  res.set('Content-Encoding', 'gzip');
-  next();
-});
-
 // middlewares
 // detect accepted languages for i18n
 app.use(createLocaleMiddleware())
+app.use(compression())
 app.use(express.static(publicUrl))
 app.use(cookieParser())
 app.set('query parser', 'simple');
