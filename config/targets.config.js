@@ -11,6 +11,7 @@ var nodeExternals = require('webpack-node-externals');
 var extend = require('lodash/assignIn')
 var commonConfig = require('./common.config.js')
 var config = require('../config.js')
+var CompressionPlugin = require('compression-webpack-plugin');
 
 // TODO
 // https://survivejs.com/webpack/optimizing/minifying/#enabling-a-performance-budget
@@ -36,9 +37,16 @@ const clientVariables =  extend({
 
 const clientProductionPlugins = isDevelopment ? [] : [
     // new webpack.optimize.DedupePlugin(), //dedupe similar code
-    // new webpack.optimize.UglifyJsPlugin(), //minify everything
     new BabiliPlugin(),
+    new webpack.optimize.UglifyJsPlugin(), //minify everything
     new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks
+    new CompressionPlugin({//   <-- Add this
+      asset: "[path].gz[query]",
+      algorithm: "gzip",
+      test: /\.js$|\.css$|\.html$/,
+      threshold: 10240,
+      minRatio: 0.8
+    })
     // new webpack.optimize.CommonsChunkPlugin({
     //     name: 'vendor.js',
     //     minChunks: Infinity, // <-- the way to avoid "webpackJsonp is not defined"
@@ -56,7 +64,7 @@ var serverConfig = merge(commonConfig, {
     output : {
         path     : path.join(__dirname, '..', 'dist'),
         filename : 'server.js',
-        libraryTarget: "commonjs",
+        // libraryTarget: "commonjs",
     },
     plugins: [
         new webpack.EnvironmentPlugin(serverVariables),
@@ -72,7 +80,7 @@ var clientConfig = merge(commonConfig, {
     name: 'client',
     target: 'web',
     entry  : {
-        'vendor.js': ['react', 'redux', 'react-redux', 'redux-form', 'material-ui'], // TODO MAKE SURE TREE SHAKING WORKS HERE
+        // 'vendor.js': ['react', 'redux', 'react-redux', 'redux-form', 'material-ui'], // TODO MAKE SURE TREE SHAKING WORKS HERE
         'scripts.js': './src/browser/App.jsx',
         // 'styles.css': './src/browser/styles.scss',
     },
@@ -88,4 +96,4 @@ var clientConfig = merge(commonConfig, {
     ],
 });
 
-module.exports = [serverConfig, clientConfig]
+module.exports = [clientConfig, serverConfig,]

@@ -5,7 +5,7 @@ var path = require('path')
 var commonConfig = require('./common.config.js')
 var merge = require('webpack-merge');
 var config = require('../config.js')
-var extend = require('lodash').assignIn
+var extend = require('lodash/assignIn')
 
 const serverVariables =  extend({
                             BROWSER: false,

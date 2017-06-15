@@ -70,6 +70,13 @@ import { renderToString } from 'react-dom/server'
 import { match } from 'react-router'
 import routes from '../browser/routes'
 
+// TODO wrap around production variable?
+app.get('*.js', function (req, res, next) {
+  req.url = req.url + '.gz';
+  res.set('Content-Encoding', 'gzip');
+  next();
+});
+
 // all routes are processed client side via react-router
 app.get('/*', function(req, res) {
   match(
