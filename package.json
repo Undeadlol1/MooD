@@ -8,8 +8,8 @@
   "scripts": {
     "migrate": "NODE_ENV=test sequelize db:migrate; NODE_ENV=development sequelize db:migrate",
     "test": "clear; NODE_ENV=test parallel-webpack --config ./config/tests.config.js --watch",
-    "start": "NODE_ENV=development concurrently \"parallel-webpack --config ./config/targets.config.js --progress --profile --watch --hide-modules\" \"nodemon dist/server.js --watch dist/server.js\"",
-    "production": "git pull; yarn; NODE_ENV=production sequelize db:migrate; NODE_ENV=production parallel-webpack --config ./config/targets.config.js; npm rebuild node-sass; pm2 update; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc';",
+    "start": "rm -rf dist; NODE_ENV=development concurrently \"parallel-webpack --config ./config/targets.config.js --progress --profile --watch --hide-modules\" \"nodemon dist/server.js --watch dist/server.js\"",
+    "production": "git pull; yarn; NODE_ENV=production sequelize db:migrate; rm -rf dist; NODE_ENV=production parallel-webpack --config ./config/targets.config.js; npm rebuild node-sass; pm2 update; pm2 stop all; pm2 start dist/server.js --node-args='--expose-gc';",
     "analyze": "NODE_ENV=production parallel-webpack --config ./config/targets.config.js --watch",
     "check_production": "NODE_ENV=production parallel-webpack --config ./config/targets.config.js; node dist/server.js"
   },
