@@ -1,7 +1,7 @@
 import { Node, Mood, Decision, User } from '../data/models'
 import { mustLogin } from '../services/permissions'
 import { parseUrl } from '../../shared/parsers'
-import { assignIn as extend } from 'lodash'
+import extend from 'lodash/assignIn'
 import sequelize from "sequelize"
 import { Router } from "express"
 import { normalizeRating } from 'server/data/controllers/NodesController'

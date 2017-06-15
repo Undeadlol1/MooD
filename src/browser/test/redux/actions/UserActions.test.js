@@ -1,5 +1,5 @@
 import nock from 'nock'
-import isArray from 'lodash'
+import isArray from 'lodash/isArray'
 import thunk from 'redux-thunk'
 import chai, { expect } from 'chai'
 import chaiImmutable from 'chai-immutable'

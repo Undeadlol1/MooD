@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import CircularProgress from 'material-ui/CircularProgress';
 import classNames from 'classnames'
-import { isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 
 /**
  * show loading indicator

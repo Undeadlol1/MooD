@@ -4,7 +4,7 @@ const chai = require('chai')
 const slugify = require('slug')
 const uniqid = require('uniqid')
 const { expect } = require('chai')
-const { isEqual } = require('lodash')
+const isEqual = require('lodash/isEqual')
 const extend = require('lodash/assignIn')
 const { parseUrl } = require('../../shared/parsers.js')
 const userFixtures = require('../data/fixtures/users.js')
@@ -24,7 +24,7 @@ const urls = [
             "https://www.youtube.com/watch?v=W7mNmiW9qts",
         ]
 
-/* 
+/*
     this function creates random digit and
     adds Date.now after decimal point
     afterwards last digit after decimal is randomized,
@@ -84,7 +84,7 @@ before(function() {
         .then(() => Mood.findAll({where: {}}))
         .each(mood => {
             urls.forEach(url => {
-                const rating = randomIntFromInterval(-3, 20) 
+                const rating = randomIntFromInterval(-3, 20)
                 nodes.push(
                     extend(
                         parseUrl(url), {
@@ -99,9 +99,9 @@ before(function() {
         .then(() => Node.bulkCreate(nodes))
         .then(() => Node.findAll({raw: true}))
         .each((node, index) => {
-            return createdUsers.forEach((user, index2) => {                  
+            return createdUsers.forEach((user, index2) => {
                 decisions.push({
-                    position: index, 
+                    position: index,
                     NodeId: node.id,
                     MoodId: node.MoodId,
                     UserId: user.id,
@@ -149,7 +149,7 @@ describe('fixture data setup', function() {
             expect(nodes.length).to.be.equal(100) // 10 moods * 10 nodes
             expect(profiles.length).to.be.equal(10)
             expect(decisions.length).to.be.equal(1000) // 10 moods * 10 nodes * 10 decisions
-            
+
             moods.forEach(mood => {
                 const moodNodes = nodes.filter(
                     node => node.MoodId == mood.id

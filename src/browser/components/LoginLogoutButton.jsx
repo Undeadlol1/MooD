@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import RaisedButton from 'material-ui/RaisedButton'
-import { assignIn as extend } from 'lodash'
+import extend from 'lodash/assignIn'
 import { translate } from 'browser/containers/Translator'
 import { toggleLoginDialog, logoutCurrentUser } from 'browser/redux/actions/UserActions'
 /**

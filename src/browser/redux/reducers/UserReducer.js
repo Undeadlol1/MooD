@@ -1,4 +1,5 @@
-import { isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
+
 import { Map } from 'immutable'
 
 const emptyProfileObject = Map({

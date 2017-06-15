@@ -3,7 +3,9 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import { AppBar, Avatar } from 'material-ui'
+import AppBar from 'material-ui/AppBar'
+import Avatar from 'material-ui/Avatar'
+
 import LoginLogoutButton from 'browser/components/LoginLogoutButton'
 import { actions } from 'browser/redux/actions/GlobalActions'
 

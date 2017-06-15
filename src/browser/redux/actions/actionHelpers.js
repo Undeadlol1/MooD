@@ -1,5 +1,5 @@
 // import React from 'react'
-import { isObject } from 'lodash'
+import isObject from 'lodash/isObject'
 import { toastr } from 'react-redux-toastr'
 import { FormattedMessage } from 'react-intl';
 
@@ -42,7 +42,7 @@ export function parseJSON(response) {
  * @returns {Object} ddssd
  */
 export function headersAndBody(payload, method = 'POST') {
-  // const body = isObject(payload) ? 
+  // const body = isObject(payload) ?
   return {
 		method: method.toUpperCase(),
 		headers: {

@@ -1,4 +1,4 @@
-import { assignIn as extend } from 'lodash'
+import extend from 'lodash/assignIn'
 import { Node, Decision } from "../models/index"
 // TODO add tests! ⚠️ ✏️️
 /**

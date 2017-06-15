@@ -1,6 +1,6 @@
 import { Node, Mood, Decision, User } from '../data/models'
 import { mustLogin } from '../services/permissions'
-import { assignIn as extend } from 'lodash'
+import extend from 'lodash/assignIn'
 import { Router } from "express"
 import selectn from "selectn"
 
