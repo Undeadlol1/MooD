@@ -6,7 +6,6 @@ var WebpackNotifierPlugin = require('webpack-notifier');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 // TODO webpack-build-notifier (seems better tgeb webpack-notifier)
 var merge = require('webpack-merge');
-var BabiliPlugin = require('babili-webpack-plugin');
 var nodeExternals = require('webpack-node-externals');
 var extend = require('lodash/assignIn')
 var commonConfig = require('./common.config.js')
@@ -37,8 +36,9 @@ const clientVariables =  extend({
 
 const clientProductionPlugins = isDevelopment ? [] : [
     // new webpack.optimize.DedupePlugin(), //dedupe similar code
-    new BabiliPlugin(),
-    new webpack.optimize.UglifyJsPlugin(), //minify everything
+    // TODO minify server
+    // TODO try this https://github.com/webpack-contrib/uglifyjs-webpack-plugin
+    new webpack.optimize.UglifyJsPlugin({minimize: true}), //minify everything
     new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks
     new CompressionPlugin({//   <-- Add this
       asset: "[path].gz[query]",
@@ -46,7 +46,7 @@ const clientProductionPlugins = isDevelopment ? [] : [
       test: /\.js$|\.css$|\.html$/,
       threshold: 10240,
       minRatio: 0.8
-    })
+    }),
     // new webpack.optimize.CommonsChunkPlugin({
     //     name: 'vendor.js',
     //     minChunks: Infinity, // <-- the way to avoid "webpackJsonp is not defined"
