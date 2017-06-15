@@ -17,6 +17,8 @@ import Translator from './containers/Translator'
 
 /* STYLES */
 if (process.env.BROWSER) require('./styles.scss')
+import { ThemeProvider } from 'styled-components'
+import { BASE_CONF } from 'react-styled-flexboxgrid'
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 // supply userAgent for material-ui prefixer in ssr
@@ -28,13 +30,15 @@ class App extends Component {
   render() {
     return  <MuiThemeProvider muiTheme={muiTheme}>
               <ReduxProvider store={store}>
-                <Translator>
-                    {
-                      process.env.BROWSER
-                      ? <Router history={browserHistory} routes={routesConfig} />
-                      : <RouterContext {...this.props} />
-                    }
-                </Translator>
+                <ThemeProvider theme={BASE_CONF}>
+                  <Translator>
+                      {
+                        process.env.BROWSER
+                        ? <Router history={browserHistory} routes={routesConfig} />
+                        : <RouterContext {...this.props} />
+                      }
+                  </Translator>
+                </ThemeProvider>
               </ReduxProvider>
             </MuiThemeProvider>
   }
