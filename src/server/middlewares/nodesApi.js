@@ -76,7 +76,8 @@ export default Router()
             /* set lastViewAt, increment viewedAmount and set position */
             const where = { UserId, NodeId: previousNode.id }
             const previousDecision =  await Decision.findOne({where})
-            const updatedDecision = await updatePositionAndViews(previousDecision)
+            // TODO remove this in future (when availability of decision will be certain)
+            previousDecision && await updatePositionAndViews(previousDecision)
             // find next node
             response = await findHighestRatingNode(UserId, MoodId, previousDecision.rating) // $qt //.position // TODO qt is not unique?
         }
