@@ -26,7 +26,6 @@ export default class PageWrapper extends Component {
 		const {location, loading, children, preset} = this.props
         const cx = classNames('PageWrapper', this.props.className)
 
-        console.log('isBrowser: ', isBrowser);
         if (!isBrowser) return <div className={cx}>{children}</div>
 		return  <RouteTransition
                     className={cx}

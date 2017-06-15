@@ -31,8 +31,16 @@ if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic
   app.use(morgan('dev')) // logger
 }
 
+// redirect .js files to .js.gz instead
+// TODO use express compression middleware instead?
+// TODO wrap around production variable?
+app.get('*.js', function (req, res, next) {
+  req.url = req.url + '.gz';
+  res.set('Content-Encoding', 'gzip');
+  next();
+});
+
 // middlewares
-app.use(helmet()) // security
 // detect accepted languages for i18n
 app.use(createLocaleMiddleware())
 app.use(express.static(publicUrl))
@@ -48,15 +56,7 @@ app.use(cookieSession({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(boom()) // provides res.boom. erros dispatching
-
-// redirect .js files to .js.gz instead
-// TODO use express compression middleware instead?
-// TODO wrap around production variable?
-app.get('*.js', function (req, res, next) {
-  req.url = req.url + '.gz';
-  res.set('Content-Encoding', 'gzip');
-  next();
-});
+app.use(helmet()) // security
 
 // REST API
 app.use('/api/auth', authorization)
