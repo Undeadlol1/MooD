@@ -20,7 +20,7 @@ const props = {
                 isOwnPage: false,
                 username: 'test',
                 fetchUser: sinon.spy(),
-                location: {pathname: 'some'},
+                location: {pathname: 'is'},
               }
 sinon.spy(UserPage.prototype, 'componentWillMount');
 const wrapper = shallow(<UserPage {...props} />)

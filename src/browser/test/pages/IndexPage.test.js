@@ -10,9 +10,9 @@ chai.use(chaiEnzyme())
 
 describe('<IndexPage />', () => {
   const props = {
-                  location: {},
                   loading: false,
                   fetchMoods: sinon.spy(),
+                  location: {pathname: 'some'},
                 }
   sinon.spy(IndexPage.prototype, 'componentWillMount');
   const wrapper = shallow(<IndexPage {...props} />)

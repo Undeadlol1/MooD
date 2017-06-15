@@ -53,7 +53,7 @@ describe('<NavBar />', () => {
 
     describe('if user logged in', () => {
       const username = 'britney'
-      const wrapper = shallow(<NavBar username={username} />)
+      const wrapper = shallow(<NavBar username={username} onClick={onClick} />)
       const link = wrapper.find('AppBar').props().iconElementRight
       const avatar = link.props.children
       it('has <Link>', () => {

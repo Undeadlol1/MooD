@@ -10,9 +10,9 @@ chai.use(chaiEnzyme())
 
 describe('<SearchPage />', () => {
   const props = {
-                  location: {},
                   loading: false,
                   fetchMoods: sinon.spy(),
+                  location: {patname: 'qwerty'},
                 }
   sinon.spy(SearchPage.prototype, 'componentWillMount');
   const wrapper = shallow(<SearchPage {...props} />)
