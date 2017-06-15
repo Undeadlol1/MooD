@@ -24,11 +24,11 @@ describe('<IndexPage />', () => {
 
   it('has className and tagName', () => {
     expect(wrapper).to.have.className('IndexPage')
-    expect(wrapper.type().name).to.eq('RouteTransition')
+    expect(wrapper.type().name).to.eq('PageWrapper')
   });
 
-  it('has <RouteTransition>', () => {
-    expect(wrapper.find('RouteTransition')).to.have.length(1);
+  it('has <Grid>', () => {
+    expect(wrapper.find('Styled(Grid)')).to.have.length(1);
   });
 
   it('has <MoodsInsert>', () => {

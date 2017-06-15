@@ -1,39 +1,38 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { injectProps } from 'relpers'
+import { connect } from 'react-redux'
+import Avatar from 'material-ui/Avatar'
 import Loading from '../components/Loading'
 import MoodsList from '../components/MoodsList'
-import MoodsInsert from '../components/MoodsInsert'
 import MoodsFind from '../components/MoodsFind'
+import MoodsInsert from '../components/MoodsInsert'
 import YoutubeSearch from '../components/YoutubeSearch'
-import ChangeLanguageForm from '../components/ChangeLanguageForm'
-import { injectProps } from 'relpers'
-import { connect } from 'react-redux';
 import { fetchUser } from '../redux/actions/UserActions'
-import { RouteTransition } from 'react-router-transition';
-import presets from 'react-router-transition/src/presets';
+import PageWrapper from 'browser/components/PageWrapper'
 import { Grid, Row, Col } from 'react-styled-flexboxgrid'
-import Avatar from 'material-ui/Avatar'
-import { FormattedMessage } from 'react-intl';
+import ChangeLanguageForm from '../components/ChangeLanguageForm'
 
 export class UserPage extends Component {
 	componentWillMount() { this.props.fetchUser() }
-    @injectProps
+	@injectProps
     render({loading, location, username, isOwnPage}) {
-		return  <RouteTransition
-					{...presets.pop}
-					className="UserPage"
-					pathname={location.pathname}
-				>
-					<Grid>
-						<Loading condition={loading}>
-							<div>
-								{isOwnPage ? <ChangeLanguageForm /> : null}
-								<h2>{username}</h2>
-								<Avatar size={300} src={`https://api.adorable.io/avatars/300/${username}.png`} />
-							 </div>
-						</Loading>
-					</Grid>
-				</RouteTransition>
+				return 	<PageWrapper
+							preset={'pop'}
+							loading={loading}
+							location={location}
+							className='UserPage'
+						>
+							<Grid>
+								<Loading condition={loading}>
+									<div>
+										{isOwnPage ? <ChangeLanguageForm /> : null}
+										<h2>{username}</h2>
+										<Avatar size={300} src={`https://api.adorable.io/avatars/300/${username}.png`} />
+									</div>
+								</Loading>
+							</Grid>
+						</PageWrapper>
     }
 }
 
@@ -58,4 +57,4 @@ export default connect(
 	(dispatch, {params}) => ({
 		fetchUser: () => dispatch(fetchUser(params.username)) // TOOD rework this
 	})
-)
+)(UserPage)

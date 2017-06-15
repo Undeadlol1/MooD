@@ -3,14 +3,13 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Grid } from 'react-styled-flexboxgrid'
-import { RouteTransition } from 'react-router-transition'
-import presets from 'react-router-transition/src/presets'
 // project files
 import Loading from 'browser/components/Loading'
 import MoodsFind from 'browser/components/MoodsFind'
 import MoodsList from 'browser/components/MoodsList'
 import MoodsInsert from 'browser/components/MoodsInsert'
 import YoutubeSearch from 'browser/components/YoutubeSearch'
+import PageWrapper from 'browser/components/PageWrapper'
 import { fetchMoods } from 'browser/redux/actions/MoodActions'
 
 export class IndexPage extends Component {
@@ -19,22 +18,23 @@ export class IndexPage extends Component {
 
     render() {
 		const {loading, moods, currentPage, totalPages, location} = this.props
-		const isBrowser = process.env.BROWSER
-		return  <RouteTransition
-						{...presets.pop}
-						className="IndexPage"
-						pathname={location.pathname}
-					>
+		return 	<PageWrapper
+					preset={'pop'}
+					loading={loading}
+					location={location}
+					className='IndexPage'
+				>
 					<Grid>
 						<MoodsInsert />
-						<Loading condition={isBrowser && loading}>
+						{/* TODO what to do with this loading? */}
+						<Loading condition={loading}>
 							<MoodsList
 								moods={moods}
 								totalPages={totalPages}
 								currentPage={currentPage} />
 						</Loading>
 					</Grid>
-				</RouteTransition>
+				</PageWrapper>
     }
 }
 

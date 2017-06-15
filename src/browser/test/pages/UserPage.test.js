@@ -15,7 +15,6 @@ function findAndConfirm(selector) {
 }
 
 const props = {
-                location: {},
                 loading: false,
                 isOwnPage: false,
                 username: 'test',
@@ -33,11 +32,11 @@ describe('<UserPage />', () => {
 
   it('has className and tagName', () => {
     expect(wrapper).to.have.className('UserPage')
-    expect(wrapper.type().name).to.eq('RouteTransition')
+    expect(wrapper.type().name).to.eq('PageWrapper')
   })
 
   it('has proper dom structure', () => {
-    findAndConfirm('RouteTransition')
+    findAndConfirm('PageWrapper')
     findAndConfirm('Styled(Grid)')
     findAndConfirm('Loading')
     findAndConfirm('div')
