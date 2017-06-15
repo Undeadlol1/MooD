@@ -33,7 +33,7 @@ var stats = {
 var baseConfig = {
     stats,
     context: path.resolve(__dirname, '../'),
-    devtool: 'inline-eval-cheap-source-map', // seems like this is faster then 'cheap-module-source-map'
+    devtool: !isProduction && 'cheap-module-source-map',
     watch: isDevelopment || isTest,
     watchOptions: {
         ignored: /node_modules/,
