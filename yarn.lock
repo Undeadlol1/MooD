@@ -8086,7 +8086,7 @@ style-loader@^0.13.2, style-loader@~0.13.1:
   dependencies:
     loader-utils "^1.0.2"
 
-styled-components@^2.0.0:
+styled-components@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-2.0.1.tgz#c7b5d211a2f794c0bf5e7c7d028617bed5781625"
   dependencies:

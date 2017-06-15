@@ -67,6 +67,7 @@ app.set('views', path.resolve(__dirname, './public'));
 
 import React from 'react'
 import { renderToString } from 'react-dom/server'
+import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
 import { match } from 'react-router'
 import routes from '../browser/routes'
 
@@ -103,9 +104,16 @@ app.get('/*', function(req, res) {
 
           // render App to string
           const App = require('browser/App.jsx').default
-          const markup = renderToString(<App {...renderProps} />);
-          // send string to handlebars template
-          res.render('index', { markup });
+          const sheet = new ServerStyleSheet()
+          const markup = renderToString(
+            <StyleSheetManager sheet={sheet.instance}>
+              <App {...renderProps} />
+            </StyleSheetManager>
+          )
+          // extract css from string
+          const css = sheet.getStyleTags()
+          // send markup and css to handlebars template
+          res.render('index', { markup, css })
         }
 
         else res.status(404).send('Not found')
