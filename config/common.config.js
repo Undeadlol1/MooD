@@ -1,7 +1,6 @@
 var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
-var CopyWebpackPlugin = require('copy-webpack-plugin')
 var WebpackNotifierPlugin = require('webpack-notifier');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
@@ -85,10 +84,6 @@ var baseConfig = {
     },
     plugins: [
         // new BundleAnalyzerPlugin({analyzerMode: 'static',}), // TODO do not include this in production
-        // new CopyWebpackPlugin([{
-        //     from: 'src/server/public',
-        //     to: 'public'
-        // }]),
         new HappyPack({
             loaders: [ 'babel-loader' ],
             verbose: false,

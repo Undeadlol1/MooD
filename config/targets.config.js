@@ -68,6 +68,10 @@ var serverConfig = merge(commonConfig, {
     },
     plugins: [
         new webpack.EnvironmentPlugin(serverVariables),
+        new CopyWebpackPlugin([{
+            from: 'src/server/public',
+            to: 'public'
+        }]),
     ],
     // this is important. Without nodeModules in "externals" bundle will throw and error
     // bundling for node requires modules not to be packed on top of bundle, but to be found via "require"
