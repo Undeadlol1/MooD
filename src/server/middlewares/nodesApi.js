@@ -84,7 +84,7 @@ export default Router()
               where,
               limit: 1,
               defaults: {MoodId},
-            })[0]
+            }).spread()
             console.log('previousDecision: ', previousDecision);
             // TODO remove this in future (when availability of decision will be certain)
             previousDecision && await updatePositionAndViews(previousDecision)
