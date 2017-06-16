@@ -23,8 +23,9 @@
     <body>
         {{!-- extra 'div' is needed to avoid "different markup on" error of React in SSR --}}
         <div id="react-root"><div>{{{ markup }}}</div></div>
+        {{!-- "async" does not block html parsing --}}
+        <script async="async" src="/scripts.js"></script>
         {{!--<script src="/vendor.js"></script>--}}
-        <script src="/scripts.js"></script>
         {{!--<link rel="stylesheet" href="/styles.css">--}}
     </body>
 </html>
