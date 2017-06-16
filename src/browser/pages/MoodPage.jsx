@@ -10,10 +10,8 @@ import NavBar from '../components/NavBar'
 import { fetchMood, unloadMood } from '../redux/actions/MoodActions'
 import { fetchNode, actions as nodeActions } from '../redux/actions/NodeActions'
 import { actions as globalActions } from '../redux/actions/GlobalActions'
-import { RouteTransition } from 'react-router-transition';
-import presets from 'react-router-transition/src/presets';
-import { FormattedMessage } from 'react-intl';
 import { translate as t } from 'browser/containers/Translator'
+import PageWrapper from 'browser/components/PageWrapper'
 
 @connect(
 	({ node, mood }, ownProps) => {
@@ -66,9 +64,14 @@ class MoodPage extends Component {
 
 		return 	<div className="MoodPage">
 					{/* TODO add 'let header' here? */}
-					<RouteTransition {...presets.slideLeft} pathname={location.pathname} className="MoodPage">
+					<PageWrapper
+						loading={false}
+						preset="slideLeft"
+						location={location}
+						className="MoodPage"
+					>
 						{dom}
-					</RouteTransition>
+					</PageWrapper>
 				</div>
 	}
 }

@@ -19,12 +19,12 @@ describe('<PageWrapper />', () => {
   //     process.env = JSON.stringify({BROWSER: true});
   // });
 
-  it('has <RouteTransition />', () => {
-    const transitionProps = wrapper.find('RouteTransition').props()
-    expect(wrapper.find('RouteTransition')).to.have.length(1);
-    expect(wrapper.find('.PageWrapper')).to.have.length(1);
-    expect(transitionProps).to.have.property('pathname', props.location.pathname)
-  });
+  // it('has <RouteTransition />', () => {
+  //   const transitionProps = wrapper.find('RouteTransition').props()
+  //   expect(wrapper.find('RouteTransition')).to.have.length(1);
+  //   expect(wrapper.find('.PageWrapper')).to.have.length(1);
+  //   expect(transitionProps).to.have.property('pathname', props.location.pathname)
+  // });
 
   it('inherits classNames properly', () => {
     const className = 'test'

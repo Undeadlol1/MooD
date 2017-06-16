@@ -7,25 +7,20 @@ import { Grid } from 'react-styled-flexboxgrid';
 import { injectProps } from 'relpers'
 import { connect } from 'react-redux';
 import { fetchMoods } from '../redux/actions/MoodActions'
-import { RouteTransition } from 'react-router-transition';
-import presets from 'react-router-transition/src/presets';
+import PageWrapper from 'browser/components/PageWrapper'
 
 export class SearchPage extends Component {
 	componentWillMount() { this.props.fetchMoods() }
     @injectProps
     render({loading, moods, currentPage, totalPages, location}) {
-		return 	<RouteTransition
-					{...presets.pop}
-					className="SearchPage"
-					pathname={location.pathname}
-				>
+		return 	<PageWrapper className="SearchPage">
 					<Grid>
 						<Loading condition={loading}>
 							<MoodsFind />
 							<MoodsList moods={moods} currentPage={currentPage} totalPages={totalPages} />
 						</Loading>
 					</Grid>
-				</RouteTransition>
+				</PageWrapper>
     }
 }
 

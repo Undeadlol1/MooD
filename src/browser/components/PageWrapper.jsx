@@ -2,8 +2,8 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import React, { Component } from 'react'
 import Loading from 'browser/components/Loading'
-import { RouteTransition } from 'react-router-transition'
-import presets from 'react-router-transition/src/presets'
+// import { RouteTransition } from 'react-router-transition'
+// import presets from 'react-router-transition/src/presets'
 
 // TODO make this a decorator?
 // TODO get location from react-router directly in order not to pass it eveyrime
@@ -15,10 +15,15 @@ import presets from 'react-router-transition/src/presets'
  */
 export default class PageWrapper extends Component {
 
+    static defaultProps = {
+        loading: false
+    }
+
     static propTypes = {
+        // TODO add defaultValue?
         loading: PropTypes.bool.isRequired,
-        preset: PropTypes.string.isRequired,
-        location: PropTypes.object.isRequired,
+        preset: PropTypes.string,
+        location: PropTypes.object,
     }
 
     render() {
@@ -27,15 +32,21 @@ export default class PageWrapper extends Component {
         const cx = classNames('PageWrapper', this.props.className)
 
         if (!isBrowser) return <div className={cx}>{children}</div>
-		return  <RouteTransition
+        return  <Loading
                     className={cx}
-                    {...presets[preset]}
-                    /* TODO remove location required proptype (take it automatically) */
-                    pathname={location.pathname}
+                    condition={isBrowser && loading}
                 >
-                    <Loading condition={isBrowser && loading}>
-                        {children}
-                    </Loading>
-				</RouteTransition>
+                    {children}
+                </Loading>
+		// return  <RouteTransition
+        //             className={cx}
+        //             {...presets[preset]}
+        //             /* TODO remove location required proptype (take it automatically) */
+        //             pathname={location.pathname}
+        //         >
+                    // <Loading condition={isBrowser && loading}>
+                        // {children}
+                    // </Loading>
+				// </RouteTransition>
     }
 }

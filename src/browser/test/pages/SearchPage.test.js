@@ -22,13 +22,9 @@ describe('<SearchPage />', () => {
     assert(props.fetchMoods.calledOnce, 'called fetchMoods()')
   });
 
-  it('has className and tagName', () => {
+  it('has className and PageWrapper', () => {
     expect(wrapper).to.have.className('SearchPage')
-    expect(wrapper.type().name).to.eq('RouteTransition')
-  });
-
-  it('has <RouteTransition>', () => {
-    expect(wrapper.find('RouteTransition')).to.have.length(1);
+    expect(wrapper.type().name).to.eq('PageWrapper')
   });
 
   it('has <MoodsFind>', () => {
