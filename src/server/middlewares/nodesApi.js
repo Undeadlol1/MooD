@@ -46,14 +46,18 @@ export default Router()
 
       const UserId = await user && user.id
       const MoodId = await Mood.findIdBySlug(params.moodSlug)
-      const previousNode = params.nodeId
+      const previousNode = await params.nodeId
                               ? await Node.findById(params.nodeId)
                               : null
-
+      console.log('previousNode: ', previousNode);
       if (!MoodId) return res.boom.notFound()
 
       // see function comment (hover over it)
-      if (previousNode) await normalizeRating(previousNode)
+      if (previousNode) {
+        console.log('normalizing rating: ');
+        await normalizeRating(previousNode)
+        console.log('normalizing is done!');
+      }
 
       /* USER IS NOT LOGGED IN */
       if (!UserId) {
