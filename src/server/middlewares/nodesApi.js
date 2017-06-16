@@ -79,7 +79,12 @@ export default Router()
           if (previousNode) {
             /* set lastViewAt, increment viewedAmount and set position */
             const where = { UserId, NodeId: previousNode.id }
-            const previousDecision =  await Decision.findOne({where})
+            // TODO test 'findOrCreate'
+            const previousDecision =  await Decision.findOrCreate({
+              where,
+              limit: 1,
+              defaults: {MoodId},
+            })
             // TODO remove this in future (when availability of decision will be certain)
             previousDecision && await updatePositionAndViews(previousDecision)
             // find next node
