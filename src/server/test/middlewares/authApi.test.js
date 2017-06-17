@@ -6,12 +6,12 @@ import select from 'selectn'
 
 chai.should();
 
-const user = request.agent(server)   
+const user = request.agent(server)
 
 /**
  * @export
- * @param {String} username 
- * @param {String} password 
+ * @param {String} username
+ * @param {String} password
  * @returns request agent function
  */
 export function loginUser(username, password) {
@@ -23,11 +23,11 @@ export function loginUser(username, password) {
 }
 
 export default describe('Authethication tests', function() {
-    
+
     const   username = 'somename',
             password = 'somepassword'
 
-    
+
     before(function() {
         // TODO add logout? to test proper user login?
         // Kill supertest server in watch mode to avoid errors
