@@ -27,14 +27,36 @@ export default class PageWrapper extends Component {
     }
 
     render() {
-		const isBrowser = process.env.BROWSER
+		const isServer = process.env.SERVER
+		const isBrowser = process.env.BROWER
 		const {location, loading, children, preset} = this.props
         const cx = classNames('PageWrapper', this.props.className)
+        // RouterTransition creates it's own 'div'
+        // which makes it harder to apply styles on root class
+        const rootStyles =  {
+            minWidth: '100%',
+            minHeight: '100%',
+            // position: 'relative',
+        }
+        const childrenStyles = {
+            opacity: '0',
+            pointerEvents: 'none',
+        }
 
-        if (!isBrowser) return <div className={cx}>{children}</div>
+        /*
+            while server side rendered content is on page show loading screen and
+            hide children beneath it so they can still be crawled for SEO
+        */
+        if (isServer) return  <div className={cx}>
+                                    <div style={rootStyles}>
+                                        <Loading condition={true} />
+                                        <div style={childrenStyles} className="PageWrapper_children">{children}</div>
+                                    </div>
+                                </div>
         return  <Loading
                     className={this.props.className}
                     condition={isBrowser && loading}
+                    style={rootStyles}
                 >
                     {children}
                 </Loading>
