@@ -8,6 +8,7 @@ import isEmpty from 'lodash/isEmpty'
  * could be used as a wrapper via 'condition' prop
  */
 export default function Loading ({condition, children, className}) {
-    if (condition == false && !isEmpty(children)) return <div>{children}</div>
-    return <CircularProgress className={classNames("Loading", className)} />
+    const cx = classNames('Loading', className)
+    if (condition == false && !isEmpty(children)) return <div className={className}>{children}</div>
+    return <CircularProgress className={cx} />
 }

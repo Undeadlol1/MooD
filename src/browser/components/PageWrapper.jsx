@@ -33,7 +33,7 @@ export default class PageWrapper extends Component {
 
         if (!isBrowser) return <div className={cx}>{children}</div>
         return  <Loading
-                    className={cx}
+                    className={this.props.className}
                     condition={isBrowser && loading}
                 >
                     {children}
