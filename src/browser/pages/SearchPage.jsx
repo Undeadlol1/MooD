@@ -14,7 +14,7 @@ export class SearchPage extends Component {
     @injectProps
     render({loading, moods, currentPage, totalPages, location}) {
 		return 	<PageWrapper className="SearchPage">
-					<Grid>
+					<Grid fluid>
 						<Loading condition={loading}>
 							<MoodsFind />
 							<MoodsList moods={moods} currentPage={currentPage} totalPages={totalPages} />

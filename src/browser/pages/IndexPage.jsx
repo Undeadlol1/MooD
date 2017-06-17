@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Grid } from 'react-styled-flexboxgrid'
+import { Grid, Row } from 'react-styled-flexboxgrid'
 // project files
 import Loading from 'browser/components/Loading'
 import MoodsFind from 'browser/components/MoodsFind'
@@ -24,7 +24,7 @@ export class IndexPage extends Component {
 					location={location}
 					className='IndexPage'
 				>
-					<Grid>
+					<Grid fluid>
 						<MoodsInsert />
 						{/* TODO what to do with this loading? */}
 						<Loading condition={loading}>
