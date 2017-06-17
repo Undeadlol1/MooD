@@ -28,11 +28,11 @@ export async function updatePositionAndViews(decision) {
 
     /** TODO POSITION UPDATING HAS BEEN DISABLED TILL FIXED */
     // set lastViewAt, increment viewedAmount and set position
-    const updatedDecision = await decision.update({
+    const updatedDecision = await Decision.update({
                                 // position: newPosition,
-                                lastViewAt: new Date(),
+                                // lastViewAt: new Date(),
                                 viewedAmount: sequelize.literal('viewedAmount +1'),
-                            })
+                            }, {where: {id: decision.id}})
 
     // decrement previous decision.position / increment next ones
     // const where = selector => ({

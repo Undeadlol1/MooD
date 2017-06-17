@@ -3,6 +3,7 @@ import csshook from 'css-modules-require-hook/preset'
 import path from 'path'
 import express from 'express'
 import boom from 'express-boom' // "boom" library for express responses
+import compression from 'compression'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import errorhandler from 'errorhandler'
@@ -19,9 +20,8 @@ import 'source-map-support/register' // do we actually need this?
 import morgan from 'morgan'
 import helmet from 'helmet'
 import createLocaleMiddleware from 'express-locale';
-import { PORT, SESSION_KEY } from '../../config'
 
-const port = PORT || 3000,
+const port = process.env.PORT || 3000,
       app = express(),
       publicUrl = path.resolve('./dist', 'public'), // TODO: or use server/public?
       cookieExpires = 100 * 60 * 24 * 100 // 100 days
@@ -33,9 +33,9 @@ if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic
 }
 
 // middlewares
-app.use(helmet()) // security
 // detect accepted languages for i18n
 app.use(createLocaleMiddleware())
+app.use(compression())
 app.use(express.static(publicUrl))
 app.use(cookieParser())
 app.set('query parser', 'simple');
@@ -43,12 +43,13 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieSession({
   name: 'session',
-  keys: [SESSION_KEY || 'keyboard cat'],
+  keys: [process.env.SESSION_KEY || 'keyboard cat'],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(boom()) // provides res.boom. erros dispatching
+app.use(helmet()) // security
 
 // REST API
 app.use('/api/auth', authorization)
@@ -68,8 +69,10 @@ app.set('views', path.resolve(__dirname, './public'));
 
 import React from 'react'
 import { renderToString } from 'react-dom/server'
+import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
 import { match } from 'react-router'
 import routes from '../browser/routes'
+
 
 // all routes are processed client side via react-router
 app.get('/*', function(req, res) {
@@ -97,9 +100,16 @@ app.get('/*', function(req, res) {
 
           // render App to string
           const App = require('browser/App.jsx').default
-          const markup = renderToString(<App {...renderProps} />);
-          // send string to handlebars template
-          res.render('index', { markup });
+          const sheet = new ServerStyleSheet()
+          const markup = renderToString(
+            <StyleSheetManager sheet={sheet.instance}>
+              <App {...renderProps} />
+            </StyleSheetManager>
+          )
+          // extract css from string
+          const css = sheet.getStyleTags()
+          // send markup and css to handlebars template
+          res.render('index', { markup, css })
         }
 
         else res.status(404).send('Not found')

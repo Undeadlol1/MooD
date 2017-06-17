@@ -1,0 +1,16 @@
+.PageWrapper {
+	// RouterTransition creates it's own 'div'
+	// which makes it harder to apply styles on root class
+	> div  {
+		min-width: 100%;
+		min-height: 100%;
+		position: relative;
+	}
+	.Loading {
+		left: 50%;
+		// center vertically minus header height
+		top: calc(50% - 64px);
+		position: absolute !important;
+		transform: translate(-50%, -50%);
+	}
+}

@@ -1,24 +1,20 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import classNames from 'classnames'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import { AppBar, Avatar } from 'material-ui'
+import AppBar from 'material-ui/AppBar'
+import Avatar from 'material-ui/Avatar'
+
 import LoginLogoutButton from 'browser/components/LoginLogoutButton'
-import { toggleSidebar } from 'browser/redux/actions/GlobalActions'
+import { actions } from 'browser/redux/actions/GlobalActions'
 
 const titleStyles = { color: 'rgb(48, 48, 48)' }
 const LoginLogoutButtonStyles = { marginTop: '5.5px' }
 
-@connect(
-    ({ user, global  }, ownProps) => {
-        const username = user.get('username')
-                         && user.get('username').toLowerCase()
-        return { username, ...ownProps }
-    }
-)
-class NavBar extends Component {
+export class NavBar extends Component {
     render() {
-        const { username, className, children, dispatch, ...rest } = this.props
+        const { username, className, children, toggleSidebar, ...rest } = this.props
         const titleLink =   <Link
                                 to="/"
                                 style={titleStyles}
@@ -26,7 +22,7 @@ class NavBar extends Component {
                             >
                                 MooD
                             </Link>
-        const loginButton = username
+        const loginOrAvatar = username
                             ? <Link to={`/users/${username}`}>
                                 <Avatar
                                     className="NavBar__avatar"
@@ -35,21 +31,32 @@ class NavBar extends Component {
                               </Link>
                             : <LoginLogoutButton style={LoginLogoutButtonStyles} />
 
-        return  <header className={'NavBar ' + className} {...rest}>
+        return  <header className={classNames('NavBar ', className)} {...rest}>
                     <AppBar
                         {...rest}
                         title={titleLink}
-                        iconElementRight={loginButton}
-                        onLeftIconButtonTouchTap={() => dispatch(toggleSidebar())}
+                        iconElementRight={loginOrAvatar}
+                        onLeftIconButtonTouchTap={toggleSidebar}
                     />
-                        {children}
+                    {children}
                 </header>
     }
 }
 
 NavBar.propTypes = {
-    // user: PropTypes.object.isRequired,
-    // toggleSidebar: PropTypes.func.isRequired
+    username: PropTypes.string,
+    toggleSidebar: PropTypes.func.isRequired,
 }
 
-export default NavBar
+export const dispatchToProps = dispatch => ({
+    toggleSidebar: () => dispatch(actions.toggleSidebar())
+})
+
+export default connect(
+    ({ user, global  }, ownProps) => {
+        const username = user.get('username')
+                         && user.get('username').toLowerCase()
+        return { username, ...ownProps }
+    },
+    dispatchToProps
+)(NavBar)

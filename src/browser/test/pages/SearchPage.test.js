@@ -3,35 +3,31 @@ import sinon from 'sinon'
 import chaiEnzyme from 'chai-enzyme'
 import chai, { expect, assert } from 'chai'
 import { shallow, mount, render } from 'enzyme'
-import { IndexPage } from 'browser/pages/IndexPage'
+import { SearchPage } from 'browser/pages/SearchPage'
 import { translate } from 'browser/containers/Translator'
 chai.should()
 chai.use(chaiEnzyme())
 
-describe('<IndexPage />', () => {
+describe('<SearchPage />', () => {
   const props = {
                   loading: false,
                   fetchMoods: sinon.spy(),
-                  location: {pathname: 'some'},
+                  location: {patname: 'qwerty'},
                 }
-  sinon.spy(IndexPage.prototype, 'componentWillMount');
-  const wrapper = shallow(<IndexPage {...props} />)
+  sinon.spy(SearchPage.prototype, 'componentWillMount');
+  const wrapper = shallow(<SearchPage {...props} />)
 
   it('calls componentWillMount', () => {
-    assert(IndexPage.prototype.componentWillMount.calledOnce)
+    assert(SearchPage.prototype.componentWillMount.calledOnce)
     assert(props.fetchMoods.calledOnce, 'called fetchMoods()')
   });
 
-  it('has className and tagName', () => {
-    expect(wrapper).to.have.className('IndexPage')
+  it('has className and PageWrapper', () => {
+    expect(wrapper).to.have.className('SearchPage')
     expect(wrapper.type().name).to.eq('PageWrapper')
   });
 
-  it('has <Grid>', () => {
-    expect(wrapper.find('Styled(Grid)')).to.have.length(1);
-  });
-
-  it('has <MoodsInsert>', () => {
+  it('has <MoodsFind>', () => {
     // TODO 'ReduxForm' does not seems right
     expect(wrapper.find('ReduxForm')).to.have.length(1);
   });

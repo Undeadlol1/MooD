@@ -1,10 +1,9 @@
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
 import { createAction, createActions } from 'redux-actions'
 import selectn from 'selectn'
-import { API_URL } from '../../../../config'
 
-const authUrl = API_URL + 'auth/'
-const usersUrl = API_URL + 'users/'
+const authUrl = process.env.API_URL + 'auth/'
+const usersUrl = process.env.API_URL + 'users/'
 
 export const actions = createActions({
 	/**
@@ -18,12 +17,12 @@ export const actions = createActions({
 	FETCHING_IN_PROGRESS: () => {},
 	TOGGLE_LOGIN_DIALOG: boolean => boolean,
 })
-const { fetchingInProgress, removeCurrentUser, recieveCurrentUser } = actions
+const { fetchingInProgress, recieveFetchedUser, removeCurrentUser, recieveCurrentUser } = actions
 
 
 export const fetchCurrentUser = () => dispatch => {
 	dispatch(fetchingInProgress())
-	fetch(authUrl + 'current_user', {credentials: 'same-origin'})
+	return fetch(authUrl + 'current_user', {credentials: 'same-origin'})
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(user => dispatch(recieveCurrentUser((user))))
@@ -31,9 +30,9 @@ export const fetchCurrentUser = () => dispatch => {
 }
 
 export const logoutCurrentUser = () => dispatch => {
-	fetch(authUrl + 'logout', {credentials: 'same-origin'})
-		.then(checkStatus)
-		.then(() => dispatch(actions.removeCurrentUser())) // TODO refactor without arrow function?
+	return fetch(authUrl + 'logout', {credentials: 'same-origin'})
+	.then(checkStatus)
+		.then(() => dispatch(removeCurrentUser())) // TODO refactor without arrow function?
 		.catch(err => console.error('logoutCurrentUser failed!', err))
 }
 /**
@@ -49,7 +48,7 @@ export const toggleLoginDialog = value => (dispatch, getState) => {
 
 export const fetchUser = username => dispatch => {
 	dispatch(fetchingInProgress())
-	fetch(`${usersUrl}user/${username}`)
+	return fetch(`${usersUrl}user/${username}`)
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(user => dispatch(recieveFetchedUser((user))))
@@ -62,7 +61,7 @@ export const fetchUser = username => dispatch => {
  */
 export const updateUser = (username, body) => dispatch => {
 	// dispatch(fetchingInProgress())
-	fetch(
+	return fetch(
 		`${usersUrl}user/${username}`,
 		headersAndBody({...body}, 'PUT')
 	)

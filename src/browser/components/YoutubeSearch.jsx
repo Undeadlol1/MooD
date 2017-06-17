@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { TextField } from 'redux-form-material-ui'
 import { Form, Field, reduxForm } from 'redux-form'
 import YoutubeVideos from 'browser/components/YoutubeVideos'
+import { translate as t } from 'browser/containers/Translator'
 import { youtubeSearch } from 'browser/redux/actions/NodeActions'
 import LoginLogoutButton from 'browser/components/LoginLogoutButton'
 
@@ -35,7 +36,7 @@ export default class YoutubeSearch extends Component {
 						name="query"
 						disabled={submitting}
 						component={TextField}
-						hintText={'Or search for video'} />
+						hintText={t('or_search_for_video')} />
 					{/* hack to submit on 'enter' */}
 					<button type="submit" hidden={true}>Submit</button>
 					<YoutubeVideos />

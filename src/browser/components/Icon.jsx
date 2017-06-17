@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import FontAwesome from 'react-fontawesome'
-import { assignIn as extendObject } from 'lodash'
+import extendObject from 'lodash/assignIn'
 
 class Icon extends Component {
     state = {

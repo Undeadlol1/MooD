@@ -1,4 +1,5 @@
-import { isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
+
 import { Map } from 'immutable'
 
 const emptyProfileObject = Map({
@@ -8,7 +9,7 @@ const emptyProfileObject = Map({
 })
 
 const emptyUserObject = Map({
-	id: '',
+	id: undefined,
 	image: '',
 	username: '',
 	vk_id: '',
@@ -29,13 +30,13 @@ export default (state = initialState, { type, payload }) => {
 		case 'FETCHING_IN_PROGRESS':
 			return state.set('loading', true)
 		case 'RECIEVE_CURRENT_USER':
-			return state.merge({
+			return state.mergeDeep({
 				...payload,
 				loading: false,
 				loginIsOpen: isEmpty(payload) && state.get('loading') && state.get('loginIsOpen')
 			})
 		case 'RECIEVE_FETCHED_USER':
-			return state.set({
+			return state.mergeDeep({
 				loading: false,
 				fetchedUser: payload
 			})
@@ -44,7 +45,7 @@ export default (state = initialState, { type, payload }) => {
 				fetchedUser: emptyUserObject
 			})
 		case 'REMOVE_CURRENT_USER':
-			return state.mergeWith(emptyUserObject)
+			return state.merge(emptyUserObject)
 		case 'TOGGLE_LOGIN_DIALOG':
 			return state.set('loginIsOpen', payload)
 		default:

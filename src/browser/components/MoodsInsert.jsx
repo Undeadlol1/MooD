@@ -7,10 +7,10 @@ import { Row, Col } from 'react-styled-flexboxgrid'
 import { insertMood } from '../redux/actions/MoodActions'
 import { TextField } from 'redux-form-material-ui'
 import { parseJSON } from'../redux/actions/actionHelpers'
-import slugify from 'slug'
 import store from 'browser/redux/store'
 import { FormattedMessage } from 'react-intl';
 import { translate } from 'browser/containers/Translator'
+import { stringify } from 'query-string'
 
 export class MoodsInsert extends Component {
 	render() {
@@ -28,11 +28,11 @@ export class MoodsInsert extends Component {
 // TODO reorganize this for better testing
 export default reduxForm({
 	form: 'MoodsInsert',
-	asyncValidate(values) { // TODO find a way to not use this thing!
-		return fetch('/api/moods/mood/' + slugify(values.name))
+	asyncValidate({name}) {
+		return fetch('/api/moods/mood/' + '?' + stringify({name}))
 				.then(parseJSON)
 				.then(result => {
-					if (result) throw { name: translate('this_mood_already_exists') } 
+					if (result) throw { name: translate('this_mood_already_exists') }
 					else return
 				})
     },
@@ -42,7 +42,7 @@ export default reduxForm({
 
 		if (!user) errors.name = translate('please_login')
 		if (!values.name) errors.name = translate('name_cant_be_empty')
-		
+
 		return errors
 	},
 	asyncBlurFields: [ 'name' ]
@@ -52,7 +52,7 @@ export default reduxForm({
     (dispatch, ownProps) => ({
         insertMood({name}) {
 			function insertSucces(slug) {
-				ownProps.reset()				
+				ownProps.reset()
 				browserHistory.push('/mood/' + slug);
 			}
             dispatch(insertMood(name, insertSucces))

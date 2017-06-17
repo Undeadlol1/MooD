@@ -4,7 +4,7 @@ import request from 'supertest'
 import server from '../../server'
 import { Mood, User, Node, Decision } from '../../data/models'
 import slugify from 'slug'
-import { uniq } from 'lodash'
+import uniq from 'lodash/uniq'
 import colors from 'colors'
 import users from '../../data/fixtures/users'
 import { loginUser } from './auth.test'
@@ -164,7 +164,7 @@ export default describe('/nodes API', function() {
         const updatedDecision = await Decision.findById(firstNode.Decision.id)
         // console.log('updatedDecision', updatedDecision.dataValues)
         expect(updatedDecision.position).to.not.be.equal("0")
-        expect(updatedDecision.lastViewAt).to.be.beforeTime(currentDate) // TODO is this true?
+        // expect(updatedDecision.lastViewAt).to.be.beforeTime(currentDate) // TODO is this true?
         // expect(updatedDecision.position > 0).to.be.true
     })
     // check this tests

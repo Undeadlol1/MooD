@@ -1,6 +1,6 @@
 import { Node, Mood, Decision, User } from '../data/models'
 import { mustLogin } from '../services/permissions'
-import { assignIn as extend } from 'lodash'
+import extend from 'lodash/assignIn'
 import { Router } from "express"
 import selectn from "selectn"
 
@@ -19,10 +19,10 @@ export default Router()
 
     const { id: UserId } = user
     const { NodeId, rating, vote } = body
-    console.log('body: ', body);
 
     try {
       const node = await Node.findById(NodeId)
+      console.log('NodeId: ', NodeId);
       const where = {
                       NodeId,
                       UserId,

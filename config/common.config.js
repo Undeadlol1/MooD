@@ -1,13 +1,11 @@
 var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
-var CopyWebpackPlugin = require('copy-webpack-plugin')
 var WebpackNotifierPlugin = require('webpack-notifier');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var HappyPack = require('happypack');
-
 var isTest = process.env.NODE_ENV === "test"
 var isDevelopment = process.env.NODE_ENV === "development"
 var isProduction = process.env.NODE_ENV === "production"
@@ -28,27 +26,39 @@ var stats = {
     modules: false,
     version: false,
     children: false,
+    errorDetails: true,
+    timings: false,
 };
 
 var baseConfig = {
+    stats,
     context: path.resolve(__dirname, '../'),
-    devtool: 'cheap-module-source-map',
+    devtool: !isProduction && 'cheap-module-source-map',
     watch: isDevelopment || isTest,
+    watchOptions: {
+        ignored: /node_modules/,
+        aggregateTimeout: 300,
+        poll: 1000,
+    },
+    // performance: {
+    //     hints: "error"
+    // },
     module : {
         loaders: [
+            // ⚠️ BEWARE .json files caused infinite recompiling in the past!⚠️
+            // {
+            //     test: /\.json$/,
+            //     use: 'json-loader'
+            // },
             {
-                test: /\.json$/,
-                use: 'json-loader'
+                test   : /.jsx?$/,
+                loader : 'happypack/loader',
+                // loader : 'babel-loader',
+                exclude: /node_modules/,
             },
             {
                 test: /\.xml$/,
                 loader: 'xml-loader'
-            },
-            { 
-                test   : /.jsx?$/,
-                // loader : 'happypack/loader',
-                loader : 'babel-loader',
-                exclude: /node_modules/,
             },
             {
                 test: /\.(svg|png|ico)$/,
@@ -74,13 +84,10 @@ var baseConfig = {
     },
     plugins: [
         // new BundleAnalyzerPlugin({analyzerMode: 'static',}), // TODO do not include this in production
-        // new CopyWebpackPlugin([{
-        //     from: 'src/server/public',
-        //     to: 'public'
-        // }]),
-        // new HappyPack({
-        //     loaders: [ 'babel-loader' ],
-        // }),
+        new HappyPack({
+            loaders: [ 'babel-loader' ],
+            verbose: false,
+        }),
         new ExtractTextPlugin({
             filename: "styles.css",
             disable: isDevelopment // TODO check if this works properly
@@ -92,7 +99,6 @@ var baseConfig = {
             browser: path.join(__dirname, '/../', 'src/browser/'),
             server : path.join(__dirname, '/../', 'src/server/'),
             shared : path.join(__dirname, '/../', 'src/shared/'),
-            config : path.join(__dirname, '/../', 'config.js'),
         },
         enforceModuleExtension: false,
         extensions: ['.js', '.jsx'],
@@ -100,4 +106,3 @@ var baseConfig = {
 };
 
 module.exports = baseConfig
- 

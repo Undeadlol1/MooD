@@ -16,8 +16,11 @@ export default {
     add_your_own_mood: 'Add your own mood!',
     choose_your_language: 'Choose your language',
     currently_zero_content_here: 'Currently zero content here',
-    
+
+    add_url: 'Add url',
+    or_search_for_video: 'Or search for video',
     page_not_found: 'Page not found',
     list_is_empty: 'List is empty',
     this_video_already_exists_please_no_duplicates: 'This video already added! Please don\'t add duplicates.',
+    whats_on_your_mind: "What's on your mind?",
 }

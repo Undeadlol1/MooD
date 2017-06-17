@@ -1,7 +1,10 @@
-  --reporter dot
+  --reporter nyan
   --ui bdd
   --no-exit
   --watch
   --no-exit
-  --require mocha-clean
   --timeout 5000
+  --prof
+  --require mocha-clean
+  --retries 2
+  --bail

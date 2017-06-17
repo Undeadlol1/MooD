@@ -10,10 +10,8 @@ import NavBar from '../components/NavBar'
 import { fetchMood, unloadMood } from '../redux/actions/MoodActions'
 import { fetchNode, actions as nodeActions } from '../redux/actions/NodeActions'
 import { actions as globalActions } from '../redux/actions/GlobalActions'
-import { RouteTransition } from 'react-router-transition';
-import presets from 'react-router-transition/src/presets';
-import { FormattedMessage } from 'react-intl';
 import { translate as t } from 'browser/containers/Translator'
+import PageWrapper from 'browser/components/PageWrapper'
 
 @connect(
 	({ node, mood }, ownProps) => {
@@ -37,15 +35,15 @@ class MoodPage extends Component {
 
 	componentWillUnmount() {
 		this.props.unloadMood()
-		this.props.unloadNode()		
-		this.props.toggleHeader(true)		
+		this.props.unloadNode()
+		this.props.toggleHeader(true)
 	}
 
 	render() {
 		let dom;
 		const { mood, node, location, params, ...rest } = this.props
 
-		if (process.env.BROWSER && (mood.loading || node.loading)) return <Loading />
+		if (mood.loading || node.loading) return <Loading />
 
 		if (!node.contentId) {
 
@@ -65,9 +63,15 @@ class MoodPage extends Component {
 		}
 
 		return 	<div className="MoodPage">
-					<RouteTransition {...presets.slideLeft} pathname={location.pathname} className="MoodPage">
+					{/* TODO add 'let header' here? */}
+					<PageWrapper
+						loading={false}
+						preset="slideLeft"
+						location={location}
+						className="MoodPage"
+					>
 						{dom}
-					</RouteTransition>
+					</PageWrapper>
 				</div>
 	}
 }
@@ -76,9 +80,9 @@ MoodPage.propTypes = {
 	mood: PropTypes.object,
 	node: PropTypes.object,
 	// fetchMood: PropTypes.func.isRequred,
-	// fetchNode: PropTypes.func.isRequred,		
-	// unloadMood: PropTypes.func.isRequred,		
-	// unloadNode: PropTypes.func.isRequred,		
+	// fetchNode: PropTypes.func.isRequred,
+	// unloadMood: PropTypes.func.isRequred,
+	// unloadNode: PropTypes.func.isRequred,
 	// toggleHeader: PropTypes.func.isRequred,
 }
 

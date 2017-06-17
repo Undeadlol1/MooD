@@ -24,12 +24,16 @@ export default class Sidebar extends Component {
 		const { user, sidebarIsOpen, toggleSidebar } = this.props
 		const username = user.get('username')
 		return 	<Drawer className="Sidebar" docked={false} open={sidebarIsOpen} onRequestChange={toggleSidebar}>
-					{username &&
-						<MenuItem>
-							<Link onClick={toggleSidebar} to={`users/${username}`}>{translate("profile")}</Link>
-						</MenuItem>
+					{
+						username
+						?	<div>
+								<MenuItem onClick={toggleSidebar}><LoginLogoutButton inline /></MenuItem>
+								<MenuItem>
+									<Link onClick={toggleSidebar} to={`users/${username}`}>{translate("profile")}</Link>
+								</MenuItem>
+							</div>
+						: 	null
 					}
-					<MenuItem onClick={toggleSidebar}><LoginLogoutButton inline fullWidth /></MenuItem>
 					<MenuItem><Link onClick={toggleSidebar} to="search">{translate("search")}</Link></MenuItem>
 					{/*<MenuItem><Link onClick={toggleSidebar} to="about">{translate("about")}</Link></MenuItem>*/}
 				</Drawer>
