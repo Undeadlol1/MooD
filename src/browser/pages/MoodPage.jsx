@@ -43,7 +43,7 @@ class MoodPage extends Component {
 		let dom;
 		const { mood, node, location, params, ...rest } = this.props
 
-		if (process.env.BROWSER && (mood.loading || node.loading)) return <Loading />
+		if (mood.loading || node.loading) return <Loading />
 
 		if (!node.contentId) {
 
