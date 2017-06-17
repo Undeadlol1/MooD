@@ -46,14 +46,18 @@ export default Router()
 
       const UserId = await user && user.id
       const MoodId = await Mood.findIdBySlug(params.moodSlug)
-      const previousNode = params.nodeId
+      const previousNode = await params.nodeId
                               ? await Node.findById(params.nodeId)
                               : null
-
+      console.log('previousNode: ', previousNode);
       if (!MoodId) return res.boom.notFound()
 
       // see function comment (hover over it)
-      if (previousNode) await normalizeRating(previousNode)
+      if (previousNode) {
+        console.log('normalizing rating: ');
+        await normalizeRating(previousNode)
+        console.log('normalizing is done!');
+      }
 
       /* USER IS NOT LOGGED IN */
       if (!UserId) {
@@ -75,7 +79,13 @@ export default Router()
           if (previousNode) {
             /* set lastViewAt, increment viewedAmount and set position */
             const where = { UserId, NodeId: previousNode.id }
-            const previousDecision =  await Decision.findOne({where})
+            // TODO test 'findOrCreate'
+            const previousDecision =  await Decision.findOrCreate({
+              where,
+              limit: 1,
+              defaults: {MoodId},
+            })
+            console.log('previousDecision: ', previousDecision);
             // TODO remove this in future (when availability of decision will be certain)
             previousDecision && await updatePositionAndViews(previousDecision)
             // find next node
