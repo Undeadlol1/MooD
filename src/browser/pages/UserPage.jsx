@@ -3,36 +3,45 @@ import PropTypes from 'prop-types'
 import { injectProps } from 'relpers'
 import { connect } from 'react-redux'
 import Avatar from 'material-ui/Avatar'
-import Loading from '../components/Loading'
-import MoodsList from '../components/MoodsList'
-import MoodsFind from '../components/MoodsFind'
-import MoodsInsert from '../components/MoodsInsert'
-import YoutubeSearch from '../components/YoutubeSearch'
-import { fetchUser } from '../redux/actions/UserActions'
+import Loading from 'browser/components/Loading'
+import MoodsList from 'browser/components/MoodsList'
+import MoodsFind from 'browser/components/MoodsFind'
+import MoodsInsert from 'browser/components/MoodsInsert'
 import PageWrapper from 'browser/components/PageWrapper'
 import { Grid, Row, Col } from 'react-styled-flexboxgrid'
-import ChangeLanguageForm from '../components/ChangeLanguageForm'
+import YoutubeSearch from 'browser/components/YoutubeSearch'
+import { fetchUser } from 'browser/redux/actions/UserActions'
+import ChangeLanguageForm from 'browser/components/ChangeLanguageForm'
 
 export class UserPage extends Component {
 	componentWillMount() { this.props.fetchUser() }
 	@injectProps
     render({loading, location, username, isOwnPage}) {
-				return 	<PageWrapper
-							preset={'pop'}
-							loading={loading}
-							location={location}
-							className='UserPage'
-						>
-							<Grid>
-								<Loading condition={loading}>
-									<div>
-										{isOwnPage ? <ChangeLanguageForm /> : null}
-										<h2>{username}</h2>
-										<Avatar size={300} src={`https://api.adorable.io/avatars/300/${username && username.toLowerCase()}.png`} />
-									</div>
-								</Loading>
-							</Grid>
-						</PageWrapper>
+		const src = `https://api.adorable.io/avatars/300/${username && username.toLowerCase()}.png`
+		return 	<PageWrapper
+					preset={'pop'}
+					loading={loading}
+					location={location}
+					className='UserPage'
+				>
+					<Grid fluid>
+						<Row center="xs">
+							<Col xs={12}>
+								<h2 className="UserPage__username">{username}</h2>
+							</Col>
+						</Row>
+						<Row center="xs">
+							<Col xs={12} className="UserPage__avatar">
+								<Avatar size={300} src={src} />
+							</Col>
+						</Row>
+						<Row>
+							<Col xs={12}>
+								{isOwnPage ? <ChangeLanguageForm /> : null}
+							</Col>
+						</Row>
+					</Grid>
+				</PageWrapper>
     }
 }
 
