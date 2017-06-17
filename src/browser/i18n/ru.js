@@ -18,7 +18,7 @@ export default {
     currently_zero_content_here: 'Пока контента нет',
 
     add_url: 'Добавить url',
-    or_search_for_video: 'Или искать видео',
+    search_for_video: 'Искать видео',
     page_not_found: 'Страница не найдена',
     list_is_empty: 'Список пуст',
     this_video_already_exists_please_no_duplicates: 'Это видео уже добавлено! Пожалуйста, не добавляйте дубликатов.',

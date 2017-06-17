@@ -17,19 +17,19 @@ class NodesInsert extends Component {
 
         const actions = [
                             <FlatButton
-                                primary={true}
+                                primary={false}
                                 onTouchTap={toggleDialog}
                                 label={t("cancel")}
                                 disabled={isDisabled}
                             />,
-                            <FlatButton
-                                type="submit"
-                                primary={true}
-                                disabled={!props.valid}
-                                onTouchTap={handleSubmit}
-                                label={t("submit")}
-                                disabled={isDisabled}
-                            />
+                            // <FlatButton
+                            //     type="submit"
+                            //     primary={true}
+                            //     disabled={!props.valid}
+                            //     onTouchTap={handleSubmit}
+                            //     label={t("submit")}
+                            //     disabled={isDisabled}
+                            // />
                         ]
 // TODO this 'handlesubmit' just bugs me out
         return  <Form onSubmit={handleSubmit(props.insertNode)} className="NodesInsert">
@@ -41,22 +41,22 @@ class NodesInsert extends Component {
                     >
                         <ContentAdd />
                     </FloatingActionButton>
-
                     {/* DIALOG */}
                     <Dialog
-                        modal={true}
+                        modal={false}
                         actions={actions}
                         open={dialogIsOpen}
-                        onRequestClose={toggleDialog}
                         title={t("add_something")}
+                        autoScrollBodyContent={true}
+                        onRequestClose={toggleDialog}
                     >
-                        <Field
+                        {/*<Field
                             name="url"
                             fullWidth
                             hintText={t('add_url')}
                             disabled={isDisabled}
                             component={TextField}
-                        />
+                        />*/}
                         <YoutubeSearch />
                     </Dialog>
 

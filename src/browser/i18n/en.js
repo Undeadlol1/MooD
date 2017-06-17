@@ -18,7 +18,7 @@ export default {
     currently_zero_content_here: 'Currently zero content here',
 
     add_url: 'Add url',
-    or_search_for_video: 'Or search for video',
+    search_for_video: 'Search for video',
     page_not_found: 'Page not found',
     list_is_empty: 'List is empty',
     this_video_already_exists_please_no_duplicates: 'This video already added! Please don\'t add duplicates.',
