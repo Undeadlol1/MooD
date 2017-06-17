@@ -32,7 +32,7 @@ passport.use(new VKontakteStrategy(
     clientSecret: VK_SECRET || 'QjVr1JLVAXfVmZDJ6ws9',
     callbackURL:  (URL || "http://127.0.0.1:3000/") +  "api/auth/vkontakte/callback"
   },
-  function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) {
+  function vkVerifyCb(accessToken, refreshToken, params, profile, done) {
     // NOTE: params contain addition requested info
       User.findOrCreate({
         where: {vk_id: profile.id},
@@ -49,8 +49,10 @@ passport.use(new VKontakteStrategy(
         const user = result[0]
         done(null, user);
       })
-      // .spread(user => done(null, user.get({plain: true})))
-      .catch(done);
+      .catch(error => {
+        console.error(error)
+        done(error)
+      });
   }
 ));
 
@@ -60,7 +62,7 @@ passport.use(new TwitterStrategy({
     consumerSecret: TWITTER_SECRET || "D15EvlV55IfCsGnsydRi5I9QAISzkYykKOO0rCqnowDfiUmwGZ",
     callbackURL: (URL || "http://127.0.0.1:3000/") +  "api/auth/twitter/callback"
   },
-  function(token, tokenSecret, profile, done) {
+  function twitterVerifyCb(token, tokenSecret, profile, done) {
     User.findOrCreate({
       where: {twitter_id: profile.id},
       defaults: {
@@ -74,7 +76,10 @@ passport.use(new TwitterStrategy({
     .then(function (result) {
       done(null, result[0]);
     })
-    .catch(done);
+    .catch(error => {
+      console.error(error)
+      done(error)
+    });
   }
 ));
 
@@ -93,7 +98,10 @@ passport.use('local-login', new LocalStrategy(
             }
             return done(null, user);
         })
-        .catch(error => done(error))
+        .catch(error => {
+          console.error(error)
+          done(error)
+        });
   }
 ));
 
