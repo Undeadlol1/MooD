@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import store from 'browser/redux/store'
 import React, { Component } from 'react'
 import { TextField } from 'redux-form-material-ui'
 import { Form, Field, reduxForm } from 'redux-form'
@@ -17,14 +18,12 @@ import LoginLogoutButton from 'browser/components/LoginLogoutButton'
 )
 @reduxForm({
 	form: 'YoutubeSearch',
-	validate(values, second) {
-		// TODO this 😎
-		// let errors = {}
-        // const user = store.getState().user.get('id')
-		// if (!user) errors.url = translate('please_login')
-        // if (!url) errors.url = translate('url_cant_be_empty')
-        // else if (url && !isUrl(url)) errors.url = translate('something_wrong_with_this_url')
-		// return errors
+	validate({query}) {
+		let errors = {}
+        const user = store.getState().user.get('id')
+		if (!user) errors.query = t('please_login')
+        if (!query) errors.query = t('name_cant_be_empty')
+		return errors
 	}
 })
 export default class YoutubeSearch extends Component {
@@ -36,7 +35,7 @@ export default class YoutubeSearch extends Component {
 						name="query"
 						disabled={submitting}
 						component={TextField}
-						hintText={t('or_search_for_video')} />
+						hintText={t('search_for_video')} />
 					{/* hack to submit on 'enter' */}
 					<button type="submit" hidden={true}>Submit</button>
 					<YoutubeVideos />
