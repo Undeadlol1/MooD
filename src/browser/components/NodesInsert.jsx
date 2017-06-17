@@ -4,7 +4,7 @@ import Dialog from 'material-ui/Dialog'
 import { Form, Field } from 'redux-form'
 import FlatButton from 'material-ui/FlatButton'
 import { TextField } from 'redux-form-material-ui'
-import { translate } from 'browser/containers/Translator'
+import { translate as t } from 'browser/containers/Translator'
 import ContentAdd from 'material-ui/svg-icons/content/add'
 import YoutubeSearch from 'browser/components/YoutubeSearch'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
@@ -19,7 +19,7 @@ class NodesInsert extends Component {
                             <FlatButton
                                 primary={true}
                                 onTouchTap={toggleDialog}
-                                label={translate("cancel")}
+                                label={t("cancel")}
                                 disabled={isDisabled}
                             />,
                             <FlatButton
@@ -27,13 +27,13 @@ class NodesInsert extends Component {
                                 primary={true}
                                 disabled={!props.valid}
                                 onTouchTap={handleSubmit}
-                                label={translate("submit")}
+                                label={t("submit")}
                                 disabled={isDisabled}
                             />
                         ]
 // TODO this 'handlesubmit' just bugs me out
         return  <Form onSubmit={handleSubmit(props.insertNode)} className="NodesInsert">
-                    
+
                     {/* BUTTON */}
                     <FloatingActionButton
                         secondary={true}
@@ -42,24 +42,24 @@ class NodesInsert extends Component {
                         <ContentAdd />
                     </FloatingActionButton>
 
-                    {/* DIALOG */}                
+                    {/* DIALOG */}
                     <Dialog
                         modal={true}
-                        actions={actions} 
+                        actions={actions}
                         open={dialogIsOpen}
                         onRequestClose={toggleDialog}
-                        title={translate("add_something")}
+                        title={t("add_something")}
                     >
                         <Field
                             name="url"
                             fullWidth
-                            hintText={'Add url'}
+                            hintText={t('add_url')}
                             disabled={isDisabled}
                             component={TextField}
                         />
                         <YoutubeSearch />
                     </Dialog>
-                    
+
                 </Form>
     }
 }
