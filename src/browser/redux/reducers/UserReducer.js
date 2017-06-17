@@ -9,7 +9,7 @@ const emptyProfileObject = Map({
 })
 
 const emptyUserObject = Map({
-	id: '',
+	id: undefined,
 	image: '',
 	username: '',
 	vk_id: '',
