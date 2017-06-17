@@ -57,6 +57,10 @@ export default class Video extends Component {
 					<div
 						hidden={controlsAreShown}
 						className="Video__controls"
+						style={{
+							// this prevents controls to be shown while InsertNode modal is open
+							pointerEvents: controlsAreShown ? "auto" : "none"
+						}}
 					>
 						<div hidden={!controlsAreShown}>{props.children}</div>
 					</div>

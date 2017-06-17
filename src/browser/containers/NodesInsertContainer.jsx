@@ -55,6 +55,7 @@ import { parseJSON, checkStatus } from 'browser/redux/actions/actionHelpers'
             ownProps.reset()
         },
         toggleDialog() {
+			dispatch(actions.toggleControls())
             dispatch(nodeActions.toggleDialog())
         },
         toggleControls(boolean) {
