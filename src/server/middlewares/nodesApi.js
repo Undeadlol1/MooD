@@ -49,15 +49,10 @@ export default Router()
       const previousNode = await params.nodeId
                               ? await Node.findById(params.nodeId)
                               : null
-      console.log('previousNode: ', previousNode);
       if (!MoodId) return res.boom.notFound()
 
       // see function comment (hover over it)
-      if (previousNode) {
-        console.log('normalizing rating: ');
-        await normalizeRating(previousNode)
-        console.log('normalizing is done!');
-      }
+      if (previousNode) await normalizeRating(previousNode)
 
       /* USER IS NOT LOGGED IN */
       if (!UserId) {
@@ -85,7 +80,6 @@ export default Router()
               limit: 1,
               defaults: {MoodId},
             })
-            console.log('previousDecision: ', previousDecision);
             // TODO remove this in future (when availability of decision will be certain)
             previousDecision && await updatePositionAndViews(previousDecision)
             // find next node
