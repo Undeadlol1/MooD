@@ -1,12 +1,14 @@
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router'
-import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
-import { Row, Col } from 'react-styled-flexboxgrid'
-import { findMoods } from '../redux/actions/MoodActions'
+import { Field, reduxForm } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
-import { checkStatus, parseJSON } from'../redux/actions/actionHelpers'
+import { Row, Col } from 'react-styled-flexboxgrid'
+import { findMoods } from 'browser/redux/actions/MoodActions'
+import { translate as t } from 'browser/containers/Translator'
+import { checkStatus, parseJSON } from'browser/redux/actions/actionHelpers'
+
 
 @reduxForm({
 	form: 'MoodsFind',
@@ -30,7 +32,7 @@ export default class MoodsFind extends Component {
 	    return  <form onSubmit={handleSubmit(findMoods)}>
 					<Row>
 						<Col xs={12}>
-							<Field name="name" component={TextField} hintText="What's on your mind?" fullWidth />
+							<Field name="name" component={TextField} hintText={t('whats_on_your_mind')} fullWidth />
 						</Col>
 					</Row>
 		        </form>
