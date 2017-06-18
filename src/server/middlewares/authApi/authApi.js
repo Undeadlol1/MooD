@@ -1,7 +1,7 @@
 import { Strategy as VKontakteStrategy } from "passport-vkontakte"
 import { Strategy as TwitterStrategy } from "passport-twitter"
 import { Strategy as LocalStrategy } from "passport-local"
-import { User, Profile } from '../data/models'
+import { User, Profile } from 'server/data/models'
 import passport from "passport"
 import express from "express"
 import selectn from 'selectn'

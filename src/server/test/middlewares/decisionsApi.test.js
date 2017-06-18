@@ -9,7 +9,7 @@ import uniq from 'lodash/uniq'
 import colors from 'colors'
 import users from '../../data/fixtures/users'
 import { stringify } from 'query-string'
-import { loginUser } from './auth.test'
+import { loginUser } from './authApi.test'
 chai.use(require('chai-datetime'));
 chai.should();
 
