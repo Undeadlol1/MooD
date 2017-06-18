@@ -96,7 +96,6 @@ var clientConfig = merge(commonConfig, {
     },
     plugins: [ // TODO MAKE SURE PLUGINS ARE ACTUALLY INCLUDED IN CONFIG
         new BrowserSyncPlugin({
-            host: '127.0.0.1',
             proxy: 'http://127.0.0.1:3000/',
             // reload delay is needed to wait till webpack finishes compiling
             reloadDelay: 2000,
