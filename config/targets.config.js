@@ -54,6 +54,22 @@ const clientProductionPlugins = isDevelopment ? [] : [
     // }),
 ]
 
+const clientDevelopmentPlugins = isDevelopment ? [
+                                    new BrowserSyncPlugin({
+                                        proxy: 'http://127.0.0.1:3000/',
+                                        // reload delay is needed to wait till webpack finishes compiling
+                                        reloadDelay: 2000,
+                                        // rest of config have not been tested carefully.
+                                        // it's here for convenience, it's might be usefull
+                                        watchOptions: {
+                                            ignored: ['*'],
+                                            ignoreInitial: true,
+                                        },
+                                        files: ['../dist/public/scripts.js']
+                                    }),
+                                ]
+                                : []
+
 var serverConfig = merge(commonConfig, {
     name: 'server',
     target: 'node',
@@ -95,21 +111,10 @@ var clientConfig = merge(commonConfig, {
         path     : path.join(__dirname, '..', 'dist', 'public'),
     },
     plugins: [ // TODO MAKE SURE PLUGINS ARE ACTUALLY INCLUDED IN CONFIG
-        new BrowserSyncPlugin({
-            proxy: 'http://127.0.0.1:3000/',
-            // reload delay is needed to wait till webpack finishes compiling
-            reloadDelay: 2000,
-            // rest of config have not been tested carefully.
-            // it's here for convenience, it's might be usefull
-            watchOptions: {
-                ignored: ['*'],
-                ignoreInitial: true,
-            },
-            files: ['../dist/public/scripts.js']
-        }),
         // TODO this will be overriden in production!!!
         new webpack.EnvironmentPlugin(clientVariables),
-        ...clientProductionPlugins
+        ...clientDevelopmentPlugins,
+        ...clientProductionPlugins,
     ],
 });
 
