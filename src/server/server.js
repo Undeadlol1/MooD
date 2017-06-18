@@ -30,6 +30,11 @@ const port = process.env.PORT || 3000,
 if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic applues all dev specific middlewares
   app.use(errorhandler())
   app.use(morgan('dev')) // logger
+  // enable 'access control' to avoid CORS errors in browsersync
+  app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+  })
 }
 
 // middlewares
