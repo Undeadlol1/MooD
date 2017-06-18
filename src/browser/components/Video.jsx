@@ -47,6 +47,8 @@ export default class Video extends Component {
 		if (document.getElementById('embed-code')) {
 			document.getElementById('embed-code').innerHTML = embedCode;
 		}
+		// on android iframe after playVideo() loads <video> tag
+		window.getElementsByTagName("video")[0].play()
 	}
 
 	render() {
