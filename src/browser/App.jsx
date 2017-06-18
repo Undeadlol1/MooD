@@ -14,6 +14,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import store from './redux/store'
 import routesConfig from './routes'
 import Translator from './containers/Translator'
+import { syncHistoryWithStore } from 'react-router-redux'
 
 /* STYLES */
 if (process.env.BROWSER) require('./styles.scss')
@@ -26,6 +27,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 darkBaseTheme.userAgent = navigator.userAgent
 const muiTheme = getMuiTheme(darkBaseTheme)
 
+const history = syncHistoryWithStore(browserHistory, store)
+
 class App extends Component {
   render() {
     return  <MuiThemeProvider muiTheme={muiTheme}>
@@ -34,7 +37,7 @@ class App extends Component {
                   <Translator>
                       {
                         process.env.BROWSER
-                        ? <Router history={browserHistory} routes={routesConfig} />
+                        ? <Router history={history} routes={routesConfig} />
                         : <RouterContext {...this.props} />
                       }
                   </Translator>
