@@ -20,11 +20,18 @@ import 'source-map-support/register' // do we actually need this?
 import morgan from 'morgan'
 import helmet from 'helmet'
 import createLocaleMiddleware from 'express-locale';
+import RateLimiter from 'express-rate-limit'
 
 const port = process.env.PORT || 3000,
       app = express(),
       publicUrl = path.resolve('./dist', 'public'), // TODO: or use server/public?
       cookieExpires = 100 * 60 * 24 * 100 // 100 days
+
+const limiter = new RateLimiter({
+  windowMs: 15*60*1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  delayMs: 0 // disable delaying - full speed until the max limit is reached
+});
 
 // development only middlewares
 if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic applues all dev specific middlewares
@@ -55,6 +62,10 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(boom()) // provides res.boom. erros dispatching
 app.use(helmet()) // security
+// rate limiter
+// only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
+// app.enable('trust proxy');
+app.use(limiter)
 
 // REST API
 app.use('/api/auth', authApi)
