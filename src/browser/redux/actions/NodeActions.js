@@ -52,7 +52,6 @@ export const fetchNode = slug => (dispatch, getState) => {
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(data => {
-			console.log('data: ', data);
 			/*
 				unload node before assigning new one because
 				mutability does node load youtube video if node is the same
