@@ -7,7 +7,7 @@ var config = process.env
     manually because currently it causes endless recompiling
   To avoid this, we need to require file manually only if it's neccesery
 */
-if (config.dialect == undefined) config = require('../../../production.json')
+if (config.dialect == undefined) config = require('../../../config')
 
 module.exports = {
   "development": {
