@@ -15,7 +15,7 @@ import usersApi from './middlewares/usersApi'
 import decisionsApi from './middlewares/decisionsApi'
 import externalsApi from './middlewares/externalsApi'
 import { mustLogin } from './services/permissions'
-import authorization, { passport } from './middlewares/authApi'
+import authApi, { passport } from './middlewares/authApi'
 import 'source-map-support/register' // do we actually need this?
 import morgan from 'morgan'
 import helmet from 'helmet'
@@ -52,7 +52,7 @@ app.use(boom()) // provides res.boom. erros dispatching
 app.use(helmet()) // security
 
 // REST API
-app.use('/api/auth', authorization)
+app.use('/api/auth', authApi)
 app.use('/api/users', usersApi)
 app.use('/api/moods', moodsApi)
 app.use('/api/nodes', nodesApi)

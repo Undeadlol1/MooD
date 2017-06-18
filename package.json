@@ -13,6 +13,9 @@
     "analyze": "NODE_ENV=production parallel-webpack --config ./config/targets.config.js --watch",
     "check_production": "NODE_ENV=production parallel-webpack --config ./config/targets.config.js; node dist/server.js"
   },
+   "engines": {
+    "node": ">=6.9"
+  },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "babel-runtime": "^6.23.0",

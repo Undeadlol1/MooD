@@ -38,7 +38,6 @@ describe('<NodesInsert />', () => {
   it('has <Dialog />', () => {
     const dialog = wrapper.find('Dialog')
     expect(wrapper).to.have.descendants('Dialog');
-    expect(dialog).to.have.descendants('Field');
     // TODO why is this not working? because of @connect?
     // expect(dialog).to.have.descendants('YoutubeSearch');
   });

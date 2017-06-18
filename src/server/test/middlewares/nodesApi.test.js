@@ -7,7 +7,7 @@ import slugify from 'slug'
 import uniq from 'lodash/uniq'
 import colors from 'colors'
 import users from '../../data/fixtures/users'
-import { loginUser } from './auth.test'
+import { loginUser } from './authApi.test'
 import { stringify } from 'query-string'
 chai.use(require('chai-datetime'));
 chai.should();

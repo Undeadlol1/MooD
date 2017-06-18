@@ -3,12 +3,12 @@ import request from 'supertest'
 import server from '../../server.js'
 import { User, Profile } from '../../data/models'
 import select from 'selectn'
-import { loginUser } from './auth.test'
+import { loginUser } from './authApi.test'
 import users from '../../data/fixtures/users'
 chai.should();
 
 export default describe('/users API', function() {
-    
+
     before(function() {
         // TODO add logout? to test proper user login?
         // Kill supertest server in watch mode to avoid errors
@@ -37,7 +37,7 @@ export default describe('/users API', function() {
             throw new Error(error)
         }
     })
-    
+
     it('update user profile', async function() {
         try {
             const user = users[0]

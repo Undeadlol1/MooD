@@ -35,7 +35,6 @@ describe('<PageWrapper />', () => {
   it('has <Loading />', () => {
     const loading = wrapper.find('Loading')
     expect(loading).to.have.length(1);
-    expect(loading.props()).to.have.property('condition', true)
   });
 
   // it('returns children in SSR', () => {
