@@ -68,7 +68,10 @@ export const fetchNode = slug => (dispatch, getState) => {
  * @param {String} query
  */
 export const youtubeSearch = query => (dispatch, getState) => {
-	fetch(externalsUrl + '?' + stringify({query}))
+	fetch(
+			externalsUrl + '?' + stringify({query}),
+			{credentials: 'same-origin'},
+		)
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(data => {
