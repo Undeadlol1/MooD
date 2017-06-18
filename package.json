@@ -13,7 +13,7 @@
     "analyze": "NODE_ENV=production parallel-webpack --config ./config/targets.config.js --watch",
     "check_production": "NODE_ENV=production parallel-webpack --config ./config/targets.config.js; node dist/server.js"
   },
-   "engines": {
+  "engines": {
     "node": ">=6.9"
   },
   "dependencies": {
@@ -95,7 +95,6 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-0": "^6.22.0",
     "babel-preset-stage-3": "^6.22.0",
-    "browser-sync-webpack-plugin": "^1.1.4",
     "chai": "^3.5.0",
     "chai-datetime": "^1.4.1",
     "chai-enzyme": "^0.7.1",
