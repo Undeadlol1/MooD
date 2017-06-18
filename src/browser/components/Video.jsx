@@ -6,9 +6,9 @@ import { actions } from 'browser/redux/actions/GlobalActions'
 
 @connect(
 	({node, global}, ownProps) => {
-		const {contentId} = node,
+		const {contentId, loading} = node,
 			  controlsAreShown = global.get('controlsAreShown')
-		return ({contentId, controlsAreShown, ...ownProps})
+		return ({contentId, loading, controlsAreShown, ...ownProps})
 	},
 	(dispatch, ownProps) => ({
 		openControls() {
@@ -23,12 +23,30 @@ import { actions } from 'browser/redux/actions/GlobalActions'
     })
 )
 export default class Video extends Component {
+	// to avoid long loading of iframe on mobile devices
+	// we hide them till they are ready
+	// TODO move this to redux
+	state = { playerLoaded: false }
+
 	timeout = null
+
 	watchMouseMove = () => {
 		clearTimeout(this.timeout)
 		this.timeout = setTimeout(() => {
 			this.props.closeControls()
 		}, 3000)
+	}
+
+	onReady = event => {
+		if(process.env.SERVER) return
+		this.setState({playerLoaded: true})
+		// auto play does not work on IOS and Android
+		// https://developers.google.com/youtube/iframe_api_reference#Events
+		var embedCode = event.target.getVideoEmbedCode();
+		event.target.playVideo();
+		if (document.getElementById('embed-code')) {
+			document.getElementById('embed-code').innerHTML = embedCode;
+		}
 	}
 
 	render() {
@@ -42,6 +60,7 @@ export default class Video extends Component {
 				}
 
 		return 	<section
+					hidden={props.loading && !state.playerLoaded}
 					className={"Video " + className}
 					// TODO add comments about iframe!!!
 					onMouseMove={this.watchMouseMove}
@@ -53,6 +72,8 @@ export default class Video extends Component {
 						videoId={props.contentId}
 						onEnd={requestNewVideo} // TODO add rating?
 						onError={requestNewVideo}
+						// TODO move this to redux
+						onReady={this.onReady}
 						/>
 					<div
 						hidden={controlsAreShown}
