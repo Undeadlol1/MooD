@@ -1,47 +1,44 @@
-import { Link } from 'react-router'
-import { connect } from 'react-redux';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
+import { connect } from 'react-redux'
+import store from 'browser/redux/store'
 import React, { Component } from 'react'
-import LoginLogoutButton from './LoginLogoutButton'
-import { toggleSidebar } from '../redux/actions/GlobalActions'
-import { checkStatus, parseJSON, headersAndBody } from'../redux/actions/actionHelpers'
+import { TextField } from 'redux-form-material-ui'
+import { Form, Field, reduxForm } from 'redux-form'
+import YoutubeVideos from 'browser/components/YoutubeVideos'
+import { translate as t } from 'browser/containers/Translator'
+import { youtubeSearch } from 'browser/redux/actions/NodeActions'
+import LoginLogoutButton from 'browser/components/LoginLogoutButton'
 
 @connect(
-	({ global: { sidebarIsOpen } }, ownProps) => ({ sidebarIsOpen, ...ownProps }),
+	(state, ownProps) => ({ ...ownProps }),
     (dispatch, ownProps) => ({
-        toggleSidebar(value) {
-            dispatch(toggleSidebar(value))
-        }
+		onSubmit({query}) {
+			dispatch(youtubeSearch(query))
+		}
     })
 )
+@reduxForm({
+	form: 'YoutubeSearch',
+	validate({query}) {
+		let errors = {}
+        const user = store.getState().user.get('id')
+		if (!user) errors.query = t('please_login')
+        if (!query) errors.query = t('name_cant_be_empty')
+		return errors
+	}
+})
 export default class YoutubeSearch extends Component {
-	state = {
-		videos: []
-	}
-	componentDidMount() {
-		fetch(`https://www.googleapis.com/youtube/v3/search?part=id&q="limp bizzkit"&type=video&key=${'AIzaSyAHOfkKqTfstb3V_YVOVKTzye9Gb2Sl4Tw'}`)
-			.then(checkStatus)		
-			.then(parseJSON)
-			.then(data => {
-				console.log(data)
-				this.setState({ videos: data.items })
-			})
-			.catch(error => {
-				console.error(error)
-			})
-	}
 	render() {
-		const { sidebarIsOpen, toggleSidebar } = this.props
-		// remove onRequestChange ?
-		return 	<div>
-					<input type="text" />
-					{/*`http://img.youtube.com/vi/${nodeContent}/0.jpg`*/}
-					<ul>
-						{
-							this.state.videos.map((video, index) => <li key={index}><img src={`http://img.youtube.com/vi/${video.id.videoId}/0.jpg`} alt=""/></li>)
-						}
-					</ul>
-				</div>
+		const { handleSubmit, onSubmit, submitting } = this.props
+		return 	<Form onSubmit={handleSubmit(onSubmit)} className="YoutubeSearch">
+					<Field
+						fullWidth
+						name="query"
+						disabled={submitting}
+						component={TextField}
+						hintText={t('search_for_video')} />
+					{/* hack to submit on 'enter' */}
+					<button type="submit" hidden={true}>Submit</button>
+					<YoutubeVideos />
+				</Form>
 	}
 }

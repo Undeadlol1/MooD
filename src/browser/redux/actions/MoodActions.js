@@ -1,6 +1,9 @@
-import { createAction, createActions } from 'redux-actions'
+// @ts-check
+import { createAction } from 'redux-actions'
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
 import { toastr } from 'react-redux-toastr'
+
+const moodsUrl = String(process.env.API_URL) + 'moods/'
 
 // export const { recieveMood, recieveMoods, fetchingInProgress, fetchingError } = createActions({
 //   recieveMood: mood => mood, // object => object
@@ -36,22 +39,25 @@ export const unloadMood = createAction('UNLOAD_MOOD')
 
 export const fetchMoods = (pageNumber = 1) => dispatch => {
 	dispatch(fetchingInProgress())
-	fetch('/api/moods' + (pageNumber ? '/' + pageNumber : ''))
-		.then(checkStatus)		
+	fetch(moodsUrl + (pageNumber ? '/' + pageNumber : ''))
+		.then(checkStatus)
 		.then(parseJSON)
 		.then(data => {
 			data.currentPage = pageNumber
 			dispatch(recieveMoods((data)))
 		})
+		.catch(error => {
+			console.error(error)
+		})
 }
 /**
  * fetch mood by slug
- * @param {String} slug 
+ * @param {String} slug
  */
 export const fetchMood = slug => dispatch => {
 	dispatch(fetchingInProgress())
-	fetch('/api/moods/mood/' + slug || '')
-		.then(checkStatus)		
+	fetch(moodsUrl + 'mood/' + slug || '')
+		.then(checkStatus)
 		.then(parseJSON)
 		.then(mood => dispatch(recieveMood((mood))))
 }
@@ -64,10 +70,10 @@ export const insertMood = (name, callback) => dispatch => {
 	fetch('/api/moods', headersAndBody({ name }))
 		.then(checkStatus)
 		.then(parseJSON)
-		.then(moodSlug => {
-			callback && callback(moodSlug)
-			return moodSlug
-		})		
+		.then(({slug}) => {
+			callback && callback(slug)
+			return slug
+		})
 		.then(() => dispatch(fetchMoods()))
 }
 /**
@@ -76,8 +82,8 @@ export const insertMood = (name, callback) => dispatch => {
  */
 export const findMoods = name => dispatch => {
 	dispatch(fetchingInProgress())
-	fetch('/api/moods/search/' + name)
-		.then(checkStatus)		
+	fetch(moodsUrl + 'search/' + name)
+		.then(checkStatus)
 		.then(parseJSON)
 		.then(data => {
 			console.log('moods have been found!', data)

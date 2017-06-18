@@ -1,10 +1,12 @@
-import { toggleLoginDialog } from '../redux/actions/UserActions'
 import React, { Component } from 'react'
-import PropTypes from 'prop-types';
-import Dialog from 'material-ui/Dialog';
-import RaisedButton from 'material-ui/RaisedButton';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import Dialog from 'material-ui/Dialog'
+import Icon from 'browser/components/Icon'
 import FontAwesome from 'react-fontawesome'
+import RaisedButton from 'material-ui/RaisedButton'
+import { translate } from 'browser/containers/Translator'
+import { toggleLoginDialog } from 'browser/redux/actions/UserActions'
 
 @connect(
 	({ user }) => ({ loginIsOpen: user.get('loginIsOpen') }),
@@ -17,29 +19,23 @@ import FontAwesome from 'react-fontawesome'
 export default class LoginDialog extends Component {
 	render() {
 		const { loginIsOpen, toggleDialog } = this.props
-		const iconOptions = iconName => ({ // TODO move this in css
-			size: "2x",
-			name: iconName,
-			style: { color: 'white' }
-		})
-
 		return <Dialog
 					open={loginIsOpen}
-					title="Please login"
+					title={translate('please_login')}
 					className="LoginDialog"
 					onRequestClose={toggleDialog}
 				>	
 					<span className="LoginDialog__icons">
 						<RaisedButton
 							label="vk.com"
-							href="/auth/vkontakte"
+							href="/api/auth/vkontakte"
 							className="LoginDialog__icon"
-							icon={<FontAwesome {...iconOptions('vk')} />} />
+							icon={<Icon name="vk" />} />
 						<RaisedButton
 							label="twitter.com"
-							href="/auth/twitter"
+							href="/api/auth/twitter"
 							className="LoginDialog__icon"							
-							icon={<FontAwesome {...iconOptions('twitter')} />} />	
+							icon={<Icon name="twitter" />} />
 					</span>
 				</Dialog>				
 	}

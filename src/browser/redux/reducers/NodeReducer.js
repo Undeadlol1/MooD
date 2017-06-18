@@ -1,8 +1,10 @@
+// TODO add immutable
 const decisionStructure = {
 								rating: '',
 								UserId: '',
 								NodeId: '',
 								MoodId: '',
+								vote: null,
 								NodeRating: '',
 								nextViewAt: '',
 							}
@@ -22,6 +24,8 @@ const initialState = 	{
 							error: '',
 							loading: true,
 							dialogIsOpen: false,
+							searchIsActive: false, // TODO do i need this?
+							searchedVideos: [],
 							...nodeStructure
 						}
 						
@@ -33,7 +37,9 @@ export default (state = initialState, {type, payload}) => {
 			newState = Object.assign({}, state, payload || initialState, {
 				loading: false
 			})
-			// if (!payload) newState = Object.assign({}, state, initialState)
+			break
+		case 'UPDATE_NODE':
+			newState = Object.assign({}, state, payload)
 			break
 		case 'TOGGLE_DIALOG':
 			newState = Object.assign({}, state, {
@@ -42,6 +48,12 @@ export default (state = initialState, {type, payload}) => {
 			break
 		case 'UNLOAD_NODE':
 			newState = Object.assign({}, state, nodeStructure)
+			break
+		case 'RECIEVE_SEARCHED_VIDEOS':
+			newState = Object.assign({}, state, {
+				searchIsActive: false,
+				searchedVideos: payload
+			})
 			break
 	}
 

@@ -1,49 +1,51 @@
-import { toggleLoginDialog, logoutCurrentUser } from '../redux/actions/UserActions'
 import React, { Component } from 'react'
-import PropTypes from 'prop-types';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import { connect } from 'react-redux';
-import FontAwesome from 'react-fontawesome'
-
-// TODO add comments
-
-@connect(
-	({ user }, ownProps) => ({
-		userId: user.get('id'), ...ownProps
-	}),	
-    (dispatch, ownProps) => ({
-        toggleDialog() {
-            dispatch(toggleLoginDialog())
-        },
-		logout() {
-			dispatch(logoutCurrentUser())
-		}
-    })
-)
-class LoginLogoutButton extends Component {
+import PropTypes from 'prop-types'
+import classNames from 'classnames'
+import { connect } from 'react-redux'
+import RaisedButton from 'material-ui/RaisedButton'
+import extend from 'lodash/assignIn'
+import { translate } from 'browser/containers/Translator'
+import { toggleLoginDialog, logoutCurrentUser } from 'browser/redux/actions/UserActions'
+/**
+ * conditionally render 'login' or 'logout' button
+ */
+export class LoginLogoutButton extends Component {
 	render() {
-		const { userId, logout, toggleDialog, inline, fullWidth, ...rest } = this.props
-		const isLoggedIn = userId
+		const { userId, className, logout, toggleDialog, inline, ...rest } = this.props
+		const label = translate(userId ? "logout" : "login")
+		const inlineStyles = {display: 'block', textAlign: "center"}
 
-		if (inline) return <span
-								onClick={isLoggedIn ? logout : toggleDialog}
-								style={{ display: 'block', textAlign: "center" }}
-								{...rest}
-							>
-								{isLoggedIn ? "logout" : "login"}
-							</span>
-		
-		return <RaisedButton
-					label={ isLoggedIn ? "logout" : "login"}
-					onClick={isLoggedIn ? logout : toggleDialog}
-					{ ...rest } />
+		const properties = extend(
+			{
+				onClick: userId ? logout : toggleDialog,
+				className: classNames('LoginLogoutButton', className),
+			},
+			// use <RaisedButton /> or <span> if 'inline' is specified
+			// span needs special styles and RaisedButton needs 'label'
+			inline ? {style: inlineStyles} : { label },
+			rest
+		)
+
+		if (inline) return <span {...properties}>{label}</span>
+		return <RaisedButton {...properties} />
 	}
 }
 
 LoginLogoutButton.propTypes = {
-	fullWidth: PropTypes.bool
+	inline: PropTypes.bool,
+	userId: PropTypes.number,
+	logout: PropTypes.func.isRequired,
+	toggleDialog: PropTypes.func.isRequired,
 }
 
-export default LoginLogoutButton
+export const dispatchToProps = (dispatch, ownProps) => ({
+	logout: () => dispatch(logoutCurrentUser()),
+	toggleDialog: () => dispatch(toggleLoginDialog()),
+})
+
+export default connect(
+	({ user }, ownProps) => ({
+		userId: user.get('id'), ...ownProps
+	}),
+	dispatchToProps
+)(LoginLogoutButton)

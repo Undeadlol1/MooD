@@ -5,101 +5,99 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var WebpackNotifierPlugin = require('webpack-notifier');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 // TODO webpack-build-notifier (seems better tgeb webpack-notifier)
-var extractSass = new ExtractTextPlugin({
-    filename: "styles.css",
-    // disable: process.env.NODE_ENV === "development"
-});
 var merge = require('webpack-merge');
-const BabiliPlugin = require('babili-webpack-plugin');
 var nodeExternals = require('webpack-node-externals');
-
+var extend = require('lodash/assignIn')
 var commonConfig = require('./common.config.js')
+var config = require('../config.js')
+var CompressionPlugin = require('compression-webpack-plugin');
 
+// TODO
 // https://survivejs.com/webpack/optimizing/minifying/#enabling-a-performance-budget
 
-// const productionConfig = merge([
+const NODE_ENV = process.env.NODE_ENV
+const isDevelopment = NODE_ENV === 'development'
+const isProduction = NODE_ENV === 'production'
+const isTest = NODE_ENV === 'test'
 
-//   {
-//     performance: {
-//       hints: 'warning', // 'error' or false are valid too
-//       maxEntrypointSize: 100000, // in bytes
-//       maxAssetSize: 450000, // in bytes
-//     },
-//   },
+const serverVariables =  extend({
+                            BROWSER: false,
+                            isBrowser: false,
+                            SERVER: true,
+                            isServer: true,
+                        }, config)
 
-//   ...
-// ]);
-
-
-
-
-const isDevelopment = process.env.npm_lifecycle_event === 'start'
+const clientVariables =  extend({
+                            BROWSER: true,
+                            isBrowser: true,
+                            SERVER: false,
+                            isServer: false,
+                        }, config)
 
 const clientProductionPlugins = isDevelopment ? [] : [
-    new webpack.DefinePlugin({ // <-- key to reducing React's size
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
+    // new webpack.optimize.DedupePlugin(), //dedupe similar code
+    // TODO minify server
+    // TODO try this https://github.com/webpack-contrib/uglifyjs-webpack-plugin
+    new webpack.optimize.UglifyJsPlugin({minimize: true}), //minify everything
+    new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks
+    new CompressionPlugin({//   <-- Add this
+      asset: "[path].gz[query]",
+      algorithm: "gzip",
+      test: /\.js$|\.css$|\.html$/,
+      threshold: 10240,
+      minRatio: 0.8
     }),
-    // new webpack.optimize.DedupePlugin(), //dedupe similar code 
-    // new webpack.optimize.UglifyJsPlugin(), //minify everything
-    new BabiliPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin()//Merge chunks 
+    // new webpack.optimize.CommonsChunkPlugin({
+    //     name: 'vendor.js',
+    //     minChunks: Infinity, // <-- the way to avoid "webpackJsonp is not defined"
+    // }),
 ]
-
 
 var serverConfig = merge(commonConfig, {
     name: 'server',
-    target: 'node',  
+    target: 'node',
     node: {
         __filename: true,
-        __dirname: true 
+        __dirname: true
     },
     entry  : ['babel-polyfill', './src/server/server.js'],
     output : {
         path     : path.join(__dirname, '..', 'dist'),
         filename : 'server.js',
-        libraryTarget: "commonjs",
+        // libraryTarget: "commonjs",
     },
     plugins: [
-        // new webpack.DefinePlugin({ // move to common?
-        //     $dirname: '__dirname',
-        // }),
+        new webpack.EnvironmentPlugin(serverVariables),
+        new CopyWebpackPlugin([{
+            from: 'src/server/public',
+            to: 'public'
+        }]),
     ],
     // this is important. Without nodeModules in "externals" bundle will throw and error
     // bundling for node requires modules not to be packed on top of bundle, but to be found via "require"
-    externals: [nodeExternals()],
+    externals: [nodeExternals({
+        whitelist: ['webpack/hot/dev-server', /^lodash/, 'react-router-transition/src/presets']
+    })],
 });
 
 var clientConfig = merge(commonConfig, {
     name: 'client',
     target: 'web',
     entry  : {
-        vendor: ['react', 'redux', 'react-redux', 'redux-form', 'material-ui'], // TODO MAKE SURE TREE SHAKING WORKS HERE
-        scripts: './src/browser/app.jsx',
+        // 'vendor.js': ['react', 'redux', 'react-redux', 'redux-form', 'material-ui'], // TODO MAKE SURE TREE SHAKING WORKS HERE
+        'scripts.js': './src/browser/App.jsx',
+        // 'styles.css': './src/browser/styles.scss',
     },
     output : {
         publicPath: '/',
-        filename : '[name].js',
+        filename : '[name]',
         path     : path.join(__dirname, '..', 'dist', 'public'),
-    },   
+    },
     plugins: [ // TODO MAKE SURE PLUGINS ARE ACTUALLY INCLUDED IN CONFIG
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-        }),
-        new HtmlWebpackPlugin({
-            template: path.join(__dirname, '../', '/src/server/public/index.html')
-        }),
+        // TODO this will be overriden in production!!!
+        new webpack.EnvironmentPlugin(clientVariables),
         ...clientProductionPlugins
     ],
-    // resolving is currently disable due to wrong modules resolving on lunix machines (might be because of babel, but unlikely)
-    // resolve: {
-    //     alias: {
-    //         pages       : path.join(__dirname, '/../', 'src/browser/pages/'),
-    //         components  : path.join(__dirname, '/../', 'src/browser/components/'),
-    //     },
-    // }
 });
 
-module.exports = [serverConfig, clientConfig]
- 
+module.exports = [clientConfig, serverConfig,]

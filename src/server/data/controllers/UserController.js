@@ -1,13 +1,13 @@
-// import UserModel from "../models/user.js"
+import { User } from "../models/index"
 
-export default class User {
-    findOne (selector) {
-        // find user  
-        // UserModel.findOne({})
-    }
+export default class {
+    // findOne (selector) {
+    //     // find user  
+    //     User.findOne({})
+    // }
 
-    create (selector) {
-        // create user
-        // UserModel.create()
-    }
+    // create (selector) {
+    //     // create user
+    //     User.create()
+    // }
 }

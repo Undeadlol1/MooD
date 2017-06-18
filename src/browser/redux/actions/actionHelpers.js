@@ -1,5 +1,7 @@
-import { isObject } from 'lodash'
+// import React from 'react'
+import isObject from 'lodash/isObject'
 import { toastr } from 'react-redux-toastr'
+import { FormattedMessage } from 'react-intl';
 
 // TODO add comments
 export function checkStatus(response) {
@@ -16,6 +18,7 @@ export function checkStatus(response) {
 			  status: toastrType,
         showCloseButton: false
 			}
+    // toastr.error(<FormattedMessage id="error_accured" />, message || response.statusText, toastrOptions)
     toastr.error('Error accured!', message || response.statusText, toastrOptions)
     console.error(error);
     console.info(response);
@@ -39,7 +42,7 @@ export function parseJSON(response) {
  * @returns {Object} ddssd
  */
 export function headersAndBody(payload, method = 'POST') {
-  // const body = isObject(payload) ? 
+  // const body = isObject(payload) ?
   return {
 		method: method.toUpperCase(),
 		headers: {
