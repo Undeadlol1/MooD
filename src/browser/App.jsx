@@ -27,8 +27,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 darkBaseTheme.userAgent = navigator.userAgent
 const muiTheme = getMuiTheme(darkBaseTheme)
 
-const history = syncHistoryWithStore(browserHistory, store)
-
 class App extends Component {
   render() {
     return  <MuiThemeProvider muiTheme={muiTheme}>
@@ -37,7 +35,7 @@ class App extends Component {
                   <Translator>
                       {
                         process.env.BROWSER
-                        ? <Router history={history} routes={routesConfig} />
+                        ? <Router history={syncHistoryWithStore(browserHistory, store)} routes={routesConfig} />
                         : <RouterContext {...this.props} />
                       }
                   </Translator>
