@@ -48,6 +48,7 @@ export default class PageWrapper extends Component {
             right: '50%',
             fontSize: '1.5rem',
             position: 'absolute',
+            fontFamily: 'sans-serif',
             transform: 'translate(50%, -50%)',
         }
 
