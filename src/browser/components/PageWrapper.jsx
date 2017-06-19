@@ -28,7 +28,7 @@ export default class PageWrapper extends Component {
 
     render() {
 		const isServer = process.env.SERVER
-		const isBrowser = process.env.BROWER
+		const isBrowser = process.env.BROWSER
 		const {location, loading, children, preset} = this.props
         const cx = classNames('PageWrapper', this.props.className)
         // RouterTransition creates it's own 'div'
