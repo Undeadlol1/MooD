@@ -4,7 +4,13 @@ import { translate } from '../containers/Translator'
 
 class NotFound extends React.Component {
   render() {
-    return  <h1 className="NotFound">{translate('page_not_found')}!</h1>
+    // align to center
+    // TODO use flexbox for it?
+    const style = {
+      marginTop: '50%',
+      textAlign: 'center',
+    }
+    return  <h1 style={style} className="NotFound">{translate('page_not_found')}!</h1>
   }
 }
 
