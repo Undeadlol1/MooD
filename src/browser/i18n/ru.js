@@ -17,6 +17,7 @@ export default {
     choose_your_language: 'Выберите ваш язык',
     currently_zero_content_here: 'Пока контента нет',
 
+    loading: 'Загрузка',
     add_url: 'Добавить url',
     search_for_video: 'Искать видео',
     page_not_found: 'Страница не найдена',

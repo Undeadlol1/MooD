@@ -17,6 +17,7 @@ export default {
     choose_your_language: 'Choose your language',
     currently_zero_content_here: 'Currently zero content here',
 
+    loading: 'Loading',
     add_url: 'Add url',
     search_for_video: 'Search for video',
     page_not_found: 'Page not found',
