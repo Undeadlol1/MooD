@@ -14,8 +14,8 @@ describe('user reducer', async () => {
     expect(reducer(undefined, {})).to.equal(initialState);
   });
 
-  it('should handle FETCHING_IN_PROGRESS action on initial state', () => {
-    const action = actions.fetchingInProgress()
+  it('should handle FETCHING_USER action on initial state', () => {
+    const action = actions.fetchingUser()
     const newState = reducer(undefined, action)
     const expectedState = initialState.set('loading', true)
     expect(newState).to.equal(expectedState)

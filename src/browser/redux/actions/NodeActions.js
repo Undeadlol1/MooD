@@ -13,7 +13,7 @@ export const actions = createActions({
   TOGGLE_DIALOG: () => null,
   RECIEVE_NODE: node => node,
   UPDATE_NODE: object => object,
-  FETCHING_IN_PROGRESS: () => null,
+  FETCHING_NODE: () => null,
   FETCHING_ERROR: reason => reason,
   RECIEVE_SEARCHED_VIDEOS: videos => videos,
 })
@@ -23,7 +23,7 @@ export const actions = createActions({
  * @param {Object} payload content url
  */
 export const insertNode = payload => (dispatch, getState) => {
-	dispatch(actions.fetchingInProgress())
+	dispatch(actions.fetchingNode())
 	fetch(nodesUrl, headersAndBody(payload))
 		.then(checkStatus)
 		.then(parseJSON)
@@ -43,7 +43,7 @@ export const fetchNode = slug => (dispatch, getState) => {
 	const nodeId = state.node.id
 	const moodSlug = slug || state.mood.get('slug')
 
-	dispatch(actions.fetchingInProgress())
+	dispatch(actions.fetchingNode())
 
 	fetch(
 		nodesUrl + moodSlug + '/' + nodeId,

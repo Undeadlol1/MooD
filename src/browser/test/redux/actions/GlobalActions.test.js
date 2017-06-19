@@ -8,7 +8,6 @@ function testAction(type, payload, action) {
 }
 
 describe('GlobalActions', () => {
-
   it('TOGGLE_HEADER', () => {
     testAction('TOGGLE_HEADER', true, actions.toggleHeader)
   })

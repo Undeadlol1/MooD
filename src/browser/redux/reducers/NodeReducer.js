@@ -28,11 +28,15 @@ const initialState = 	{
 							searchedVideos: [],
 							...nodeStructure
 						}
-						
+
 export default (state = initialState, {type, payload}) => {
 	let newState = state
 
 	switch(type) {
+		case 'FETCHING_NODE':
+			newState = Object.assign({}, state, {
+					loading: true
+			})
 		case 'RECIEVE_NODE':
 			newState = Object.assign({}, state, payload || initialState, {
 				loading: false

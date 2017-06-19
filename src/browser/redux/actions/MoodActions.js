@@ -13,23 +13,23 @@ const moodsUrl = String(process.env.API_URL) + 'moods/'
 // })
 
 /**
- * @param {Array} moods
+ * @param {array} moods
  */
 export const recieveMoods = createAction('RECIEVE_MOODS')
 /**
- * @param {Object} mood
+ * @param {object} mood
  */
 export const recieveMood = createAction('RECIEVE_MOOD')
 /**
- * @param {Array} moods
+ * @param {array} moods
  */
 export const recieveSearchResult = createAction('RECIEVE_SEARCH_RESULT')
 /**
- * @param {Boolean} value // TODO add toggle
+ * @param {boolean} value // TODO add toggle
  */
-export const fetchingInProgress = createAction('FETCHING_IN_PROGRESS')
+export const fetchingInProgress = createAction('FETCHING_MOOD')
 /**
- * @param {String} reason
+ * @param {string} reason
  */
 export const fetchingError = createAction('FETCHING_ERROR', reason => reason)
 /**
