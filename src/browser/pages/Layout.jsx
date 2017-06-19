@@ -77,10 +77,11 @@ export default class Layout extends React.Component {
 
 		// styles
 		const 	baseStyles = 	{
+									color: 'white',
 									height: '100vh',
 									minHeight: '100vh',
+									fontFamily: 'sans-serif',
 									backgroundColor: 'rgb(48, 48, 48)',
-									color: 'white'
 								},
 				headerStyles = 	{ // this is moved to navbar.scss
 									// position: 'fixed',
