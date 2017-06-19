@@ -56,7 +56,11 @@ const clientProductionPlugins = isDevelopment ? [] : [
 
 const clientDevelopmentPlugins = isDevelopment ? [
                                     new BrowserSyncPlugin({
-                                        proxy: 'http://127.0.0.1:3000/',
+                                        open: false,
+                                        proxy: {
+                                            target: 'http://127.0.0.1:3000/',
+                                            cookies: { stripDomain: false }
+                                        },
                                         // reload delay is needed to wait till webpack finishes compiling
                                         reloadDelay: 2000,
                                         // rest of config have not been tested carefully.
