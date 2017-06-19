@@ -43,7 +43,7 @@ function randomIntFromInterval(min, max) {
 }
 
 // insert fixtures into database
-before(function() {
+before(function(done) {
     // close server incase of supertest.agent server is in use
     require('../server.js').default.close()
 
@@ -62,7 +62,7 @@ before(function() {
     })
 
     // create users
-    return User.bulkCreate(usersWithHashedPassword)
+    User.bulkCreate(usersWithHashedPassword)
         // refetch users because .bulkCreate return objects with id == null
         .then(() => User.findAll())
         // create moods fixtures array
@@ -112,6 +112,7 @@ before(function() {
         })
         // create decisions
         .then(() => Decision.bulkCreate(decisions))
+        .then(() => done())
         .catch(error => {
             console.error(error)
             return error
@@ -122,11 +123,11 @@ before(function() {
 // clean up db
 after(async function() {
     try {
-        User.destroy({ where: {} })
-        Profile.destroy({ where: {} })
-        Mood.destroy({ where: {} })
-        Node.destroy({ where: {} })
-        Decision.destroy({ where: {} })
+        await User.destroy({ where: {} })
+        await Profile.destroy({ where: {} })
+        await Mood.destroy({ where: {} })
+        await Node.destroy({ where: {} })
+        await Decision.destroy({ where: {} })
     }
     catch(error) {
         console.log(error)
