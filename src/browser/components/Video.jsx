@@ -69,14 +69,14 @@ export default class Video extends Component {
 					onMouseLeave={props.closeControls}
 					onMouseOver={props.openControls}
 				>
-					<YouTube
+					{props.contentId && <YouTube
 						opts={opts}
 						videoId={props.contentId}
 						onEnd={requestNewVideo} // TODO add rating?
 						onError={requestNewVideo}
 						// TODO move this to redux
 						onReady={this.onReady}
-						/>
+						/>}
 					<div
 						hidden={controlsAreShown}
 						className="Video__controls"
