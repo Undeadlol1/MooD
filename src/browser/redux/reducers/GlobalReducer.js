@@ -6,6 +6,7 @@ import isBoolean from 'lodash/isBoolean'
 export const initialState =	fromJS({
 								headerIsShown: true,
 								sidebarIsOpen: false,
+								playerIsReady: false,
 								controlsAreShown: false,
 							})
 
@@ -29,6 +30,8 @@ export default (state = initialState, { type, payload }) => {
 			return toggleElement('sidebarIsOpen')
 		case 'TOGGLE_CONTROLS':
 			return toggleElement('controlsAreShown')
+		case 'TOGGLE_PLAYER_IS_READY':
+			return toggleElement('playerIsReady')
 		default:
 			return state
 	}

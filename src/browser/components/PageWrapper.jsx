@@ -53,13 +53,16 @@ export default class PageWrapper extends Component {
                                         <div style={childrenStyles} className="PageWrapper_children">{children}</div>
                                     </div>
                                 </div>
-        return  <Loading
-                    className={this.props.className}
-                    condition={isBrowser && loading}
-                    style={rootStyles}
-                >
-                    {children}
-                </Loading>
+        return  <div className={cx}>
+                    <div style={rootStyles}>
+                        <Loading
+                            className={this.props.className}
+                            condition={isBrowser && loading}
+                        >
+                            {children}
+                        </Loading>
+                    </div>
+                </div>
 		// return  <RouteTransition
         //             className={cx}
         //             {...presets[preset]}

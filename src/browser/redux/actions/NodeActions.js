@@ -45,7 +45,7 @@ export const fetchNode = slug => (dispatch, getState) => {
 
 	dispatch(actions.fetchingNode())
 
-	fetch(
+	return fetch(
 		nodesUrl + moodSlug + '/' + nodeId,
 		{ credentials: 'same-origin' }
 	)
