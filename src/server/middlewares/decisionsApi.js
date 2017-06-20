@@ -22,7 +22,6 @@ export default Router()
 
     try {
       const node = await Node.findById(NodeId)
-      console.log('NodeId: ', NodeId);
       const where = {
                       NodeId,
                       UserId,
