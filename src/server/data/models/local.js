@@ -1,4 +1,6 @@
 'use strict';
+var bcrypt   = require('bcrypt-nodejs');
+
 module.exports = function(sequelize, DataTypes) {
   var Local = sequelize.define('Local', {
     // TODO add checks: must not have spaces
@@ -31,12 +33,20 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   }, {
+    tableName: 'locals',
+    freezeTableName: true,
     classMethods: {
-      tableName: 'locals',
-      freezeTableName: true,
+      generateHash: function(password) {
+        return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+      },
       // associations can be defined here
       associate: function(models) {
         Local.belongsTo(models.User, {foreignKey: 'UserId', targetKey: 'id'})
+      }
+    },
+    instanceMethods: {
+      validPassword: function(password) {
+        return bcrypt.compareSync(password, this.password);
       }
     }
   });

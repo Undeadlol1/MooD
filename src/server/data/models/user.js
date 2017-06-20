@@ -12,18 +12,10 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'users',
     freezeTableName: true,
     classMethods: {
-      generateHash: function(password) {
-        return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-      },
       // associations can be defined here
       associate: function(models) {
         User.hasOne(models.Profile)
         User.hasOne(models.Local)
-      }
-    },
-    instanceMethods: {
-      validPassword: function(password) {
-        return bcrypt.compareSync(password, this.password);
       }
     }
   });
