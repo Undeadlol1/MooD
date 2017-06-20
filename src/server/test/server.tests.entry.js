@@ -8,9 +8,10 @@ const isEqual = require('lodash/isEqual')
 const extend = require('lodash/assignIn')
 const { parseUrl } = require('../../shared/parsers.js')
 const userFixtures = require('../data/fixtures/users.js')
-const { User, Mood, Node, Decision, Profile } = require('../data/models/index.js')
+const { User, Local, Mood, Node, Decision, Profile } = require('../data/models/index.js')
 chai.should()
 
+// TODO move this to fixtures
 const urls = [
             "https://www.youtube.com/watch?v=nBwHtgQH2EQ",
             "https://www.youtube.com/watch?v=l5-gja10qkw",
@@ -49,32 +50,38 @@ before(function(done) {
 
     const moods = [],
           nodes = [],
+          locals = [],
           profiles = [],
           decisions = [],
           createdUsers = []
 
-    const usersWithHashedPassword = userFixtures.map(user => {
+    const localsWithHashedPassword = userFixtures.map(user => {
         // create new object to avoid object mutablity
         // (user.password = "some" overrides fixture data)
-        const newUser = Object.assign({}, user);
-        newUser.password = User.generateHash(newUser.password)
-        return newUser
+        const newLocal = Object.assign({}, user);
+        newLocal.password = Local.generateHash(newLocal.password)
+        return newLocal
     })
 
     // create users
-    User.bulkCreate(usersWithHashedPassword)
+    User.bulkCreate(userFixtures)
         // refetch users because .bulkCreate return objects with id == null
         .then(() => User.findAll())
         // create moods fixtures array
-        .each(user => {
+        .each((user, index) => {
             const   name = uniqid(),
                     language = 'ru',
                     slug = slugify(name),
                     UserId = user.get('id')
+            const local = localsWithHashedPassword[index]
+            local.UserId = user.id
+            locals.push(local)
             createdUsers.push(user)
             profiles.push({UserId, language})
             moods.push({name, UserId, slug})
         })
+        // create locals
+        .then(() => Local.bulkCreate(locals))
         // create profiles
         .then(() => Profile.bulkCreate(profiles))
         // .then(() => Profile.findAll({where: {}, raw: true}))
@@ -124,6 +131,7 @@ before(function(done) {
 after(async function() {
     try {
         await User.destroy({ where: {} })
+        await Local.destroy({ where: {} })
         await Profile.destroy({ where: {} })
         await Mood.destroy({ where: {} })
         await Node.destroy({ where: {} })
@@ -140,16 +148,18 @@ describe('fixture data setup', function() {
     it('added fixtures properly', async function(){
         try {
             const users = await User.findAll({raw: true})
+            const locals = await Local.findAll({raw: true})
             const moods = await Mood.findAll({raw: true})
             const nodes = await Node.findAll({raw: true})
             const profiles = await Profile.findAll({raw: true})
             const decisions = await Decision.findAll({raw: true})
 
-            expect(users.length).to.be.equal(10)
-            expect(moods.length).to.be.equal(10)
-            expect(nodes.length).to.be.equal(100) // 10 moods * 10 nodes
-            expect(profiles.length).to.be.equal(10)
-            expect(decisions.length).to.be.equal(1000) // 10 moods * 10 nodes * 10 decisions
+            expect(users).to.have.length(10)
+            expect(locals).to.have.length(10)
+            expect(moods).to.have.length(10)
+            expect(nodes).to.have.length(100) // 10 moods * 10 nodes
+            expect(profiles).to.have.length(10)
+            expect(decisions).to.have.length(1000) // 10 moods * 10 nodes * 10 decisions
 
             moods.forEach(mood => {
                 const moodNodes = nodes.filter(
