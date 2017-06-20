@@ -16,5 +16,5 @@ export default function Loading ({condition, children, style, className}) {
     }
     const cx = classNames('Loading', className)
     if (!condition && !isEmpty(children)) return <div className={className}>{children}</div>
-    return <div style={styles}><CircularProgress style={styles} className={cx} /></div>
+    return <div style={styles} className={className} ><CircularProgress className="loading" style={styles} /></div>
 }

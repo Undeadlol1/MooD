@@ -13,7 +13,7 @@
     "analyze": "NODE_ENV=production parallel-webpack --config ./config/targets.config.js --watch",
     "check_production": "NODE_ENV=production parallel-webpack --config ./config/targets.config.js; node dist/server.js"
   },
-   "engines": {
+  "engines": {
     "node": ">=6.9"
   },
   "dependencies": {
@@ -33,6 +33,7 @@
     "express": "^4.14.1",
     "express-boom": "^2.0.0",
     "express-locale": "^1.0.1",
+    "express-rate-limit": "^2.8.0",
     "express-session": "^1.15.1",
     "font-awesome": "^4.7.0",
     "helmet": "^3.6.0",
@@ -95,6 +96,7 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-0": "^6.22.0",
     "babel-preset-stage-3": "^6.22.0",
+    "browser-sync": "^2.18.12",
     "browser-sync-webpack-plugin": "^1.1.4",
     "chai": "^3.5.0",
     "chai-datetime": "^1.4.1",

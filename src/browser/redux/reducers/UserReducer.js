@@ -1,5 +1,4 @@
 import isEmpty from 'lodash/isEmpty'
-
 import { Map } from 'immutable'
 
 const emptyProfileObject = Map({
@@ -27,7 +26,7 @@ export const initialState = Map({
 
 export default (state = initialState, { type, payload }) => {
 	switch(type) {
-		case 'FETCHING_IN_PROGRESS':
+		case 'FETCHING_USER':
 			return state.set('loading', true)
 		case 'RECIEVE_CURRENT_USER':
 			return state.mergeDeep({

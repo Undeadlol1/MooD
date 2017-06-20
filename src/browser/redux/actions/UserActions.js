@@ -14,14 +14,14 @@ export const actions = createActions({
 	REMOVE_CURRENT_USER: () => {},
 	RECIEVE_FETCHED_USER: user => user,
 	REMOVE_FETCHED_USER: () => {},
-	FETCHING_IN_PROGRESS: () => {},
+	FETCHING_USER: () => {},
 	TOGGLE_LOGIN_DIALOG: boolean => boolean,
 })
-const { fetchingInProgress, recieveFetchedUser, removeCurrentUser, recieveCurrentUser } = actions
+const { fetchingUser, recieveFetchedUser, removeCurrentUser, recieveCurrentUser } = actions
 
-
+//
 export const fetchCurrentUser = () => dispatch => {
-	dispatch(fetchingInProgress())
+	dispatch(fetchingUser())
 	return fetch(authUrl + 'current_user', {credentials: 'same-origin'})
 		.then(checkStatus)
 		.then(parseJSON)
@@ -47,7 +47,7 @@ export const toggleLoginDialog = value => (dispatch, getState) => {
 }
 
 export const fetchUser = username => dispatch => {
-	dispatch(fetchingInProgress())
+	dispatch(fetchingUser())
 	return fetch(`${usersUrl}user/${username}`)
 		.then(checkStatus)
 		.then(parseJSON)
@@ -60,7 +60,7 @@ export const fetchUser = username => dispatch => {
  * @param {Object} body profile attributes to update
  */
 export const updateUser = (username, body) => dispatch => {
-	// dispatch(fetchingInProgress())
+	// dispatch(fetchingUser())
 	return fetch(
 		`${usersUrl}user/${username}`,
 		headersAndBody({...body}, 'PUT')

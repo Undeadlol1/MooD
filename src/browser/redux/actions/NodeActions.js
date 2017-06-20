@@ -13,7 +13,7 @@ export const actions = createActions({
   TOGGLE_DIALOG: () => null,
   RECIEVE_NODE: node => node,
   UPDATE_NODE: object => object,
-  FETCHING_IN_PROGRESS: () => null,
+  FETCHING_NODE: () => null,
   FETCHING_ERROR: reason => reason,
   RECIEVE_SEARCHED_VIDEOS: videos => videos,
 })
@@ -23,7 +23,7 @@ export const actions = createActions({
  * @param {Object} payload content url
  */
 export const insertNode = payload => (dispatch, getState) => {
-	dispatch(actions.fetchingInProgress())
+	dispatch(actions.fetchingNode())
 	fetch(nodesUrl, headersAndBody(payload))
 		.then(checkStatus)
 		.then(parseJSON)
@@ -43,16 +43,15 @@ export const fetchNode = slug => (dispatch, getState) => {
 	const nodeId = state.node.id
 	const moodSlug = slug || state.mood.get('slug')
 
-	dispatch(actions.fetchingInProgress())
+	dispatch(actions.fetchingNode())
 
-	fetch(
+	return fetch(
 		nodesUrl + moodSlug + '/' + nodeId,
 		{ credentials: 'same-origin' }
 	)
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(data => {
-			console.log('data: ', data);
 			/*
 				unload node before assigning new one because
 				mutability does node load youtube video if node is the same
@@ -68,7 +67,10 @@ export const fetchNode = slug => (dispatch, getState) => {
  * @param {String} query
  */
 export const youtubeSearch = query => (dispatch, getState) => {
-	fetch(externalsUrl + '?' + stringify({query}))
+	fetch(
+			externalsUrl + '?' + stringify({query}),
+			{credentials: 'same-origin'},
+		)
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(data => {

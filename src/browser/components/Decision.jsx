@@ -22,20 +22,18 @@ import { vote, fetchNode } from 'browser/redux/actions/NodeActions'
 class Decision extends Component {
 	render() {
 		const { decision, className, decisionVote, vote, fetchNode, ...rest } = this.props
-		// console.log('decision: ', decision);
-		console.log('decision.vote', decisionVote)
 		return 	<div className={'Decision ' + className}>
-					<Icon
+					{/*<Icon
 						name="thumbs-up"
 						hoverIcon='thumbs-o-up'
-						onClick={vote.bind(this, true)} />
+						onClick={vote.bind(this, true)} />*/}
 					<Icon
 						onClick={fetchNode}
 						name="step-forward" />
-					<Icon
+					{/*<Icon
 						name="thumbs-down"
 						hoverIcon='thumbs-o-down'
-						onClick={vote.bind(this, false)} />
+						onClick={vote.bind(this, false)} />*/}
 				</div>
 	}
 }

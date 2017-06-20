@@ -15,8 +15,12 @@ import PageWrapper from 'browser/components/PageWrapper'
 
 @connect(
 	({ node, mood }, ownProps) => {
-		return { mood, node, ...ownProps}
-	}, // TODO rework "node" state because it is store in 'mood' now
+		return {
+			contentNotFound: node.contentNotFound,
+			isLoading: mood.get('loading') || !node.finishedLoading,
+			...ownProps
+		}
+	},
 	(dispatch, ownProps) => ({ // TODO remove this and use dispatch directly?
 		fetchMood: (slug) => dispatch(fetchMood(slug)),
 	    fetchNode: (slug) => dispatch(fetchNode(slug)),
@@ -40,39 +44,19 @@ class MoodPage extends Component {
 	}
 
 	render() {
-		let dom;
-		const { mood, node, location, params, ...rest } = this.props
-
-		if (mood.loading || node.loading) return <Loading />
-
-		if (!node.contentId) {
-
-			dom = 	<div className="MoodPage--empty">
+		const { contentNotFound, isLoading, location, params, ...rest } = this.props
+		return 	<PageWrapper
+					loading={isLoading}
+					className="MoodPage"
+				>
+					{/* TODO remove h1 (use css instead) */}
+					<h1 hidden={!contentNotFound} className="MoodPage__header">{t("currently_zero_content_here")}</h1>
+					<Video className='MoodPage__video'>
 						<NavBar className='NavBar--sticky' />
-						{/* TODO remove h1 (use css instead) */}
-						<h1 className="MoodPage__header">{t("currently_zero_content_here")}</h1>
-						<NodesInsert moodSlug={params.moodSlug} /> {/* TODO rework passing of moodSlug */}
-					</div>
-		}
-		else {
-			dom =  <Video className='MoodPage__video'>
-						<NavBar className='NavBar--sticky' />
-						<Decision className='MoodPage__decision' />
+						{!contentNotFound && <Decision className='MoodPage__decision' />}
 						<NodesInsert moodSlug={params.moodSlug} /> {/* TODO rework passing of moodSlug */}
 					</Video>
-		}
-
-		return 	<div className="MoodPage">
-					{/* TODO add 'let header' here? */}
-					<PageWrapper
-						loading={false}
-						preset="slideLeft"
-						location={location}
-						className="MoodPage"
-					>
-						{dom}
-					</PageWrapper>
-				</div>
+				</PageWrapper>
 	}
 }
 

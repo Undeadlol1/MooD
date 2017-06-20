@@ -41,8 +41,9 @@ export default class ChangeLanguageForm extends Component {
 		const labelText = translate("choose_your_language")
 	    return  <form>
 					<Row>
-						<Col xs={12}>
+						<Col xs={12} sm={6} md={3}>
 							<Field
+								fullWidth
 								name="language"
 								component={SelectField}
 								onChange={this.handleChange}

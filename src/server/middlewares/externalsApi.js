@@ -7,7 +7,13 @@ import { Router } from "express"
 import { parse as parseQuery } from 'query-string'
 import isEmpty from 'lodash/isEmpty'
 import YouTube from 'youtube-node'
-
+/*
+  ⚠️ note about YouTube API ⚠️
+  currently youtube key works only on specific IP's
+  so, when multi server infrastructure is created ither
+  add server IP addresses in YouTube dashboard,
+  or bound key to website URL and move YT search to client
+*/
 const youTube = new YouTube();
 youTube.setKey(process.env.YOUTUBE_KEY);
 youTube.addParam('type', 'video')

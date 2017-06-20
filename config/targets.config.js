@@ -11,6 +11,7 @@ var extend = require('lodash/assignIn')
 var commonConfig = require('./common.config.js')
 var config = require('../config.js')
 var CompressionPlugin = require('compression-webpack-plugin');
+var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 // TODO
 // https://survivejs.com/webpack/optimizing/minifying/#enabling-a-performance-budget
@@ -52,6 +53,26 @@ const clientProductionPlugins = isDevelopment ? [] : [
     //     minChunks: Infinity, // <-- the way to avoid "webpackJsonp is not defined"
     // }),
 ]
+
+const clientDevelopmentPlugins = isDevelopment ? [
+                                    new BrowserSyncPlugin({
+                                        open: false,
+                                        proxy: {
+                                            target: 'http://127.0.0.1:3000/',
+                                            cookies: { stripDomain: false }
+                                        },
+                                        // reload delay is needed to wait till webpack finishes compiling
+                                        reloadDelay: 2000,
+                                        // rest of config have not been tested carefully.
+                                        // it's here for convenience, it's might be usefull
+                                        watchOptions: {
+                                            ignored: ['*'],
+                                            ignoreInitial: true,
+                                        },
+                                        files: ['../dist/public/scripts.js']
+                                    }),
+                                ]
+                                : []
 
 var serverConfig = merge(commonConfig, {
     name: 'server',
@@ -96,7 +117,8 @@ var clientConfig = merge(commonConfig, {
     plugins: [ // TODO MAKE SURE PLUGINS ARE ACTUALLY INCLUDED IN CONFIG
         // TODO this will be overriden in production!!!
         new webpack.EnvironmentPlugin(clientVariables),
-        ...clientProductionPlugins
+        ...clientDevelopmentPlugins,
+        ...clientProductionPlugins,
     ],
 });
 

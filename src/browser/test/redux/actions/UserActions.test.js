@@ -44,10 +44,9 @@ describe('UserActions', () => {
   afterEach(() => nock.cleanAll())
 
 
-
-  it('fetchCurrentUser calls fetchingInProgress and recieveCurrentUser', async () => {
+  it('fetchCurrentUser calls fetchingUser and recieveCurrentUser', async () => {
     const expectedActions = [
-                              actions.fetchingInProgress(),
+                              actions.fetchingUser(),
                               actions.recieveCurrentUser(user)
                             ]
     await mockRequest(authApi + 'current_user', fetchCurrentUser, undefined, expectedActions)
@@ -58,10 +57,10 @@ describe('UserActions', () => {
     await mockRequest(authApi + 'logout', logoutCurrentUser, undefined, expectedActions)
   })
 
-  it('fetchUser calls fetchingInProgress and recieveFetchedUser', async () => {
+  it('fetchUser calls fetchingUser and recieveFetchedUser', async () => {
     const { username } = user
     const expectedActions = [
-                              actions.fetchingInProgress(),
+                              actions.fetchingUser(),
                               actions.recieveFetchedUser(user)
                             ]
     await mockRequest(usersApi + 'user/' + username, fetchUser, username, expectedActions)

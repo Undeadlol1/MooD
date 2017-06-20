@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import React, { Component } from 'react'
 import Loading from 'browser/components/Loading'
+import { translate as t } from 'browser/containers/Translator'
 // import { RouteTransition } from 'react-router-transition'
 // import presets from 'react-router-transition/src/presets'
 
@@ -28,7 +29,7 @@ export default class PageWrapper extends Component {
 
     render() {
 		const isServer = process.env.SERVER
-		const isBrowser = process.env.BROWER
+		const isBrowser = process.env.BROWSER
 		const {location, loading, children, preset} = this.props
         const cx = classNames('PageWrapper', this.props.className)
         // RouterTransition creates it's own 'div'
@@ -42,6 +43,14 @@ export default class PageWrapper extends Component {
             opacity: '0',
             pointerEvents: 'none',
         }
+        const textStyles = {
+            top: '50%',
+            right: '50%',
+            fontSize: '1.5rem',
+            position: 'absolute',
+            fontFamily: 'sans-serif',
+            transform: 'translate(50%, -50%)',
+        }
 
         /*
             while server side rendered content is on page show loading screen and
@@ -49,17 +58,20 @@ export default class PageWrapper extends Component {
         */
         if (isServer) return  <div className={cx}>
                                     <div style={rootStyles}>
-                                        <Loading condition={true} />
+                                        <span style={textStyles}>{t('loading')}...</span>
                                         <div style={childrenStyles} className="PageWrapper_children">{children}</div>
                                     </div>
                                 </div>
-        return  <Loading
-                    className={this.props.className}
-                    condition={isBrowser && loading}
-                    style={rootStyles}
-                >
-                    {children}
-                </Loading>
+        return  <div className={cx}>
+                    <div style={rootStyles}>
+                        <Loading
+                            className={this.props.className}
+                            condition={isBrowser && loading}
+                        >
+                            {children}
+                        </Loading>
+                    </div>
+                </div>
 		// return  <RouteTransition
         //             className={cx}
         //             {...presets[preset]}
