@@ -23,6 +23,7 @@ module.exports = function(sequelize, DataTypes) {
       // associations can be defined here
       associate: function(models) {
         User.hasOne(models.Profile)
+        User.hasOne(models.Local)
       }
     },
     instanceMethods: {
