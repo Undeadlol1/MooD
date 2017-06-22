@@ -14,6 +14,14 @@ const emptyLocalObject = Map({
 	UserId: '',
 })
 
+const emptyVkObject = Map({
+	id: '',
+	image: '',
+	UserId: '',
+	username: '',
+	displayName: '',
+})
+
 const emptyTwitterObject = Map({
 	id: '',
 	image: '',
@@ -29,6 +37,7 @@ const emptyUserObject = Map({
 	vk_id: '',
 	facebook_id: '',
 	twitter_id: '',
+	Vk: emptyVkObject,
 	Twitter: emptyTwitterObject,
 	Profile: emptyProfileObject,
 	Local: emptyLocalObject,

@@ -17,6 +17,7 @@ module.exports = function(sequelize, DataTypes) {
         User.hasOne(models.Profile)
         User.hasOne(models.Local)
         User.hasOne(models.Twitter)
+        User.hasOne(models.Vk)
       }
     }
   });

@@ -24,11 +24,11 @@ export class LoginDialog extends Component {
 					title={translate('please_login')}
 				>
 					<span className="LoginDialog__icons">
-						{/*<RaisedButton
+						<RaisedButton
 							label="vk.com"
 							href="/api/auth/vkontakte"
 							className="LoginDialog__icon"
-							icon={<Icon name="vk" />} />*/}
+							icon={<Icon name="vk" />} />
 						<RaisedButton
 							label="twitter.com"
 							href="/api/auth/twitter"
