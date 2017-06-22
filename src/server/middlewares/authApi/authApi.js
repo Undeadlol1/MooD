@@ -16,7 +16,7 @@ passport.deserializeUser(function(id, done) {
     .findById(id, {
       raw: true,
       nest: true,
-      include: [Profile, Local]
+      include: [Profile, Local, Twitter]
     })
     .then(user => done(null, user))
     .catch(error => {
