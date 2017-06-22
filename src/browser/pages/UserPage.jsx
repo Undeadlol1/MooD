@@ -58,10 +58,10 @@ export default connect(
 		console.log('fetchedUser: ', user.get('fetchedUser').toJS());
 		return {
 			UserId,
-			username: user.getIn(['fetchedUser', 'Local', 'username']),
 			loading: user.get('loading'),
 			fetchedUser: user.get('fetchedUser'),
 			isOwnPage: user.get('id') == params.username, // TODO this,
+			username: user.getIn(['fetchedUser', 'Local', 'username']),
 		}
 	},
 	(dispatch, {params}) => ({
