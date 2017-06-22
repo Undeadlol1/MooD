@@ -14,10 +14,10 @@ import { fetchUser } from 'browser/redux/actions/UserActions'
 import ChangeLanguageForm from 'browser/components/ChangeLanguageForm'
 
 export class UserPage extends Component {
-	componentWillMount() { this.props.fetchUser() }
+	componentWillMount() { this.props.fetchUser(this.props.params.username) }
 	@injectProps
-    render({loading, location, username, isOwnPage}) {
-		const src = `https://api.adorable.io/avatars/300/${username && username.toLowerCase()}.png`
+    render({loading, location, UserId, username, isOwnPage}) {
+		const src = `https://api.adorable.io/avatars/300/${UserId}.png`
 		return 	<PageWrapper
 					preset={'pop'}
 					loading={loading}
@@ -55,12 +55,14 @@ UserPage.propTypes = {
 
 export default connect(
 	({user}, {params}) => {
-		const username = user.getIn(['fetchedUser', 'username'])
+		const UserId = user.getIn(['fetchedUser', 'id'])
+		console.log('fetchedUser: ', user.get('fetchedUser').toJS());
 		return {
-			username,
+			UserId,
+			username: user.getIn(['fetchedUser', 'Local', 'username']),
 			loading: user.get('loading'),
 			fetchedUser: user.get('fetchedUser'),
-			isOwnPage: username.toLowerCase() == params.username.toLowerCase(),
+			isOwnPage: user.get('id') == params.username, // TODO this,
 		}
 	},
 	(dispatch, {params}) => ({
