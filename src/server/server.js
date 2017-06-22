@@ -44,6 +44,11 @@ if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic
   })
 }
 
+// some routes return 304 if
+// multiple calls to same route are made
+// (while validating user info in signup form, for example)
+app.disable('etag');
+
 // middlewares
 // detect accepted languages for i18n
 app.use(createLocaleMiddleware())

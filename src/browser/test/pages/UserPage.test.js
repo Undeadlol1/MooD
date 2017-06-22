@@ -14,12 +14,14 @@ function findAndConfirm(selector) {
   return element
 }
 
+const username = 'test'
+
 const props = {
+                username,
                 loading: false,
                 isOwnPage: false,
-                username: 'test',
                 fetchUser: sinon.spy(),
-                location: {pathname: 'is'},
+                params: { username },
               }
 sinon.spy(UserPage.prototype, 'componentWillMount');
 const wrapper = shallow(<UserPage {...props} />)

@@ -14,7 +14,7 @@ const LoginLogoutButtonStyles = { marginTop: '5.5px' }
 
 export class NavBar extends Component {
     render() {
-        const { username, className, children, toggleSidebar, ...rest } = this.props
+        const { UserId, className, children, toggleSidebar, ...rest } = this.props
         const titleLink =   <Link
                                 to="/"
                                 style={titleStyles}
@@ -22,11 +22,11 @@ export class NavBar extends Component {
                             >
                                 MooD
                             </Link>
-        const loginOrAvatar = username
-                            ? <Link to={`/users/${username}`}>
+        const loginOrAvatar = UserId
+                            ? <Link to={`/users/${UserId}`}>
                                 <Avatar
                                     className="NavBar__avatar"
-                                    src={`https://api.adorable.io/avatars/100/${username}.png`}
+                                    src={`https://api.adorable.io/avatars/100/${UserId}.png`}
                                 />
                               </Link>
                             : <LoginLogoutButton style={LoginLogoutButtonStyles} />
@@ -44,7 +44,7 @@ export class NavBar extends Component {
 }
 
 NavBar.propTypes = {
-    username: PropTypes.string,
+    UserId: PropTypes.number,
     toggleSidebar: PropTypes.func.isRequired,
 }
 
@@ -54,9 +54,8 @@ export const dispatchToProps = dispatch => ({
 
 export default connect(
     ({ user, global  }, ownProps) => {
-        const username = user.get('username')
-                         && user.get('username').toLowerCase()
-        return { username, ...ownProps }
+        const UserId = user.get('id')
+        return { UserId, ...ownProps }
     },
     dispatchToProps
 )(NavBar)

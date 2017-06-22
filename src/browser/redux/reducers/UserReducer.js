@@ -7,6 +7,21 @@ const emptyProfileObject = Map({
 	UserId: '',
 })
 
+const emptyLocalObject = Map({
+	id: '',
+	username: '',
+	email: '',
+	UserId: '',
+})
+
+const emptyTwitterObject = Map({
+	id: '',
+	image: '',
+	UserId: '',
+	username: '',
+	displayName: '',
+})
+
 const emptyUserObject = Map({
 	id: undefined,
 	image: '',
@@ -14,7 +29,9 @@ const emptyUserObject = Map({
 	vk_id: '',
 	facebook_id: '',
 	twitter_id: '',
+	Twitter: emptyTwitterObject,
 	Profile: emptyProfileObject,
+	Local: emptyLocalObject,
 })
 
 export const initialState = Map({

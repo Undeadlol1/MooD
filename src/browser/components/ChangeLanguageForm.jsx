@@ -8,7 +8,6 @@ import { updateUser } from '../redux/actions/UserActions'
 // TODO test (redux-form may be importing whole material-ui library)
 import { TextField, SelectField } from 'redux-form-material-ui'
 import MenuItem from 'material-ui/MenuItem'
-import { FormattedMessage } from 'react-intl';
 import cookies from 'cookies-js'
 import { translate } from '../containers/Translator'
 

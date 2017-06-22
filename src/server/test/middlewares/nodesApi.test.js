@@ -31,7 +31,7 @@ function login() {
     return user
         .post('/api/auth/login')
         .send({ username, password })
-        .expect(302)
+        .expect(200)
 }
 
 export default describe('/nodes API', function() {

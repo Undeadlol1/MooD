@@ -8,7 +8,6 @@ import { insertMood } from '../redux/actions/MoodActions'
 import { TextField } from 'redux-form-material-ui'
 import { parseJSON } from'../redux/actions/actionHelpers'
 import store from 'browser/redux/store'
-import { FormattedMessage } from 'react-intl';
 import { translate } from 'browser/containers/Translator'
 import { stringify } from 'query-string'
 

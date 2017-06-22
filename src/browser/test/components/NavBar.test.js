@@ -52,16 +52,20 @@ describe('<NavBar />', () => {
     })
 
     describe('if user logged in', () => {
-      const username = 'britney'
-      const wrapper = shallow(<NavBar username={username} onClick={onClick} />)
+      const UserId = 'britney'
+      const props = {
+        UserId,
+        toggleSidebar: onClick,
+      }
+      const wrapper = shallow(<NavBar {...props} />)
       const link = wrapper.find('AppBar').props().iconElementRight
       const avatar = link.props.children
       it('has <Link>', () => {
-        expect(link.props.to).to.eq('/users/' + username)
+        expect(link.props.to).to.eq('/users/' + UserId)
       })
       it('has <Avatar>', () => {
         expect(avatar.props.className).to.eq('NavBar__avatar')
-        expect(avatar.props.src).to.eq(`https://api.adorable.io/avatars/100/${username}.png`)
+        expect(avatar.props.src).to.eq(`https://api.adorable.io/avatars/100/${UserId}.png`)
       })
     })
 

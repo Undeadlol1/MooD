@@ -1,6 +1,8 @@
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
 import { createAction, createActions } from 'redux-actions'
+import { SubmissionError } from 'redux-form'
 import selectn from 'selectn'
+import { translate } from 'browser/containers/Translator'
 
 const authUrl = process.env.API_URL + 'auth/'
 const usersUrl = process.env.API_URL + 'users/'
@@ -19,6 +21,58 @@ export const actions = createActions({
 })
 const { fetchingUser, recieveFetchedUser, removeCurrentUser, recieveCurrentUser } = actions
 
+export const loginUser = (payload, callback) => dispatch => {
+	console.log('loginUser: ');
+	return fetch(authUrl + 'login', headersAndBody(payload))
+			.then(res => {
+				console.log('res', res);
+				if (res.status != 200) {
+					return res
+						.text()
+						.then(text => {
+							let password,
+								username
+							if (text == 'Incorrect password') password = translate('incorrent_password')
+							if (text == 'User not exists') password = translate('user_does_not_exists')
+							throw new SubmissionError({username, password})
+						})
+				}
+				else return res
+							.json()
+							.then(user => {
+								// reset form
+								callback && callback()
+								dispatch(recieveCurrentUser((user)))
+							})
+			})
+}
+
+export const createUser = (payload, callback) => dispatch => {
+	return fetch(authUrl + 'signup', headersAndBody(payload))
+			.then(res => {
+				if (res.status != 200) {
+					return res
+						.text()
+						.then(text => {
+							let email,
+								username
+							if (text == 'user already exists') {
+								email = translate('user_already_exists')
+								username = translate('user_already_exists')
+							}
+							throw new SubmissionError({username: text, email: text})
+						})
+				}
+				else return res
+							.json()
+							.then(user => {
+								// reset form
+								callback && callback()
+								dispatch(recieveCurrentUser((user)))
+							})
+			})
+}
+
 //
 export const fetchCurrentUser = () => dispatch => {
 	dispatch(fetchingUser())
@@ -29,6 +83,7 @@ export const fetchCurrentUser = () => dispatch => {
 		.catch(err => console.error('fetchCurrentUser failed!', err)) // TODO add client side error handling
 }
 
+// TODO rename this to 'logoutUser'
 export const logoutCurrentUser = () => dispatch => {
 	return fetch(authUrl + 'logout', {credentials: 'same-origin'})
 	.then(checkStatus)

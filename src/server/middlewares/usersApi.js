@@ -1,22 +1,21 @@
 import { mustLogin } from '../services/permissions'
-import { User, Profile } from '../data/models'
+import { User, Local,  Profile } from '../data/models'
 import { Router } from 'express'
 
 // routes
 const limit = 12
 
 export default Router()
-  .get('/user/:username', async function({ params }, res) {
+  .get('/user/:id', async function({ params }, res) {
     try {
-      const username  = params.username
-      if (!username) return res.badRequest('invalid query')
+      const id  = params.id
+      if (!id) return res.badRequest('invalid query')
 
-      const user = await User.findOne({
-        raw: true,
-        nest: true,
-        include: Profile,
-        where: {username},
-      })
+      const user =  await User.findById(id, {
+                      raw: true,
+                      nest: true,
+                      include: [Profile, Local],
+                    })
 
       if (!user) res.boom.notFound('user not found')
       else res.json(user)
@@ -28,18 +27,18 @@ export default Router()
   })
 
   // currently used to update user.Profile.language
-  .put('/user/:username', mustLogin, async function({ params, body }, res) {
+  .put('/user/:id', mustLogin, async function({ params, body }, res) {
     try {
       // TODO add user validations/permissions
-      const username  = params.username
+      const id  = params.id
 
-      if (!username) return res.badRequest('invalid query')
+      if (!id) return res.badRequest('invalid query')
       // TODO add body validations
 
       const user = await User.findOne({
                           raw: true,
                           nest: true,
-                          where: {username},
+                          where: {id},
                           include: [Profile],
                         })
       if (!user) return res.boom.notFound('user not found')
@@ -50,7 +49,7 @@ export default Router()
           UserId: user.id,
           language: body.language
         })
-      } 
+      }
       else {
         await Profile.update(
           {language: body.language},
@@ -59,12 +58,12 @@ export default Router()
       }
 
       const userWithProfile = await User.findOne({
-        where: {username},
+        where: {id},
         include: [Profile],
         raw: true,
         nest: true,
       })
-      
+
       res.json(userWithProfile)
 
     } catch (error) {
