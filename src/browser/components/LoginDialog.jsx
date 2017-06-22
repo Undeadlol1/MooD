@@ -1,30 +1,28 @@
-import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Dialog from 'material-ui/Dialog'
+import React, { Component } from 'react'
+import Divider from 'material-ui/Divider'
 import Icon from 'browser/components/Icon'
-import FontAwesome from 'react-fontawesome'
 import RaisedButton from 'material-ui/RaisedButton'
+import LoginForm from 'browser/components/LoginForm'
 import { translate } from 'browser/containers/Translator'
 import { toggleLoginDialog } from 'browser/redux/actions/UserActions'
 
-@connect(
-	({ user }) => ({ loginIsOpen: user.get('loginIsOpen') }),
-    (dispatch, ownProps) => ({
-        toggleDialog() {
-            dispatch(toggleLoginDialog())
-        }
-    })
-)
-export default class LoginDialog extends Component {
+export class LoginDialog extends Component {
+
+	static defaultProps = {
+		loginIsOpen: false,
+	}
+
 	render() {
 		const { loginIsOpen, toggleDialog } = this.props
 		return <Dialog
 					open={loginIsOpen}
-					title={translate('please_login')}
 					className="LoginDialog"
 					onRequestClose={toggleDialog}
-				>	
+					title={translate('please_login')}
+				>
 					<span className="LoginDialog__icons">
 						<RaisedButton
 							label="vk.com"
@@ -34,9 +32,25 @@ export default class LoginDialog extends Component {
 						<RaisedButton
 							label="twitter.com"
 							href="/api/auth/twitter"
-							className="LoginDialog__icon"							
+							className="LoginDialog__icon"
 							icon={<Icon name="twitter" />} />
 					</span>
-				</Dialog>				
+					<Divider />
+					<LoginForm />
+				</Dialog>
 	}
 }
+
+LoginDialog.PropTypes = {
+	loginIsOpen: PropTypes.bool.isRequired,
+	toggleDialog: PropTypes.func.isRequired,
+}
+
+export const dispatchToProps = (dispatch, ownProps) => ({
+	toggleDialog: () => dispatch(toggleLoginDialog()),
+})
+
+export default connect(
+	({ user }) => ({ loginIsOpen: user.get('loginIsOpen') }),
+	dispatchToProps
+)(LoginDialog)
