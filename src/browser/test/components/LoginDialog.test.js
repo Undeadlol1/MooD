@@ -17,7 +17,7 @@ describe('<LoginDialog />', () => {
   const props = { toggleDialog }
   const wrapper = shallow(<LoginDialog {...props} />)
   const dialog = wrapper.find('Dialog')
-  const span = wrapper.find('span')
+  const row = wrapper.find('Styled(Row)')
   const buttons = wrapper.find('RaisedButton')
 
   it('has `.LoginDialog`', () => {
@@ -42,12 +42,12 @@ describe('<LoginDialog />', () => {
       expect(wrapper.find('Divider')).to.have.length(1)
   })
 
-  it('has <span>', () => {
-      const props = span.props()
-      expect(span).to.have.length(1)
+  it('has <Row>', () => {
+      const props = row.props()
+      expect(row).to.have.length(1)
       expect(props.className).to.eq('LoginDialog__icons')
       expect(props.children).to.have.length(2)
-      expect(span.find('RaisedButton')).to.have.length(2)
+      expect(row.find('RaisedButton')).to.have.length(2)
   })
 
   it('has vk <Icon>', () => {
