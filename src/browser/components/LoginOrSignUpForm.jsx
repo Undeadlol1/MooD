@@ -16,6 +16,7 @@ export class LoginOrSignUpForm extends Component {
 	render() {
 		// TODO
 		const { isLogin, valid, onSubmit, handleSubmit, asyncValidating } = this.props
+		const buttonStyle = {paddingTop: '1rem'}
 	    return  <Form
 					onSubmit={handleSubmit(onSubmit)}
 					className="LoginOrSignUpForm"
@@ -30,7 +31,7 @@ export class LoginOrSignUpForm extends Component {
 							}
 							<Field name="username" type="text" component={TextField} hidden={asyncValidating} hintText={t('username')} fullWidth />
 							<Field name="password" type="password" component={TextField} hidden={asyncValidating} hintText={t('password')} fullWidth />
-							<center><RaisedButton disabled={!valid} label={t('submit')} type="submit" /></center>
+							<center><RaisedButton style={buttonStyle} disabled={!valid} label={t('submit')} type="submit" /></center>
 						</Col>
 					</Row>
 				</Form>
