@@ -35,7 +35,7 @@ describe('<LoginDialog />', () => {
   })
 
   it('has <LoginForm>', () => {
-      expect(wrapper.find('ReduxForm')).to.have.length(1)
+      expect(wrapper.find('LoginForm')).to.have.length(1)
   })
 
   it('has <Divider>', () => {
