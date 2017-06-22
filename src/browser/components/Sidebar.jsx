@@ -1,41 +1,52 @@
+import PropTypes from 'prop-types'
 import { Link } from 'react-router'
-import { connect } from 'react-redux';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
+import { connect } from 'react-redux'
+import Drawer from 'material-ui/Drawer'
 import React, { Component } from 'react'
-import LoginLogoutButton from './LoginLogoutButton'
-import { actions } from '../redux/actions/GlobalActions'
+import MenuItem from 'material-ui/MenuItem'
 import { translate } from 'browser/containers/Translator'
+import { actions } from 'browser/redux/actions/GlobalActions'
+import LoginLogoutButton from 'browser/components/LoginLogoutButton'
 
-@connect(
-	({ user, global }, ownProps) => ({
-		user,
-		...ownProps,
-		sidebarIsOpen: global.get('sidebarIsOpen'),
-	}),
-    (dispatch, ownProps) => ({
-        toggleSidebar() {
-            dispatch(actions.toggleSidebar())
-        }
-    })
-)
-export default class Sidebar extends Component {
+export class Sidebar extends Component {
 	render() {
-		const { user, sidebarIsOpen, toggleSidebar } = this.props
-		const username = user.get('username')
+		const { UserId, sidebarIsOpen, toggleSidebar } = this.props
 		return 	<Drawer className="Sidebar" docked={false} open={sidebarIsOpen} onRequestChange={toggleSidebar}>
 					{
-						username
+						UserId
 						?	<div>
 								<MenuItem onClick={toggleSidebar}><LoginLogoutButton inline /></MenuItem>
 								<MenuItem>
-									<Link onClick={toggleSidebar} to={`users/${username}`}>{translate("profile")}</Link>
+									<Link onClick={toggleSidebar} to={`users/${UserId}`}>{translate("profile")}</Link>
 								</MenuItem>
 							</div>
 						: 	null
 					}
-					<MenuItem><Link onClick={toggleSidebar} to="search">{translate("search")}</Link></MenuItem>
+					<MenuItem><Link className="Sidebar__profile-link" onClick={toggleSidebar} to="search">{translate("search")}</Link></MenuItem>
 					{/*<MenuItem><Link onClick={toggleSidebar} to="about">{translate("about")}</Link></MenuItem>*/}
 				</Drawer>
 	}
 }
+
+Sidebar.defaultProps = {
+	sidebarIsOpen: false,
+}
+
+Sidebar.propTypes = {
+	UserId: PropTypes.number,
+	sidebarIsOpen: PropTypes.bool,
+	toggleSidebar: PropTypes.func.isRequired,
+}
+
+export const dispatchToProps = dispatch => ({
+	toggleSidebar: () => dispatch(actions.toggleSidebar())
+})
+
+export default connect(
+	({ user, global }, ownProps) => ({
+		...ownProps,
+		UserId: user.get('id'),
+		sidebarIsOpen: global.get('sidebarIsOpen'),
+	}),
+	dispatchToProps
+)(Sidebar)
