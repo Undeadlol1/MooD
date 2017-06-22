@@ -50,7 +50,6 @@ UserPage.propTypes = {
 	loading: PropTypes.bool.isRequired,
 	isOwnPage: PropTypes.bool.isRequired,
 	fetchUser: PropTypes.func.isRequired,
-	location: PropTypes.object.isRequired,
 }
 
 export default connect(
