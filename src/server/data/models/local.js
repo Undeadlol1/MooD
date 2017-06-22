@@ -46,9 +46,18 @@ module.exports = function(sequelize, DataTypes) {
     },
     instanceMethods: {
       validPassword: function(password) {
-        return bcrypt.compareSync(password, this.password);
+        return bcrypt.compareSync(password, this.password)
       }
-    }
+    },
+    // defaultScope: {
+    //   // where: {},
+    //   // attributes: { exclude: ['password'] },
+    // },
+    // scopes: {
+    //   protected: {
+    //     where: {},
+    //   }
+    // }
   });
   return Local;
 };
