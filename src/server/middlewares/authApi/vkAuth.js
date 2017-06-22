@@ -1,5 +1,5 @@
 import { Strategy as VKontakteStrategy } from "passport-vkontakte"
-import { User, Profile } from 'server/data/models'
+import { User, Vk, Profile } from 'server/data/models'
 import passport from "passport"
 import express from "express"
 import selectn from 'selectn'
@@ -8,29 +8,43 @@ const { URL, VK_ID, VK_SECRET,} = process.env
 /* VK AUTH */
 passport.use(new VKontakteStrategy(
   {
-    clientID:     VK_ID || '5202075',
-    clientSecret: VK_SECRET || 'QjVr1JLVAXfVmZDJ6ws9',
-    callbackURL:  (URL || "http://127.0.0.1:3000/") +  "api/auth/vkontakte/callback"
+    clientID:     VK_ID,
+    clientSecret: VK_SECRET,
+    callbackURL:  URL +  "api/auth/vkontakte/callback"
   },
-  function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) {
-    // NOTE: params contain addition requested info
-      User.findOrCreate({
-        where: {vk_id: profile.id},
-        defaults: {
-          username: profile.username, // TODO this
-          display_name: profile.displayName,
-          // email: params.email,
-          image: selectn('photos[0].value', profile), // TODO make image migration
-        },
-        include: [Profile]
-        // raw: true
+  async function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) {
+    try {
+      const existingUser = await User.findOne({
+        where: {},
+        include: [{
+          model: Vk,
+          where: {id: profile.id},
+        }, Profile],
+        raw: true,
+        nest: true,
       })
-      .then(function (result) {
-        const user = result[0]
-        done(null, user);
-      })
-      // .spread(user => done(null, user.get({plain: true})))
-      .catch(done);
+
+      if (existingUser) return done(null, existingUser)
+      else {
+        // TODO rework this
+        const user = await User.create({})
+        const vk = await Vk.create({
+          UserId: user.id,
+          id: profile.id,
+          username: profile.username,
+          displayName: profile.displayName,
+          image: selectn('photos[0].value', profile),
+        })
+        const newUser = await User.findById(user.id, {
+          include: [Vk, Profile]
+        })
+        console.log('newUser: ', newUser);
+        done(null, newUser)
+      }
+    } catch (error) {
+      console.error(error)
+      done(error)
+    }
   }
 ));
 

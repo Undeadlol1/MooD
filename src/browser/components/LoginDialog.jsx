@@ -4,6 +4,7 @@ import Dialog from 'material-ui/Dialog'
 import React, { Component } from 'react'
 import Divider from 'material-ui/Divider'
 import Icon from 'browser/components/Icon'
+import { Row, Col } from 'react-styled-flexboxgrid'
 import RaisedButton from 'material-ui/RaisedButton'
 import LoginForm from 'browser/components/LoginForm'
 import { translate } from 'browser/containers/Translator'
@@ -17,24 +18,35 @@ export class LoginDialog extends Component {
 
 	render() {
 		const { loginIsOpen, toggleDialog } = this.props
+		const iconStyle = {paddingBottom: '1.2rem'}
 		return <Dialog
 					open={loginIsOpen}
 					className="LoginDialog"
 					onRequestClose={toggleDialog}
 					title={translate('please_login')}
 				>
-					<span className="LoginDialog__icons">
-						{/*<RaisedButton
-							label="vk.com"
-							href="/api/auth/vkontakte"
-							className="LoginDialog__icon"
-							icon={<Icon name="vk" />} />*/}
-						<RaisedButton
-							label="twitter.com"
-							href="/api/auth/twitter"
-							className="LoginDialog__icon"
-							icon={<Icon name="twitter" />} />
-					</span>
+					<Row className="LoginDialog__icons">
+						<Col xs={12} sm={6}>
+							<RaisedButton
+								primary
+								fullWidth
+								label="vk.com"
+								style={iconStyle}
+								href="/api/auth/vkontakte"
+								className="LoginDialog__icon"
+								icon={<Icon name="vk" />} />
+						</Col>
+						<Col xs={12} sm={6}>
+							<RaisedButton
+								primary
+								fullWidth
+								style={iconStyle}
+								label="twitter.com"
+								href="/api/auth/twitter"
+								className="LoginDialog__icon"
+								icon={<Icon name="twitter" />} />
+						</Col>
+					</Row>
 					<Divider />
 					<LoginForm />
 				</Dialog>
