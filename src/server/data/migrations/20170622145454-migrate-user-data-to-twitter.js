@@ -1,5 +1,5 @@
 'use strict';
-var { User, Local, Profile } = require('../models')
+var { User, Twitter } = require('../models')
 module.exports = {
   up: function(queryInterface, Sequelize) {
     // create table
@@ -9,7 +9,6 @@ module.exports = {
       }
     })
     .each(user => {
-      console.log('user: ', user);
       return  Twitter.create({
                 UserId: user.id,
                 id: user.twitter_id,
