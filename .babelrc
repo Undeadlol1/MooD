@@ -9,6 +9,7 @@
     //   }
     // }
   ],
+  // TODO try this http://redux-form.com/6.8.0/docs/faq/BundleSize.md/
   "plugins": [
     "transform-runtime",
     "transform-decorators-legacy",
