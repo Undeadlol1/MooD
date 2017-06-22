@@ -9,7 +9,6 @@ module.exports = {
       }
     })
     .each(user => {
-      console.log('user: ', user);
       return  Twitter.create({
                 UserId: user.id,
                 id: user.twitter_id,
