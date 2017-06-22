@@ -1,5 +1,5 @@
 import { mustLogin } from '../services/permissions'
-import { User, Local,  Profile } from '../data/models'
+import { User, Local,  Profile, Vk, Twitter } from '../data/models'
 import { Router } from 'express'
 
 // routes
@@ -14,7 +14,8 @@ export default Router()
       const user =  await User.findById(id, {
                       raw: true,
                       nest: true,
-                      include: [Profile, Local],
+                      // TODO remove in future when all values will be stored in profile
+                      include: [Profile, Local, Vk, Twitter],
                     })
 
       if (!user) res.boom.notFound('user not found')
