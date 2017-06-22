@@ -1,4 +1,4 @@
-import { User, Profile, Local } from 'server/data/models'
+import { User, Profile, Local, Twitter } from 'server/data/models'
 import passport from "passport"
 import express from "express"
 import selectn from 'selectn'
