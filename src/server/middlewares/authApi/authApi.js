@@ -1,4 +1,4 @@
-import { User, Profile } from 'server/data/models'
+import { User, Profile, Local } from 'server/data/models'
 import passport from "passport"
 import express from "express"
 import selectn from 'selectn'
@@ -16,10 +16,13 @@ passport.deserializeUser(function(id, done) {
     .findById(id, {
       raw: true,
       nest: true,
-      include: [Profile]
+      include: [Profile, Local]
     })
-    .then((user) => done(null, user))
-    .catch(done);
+    .then(user => done(null, user))
+    .catch(error => {
+      console.error(error)
+      done(error)
+    });
 });
 
 // routes
@@ -29,9 +32,6 @@ router
   .use(twitter)
   .use(vk)
   .get('/logout', (req, res) => {
-    // TODO check if this works previous:
-    // req.logout();
-    // res.end();
     if (req.user) {
       req.logout()
       res.end()
