@@ -26,30 +26,34 @@ export async function normalizeRating(node) {
 /**
  * find node with highest node.Decision.rating
  * @export
- * @param {string} UserId
  * @param {string} MoodId
+ * @param {string} [UserId]
  * @param {number} [afterRating] threshold too look after
  * @returns
  */
-export async function findHighestRatingNode(UserId, MoodId, afterRating) {
+export async function findHighestRatingNode(MoodId, UserId, afterRating) {
+    // using extend function to have clean object and
+    // avoid things like {UserId: undefined}, which gets unexpected results from DB
+    const where = extend(
+        {MoodId},
+        UserId && {UserId},
+        afterRating && {
+            rating: {
+                $lt: afterRating
+            }
+        },
+    )
+
     return await Node.findOne({
-    raw: true,
-    nest: true,
-    where: {}, // TODO comment out?
-    include: [{
-        model: Decision,
-        order: [['rating', 'DESC']],
-        where:  extend(
-            {UserId, MoodId},
-            afterRating
-            ?   {
-                    rating: {
-                        $lt: afterRating
-                    }
-                }
-            : undefined
-        ),
-    }],
+        limit: 1,
+        raw: true,
+        nest: true,
+        where: {}, // TODO comment out?
+        include: [{
+            where,
+            model: Decision,
+            order: [['rating', 'DESC']],
+        }],
     })
 }
 /**

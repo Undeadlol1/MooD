@@ -85,24 +85,14 @@ export default Router()
             // TODO remove this in future (when availability of decision will be certain)
             if (previousDecision) await updatePositionAndViews(previousDecision)
             // find next node
-            response = await findHighestRatingNode(UserId, MoodId, previousDecision.rating) // $qt //.position // TODO qt is not unique?
+            response = await findHighestRatingNode(MoodId, UserId, previousDecision.rating) // $qt //.position // TODO qt is not unique?
             console.log('response: ', response);
         }
-        // fallback to highest position node
-        // TODO does this intefere with next fallback?
-        // do all nodes have decisions and proper positions?
-        if (!response) response = await findHighestRatingNode(UserId, MoodId)
       }
 
       // fallback to highest rated node if nothing was found
-      if (!response) {
-        // console.log('there is no response!!!')
-        response = await Node.findOne({
-          where: { MoodId },
-          order: [['rating', 'DESC']]
-        })
-      }
-
+      if (!response) response = await findHighestRatingNode(MoodId, UserId)
+      // close request
       res.json(response)
     } catch (error) {
       console.error(error);
