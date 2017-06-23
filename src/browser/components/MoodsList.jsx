@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { Row, Col } from 'react-styled-flexboxgrid'
 import { fetchMoods } from '../redux/actions/MoodActions'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import Link from 'react-router/lib/Link'
 import selectn from 'selectn'
 import { translate } from 'browser/containers/Translator'
 import { Map, List } from 'immutable'
@@ -76,7 +76,7 @@ export class MoodsList extends Component {
 
 MoodsList.propTypes = {
   moods: PropTypes.object.isRequired,
-  totalPages: PropTypes.number,  
+  totalPages: PropTypes.number,
   currentPage: PropTypes.number,
 }
 

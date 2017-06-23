@@ -91,7 +91,7 @@ app.set('views', path.resolve(__dirname, './public'));
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
-import { match } from 'react-router'
+import match from 'react-router/lib/match'
 import routes from '../browser/routes'
 
 

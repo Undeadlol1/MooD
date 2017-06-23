@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Link } from 'react-router'
+import Link from 'react-router/lib/Link'
 import { connect } from 'react-redux'
 import Drawer from 'material-ui/Drawer'
 import React, { Component } from 'react'

@@ -8,8 +8,10 @@ injectTapEventPlugin();
 /* DEPENDENCIES */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Router, browserHistory, RouterContext } from 'react-router';
-import { Provider as ReduxProvider } from 'react-redux';
+import Router from 'react-router/lib/Router'
+import RouterContext from 'react-router/lib/RouterContext'
+import browserHistory from 'react-router/lib/browserHistory'
+import { Provider as ReduxProvider } from 'react-redux'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import store from './redux/store'
 import routesConfig from './routes'

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import selectn from 'selectn'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router'
+import Link from 'react-router/lib/Link'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-styled-flexboxgrid'
 import { translate } from 'browser/containers/Translator'
@@ -67,7 +67,7 @@ class YoutubeVideos extends Component {
 // TODO add propTypes
 // YoutubeVideos.propTypes = {
 //   videos: PropTypes.object.isRequired,
-//   totalPages: PropTypes.number,  
+//   totalPages: PropTypes.number,
 //   currentPage: PropTypes.number,
 // }
 

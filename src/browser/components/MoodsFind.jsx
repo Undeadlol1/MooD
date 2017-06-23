@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { browserHistory } from 'react-router'
 import { Field, reduxForm } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
 import { Row, Col } from 'react-styled-flexboxgrid'

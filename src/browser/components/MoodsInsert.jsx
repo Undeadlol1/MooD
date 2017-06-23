@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router'
+import browserHistory from 'react-router/lib/browserHistory'
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { Row, Col } from 'react-styled-flexboxgrid'

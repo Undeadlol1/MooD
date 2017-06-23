@@ -1,7 +1,7 @@
 import React from 'react'
 import selectn from 'selectn'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router'
+import Link from 'react-router/lib/Link'
 import { connect } from 'react-redux'
 import ReduxToastr from 'react-redux-toastr'
 import NavBar from 'browser/components/NavBar'
