@@ -52,7 +52,7 @@ describe('<NavBar />', () => {
     })
 
     describe('if user logged in', () => {
-      const UserId = 'britney'
+      const UserId = 12345
       const props = {
         UserId,
         toggleSidebar: onClick,
