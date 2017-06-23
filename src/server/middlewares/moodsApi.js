@@ -72,7 +72,12 @@ router
       const moods = await Mood.findAll({
         limit,
         offset,
-        include: [{ model: Node, limit: 1 }] // for preview image
+        // add preview image
+        include: [{
+          limit: 1,
+          model: Node,
+          order: 'rand()',
+        }]
       })
       res.json({ moods, totalPages })
     }
