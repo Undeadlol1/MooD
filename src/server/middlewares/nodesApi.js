@@ -56,6 +56,7 @@ export default Router()
 
       /* USER IS NOT LOGGED IN */
       if (!UserId) {
+        console.log('NOT LOGGED IN');
         if(previousNode) {
           response = await Node.findOne({
                               where: {
@@ -71,6 +72,7 @@ export default Router()
       /* USER IS LOGGED IN */
       // TODO some of this things i do in decisionsApi
       else {// IMPLEMENT THIS // DO NOT FORGET TO IMPLEMENT DECISIONS ON USER CREATION
+        console.log('IS LOGGED IN');
           if (previousNode) {
             /* set lastViewAt, increment viewedAmount and set position */
             const where = { UserId, NodeId: previousNode.id }
@@ -81,9 +83,10 @@ export default Router()
               defaults: {MoodId},
             })
             // TODO remove this in future (when availability of decision will be certain)
-            previousDecision && await updatePositionAndViews(previousDecision)
+            if (previousDecision) await updatePositionAndViews(previousDecision)
             // find next node
             response = await findHighestRatingNode(UserId, MoodId, previousDecision.rating) // $qt //.position // TODO qt is not unique?
+            console.log('response: ', response);
         }
         // fallback to highest position node
         // TODO does this intefere with next fallback?
