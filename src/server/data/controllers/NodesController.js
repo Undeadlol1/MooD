@@ -9,14 +9,14 @@ import { Node, Decision } from "../models/index"
  * @param {object} node
  */
 export async function normalizeRating(node) {
-    if (node.rating == '0.00000000000000000' && (node.rating % 1) == 0) {
+    if (node.rating.includes('.00000000000000000') && (node.rating % 1) == 0) {
         console.log('node.rating', node.rating)
         console.log('after point', node.rating % 1)
         console.log('point test', (Number(node.rating + '.' + Date.now())) % 1)
         console.warn('rating is not normal!')
         console.info('Normalizing...')
         const id = node.id
-        const newRating = node.rating == '0.00000000000000000'
+        const newRating = node.rating.includes('.00000000000000000')
                         ? Number(0 + '.' + Date.now())
                         : Number(node.rating + '.' + Date.now())
         await Node.update({rating: newRating}, {where: {id}})
