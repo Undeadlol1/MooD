@@ -31,7 +31,7 @@ describe('<NavBar />', () => {
 
     it('has title', () => {
       const title = wrapper.find('AppBar').prop('title')
-      expect(title.props.children).to.eq('MooD')
+      expect(title.props.children).to.eq(process.env.APP_NAME)
       expect(title.props.style).to.be.a('object')
       expect(title.type.displayName).to.eq('Link')
       expect(title.props.className).to.eq('NavBar__home-link')

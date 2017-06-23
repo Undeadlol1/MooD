@@ -20,7 +20,7 @@ export class NavBar extends Component {
                                 style={titleStyles}
                                 className="NavBar__home-link"
                             >
-                                MooD
+                                {process.env.APP_NAME}
                             </Link>
         const loginOrAvatar = UserId
                             ? <Link to={`/users/${UserId}`}>
