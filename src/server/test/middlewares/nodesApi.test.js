@@ -1,5 +1,5 @@
 import 'babel-polyfill'
-import chai, { should, expect } from 'chai'
+import chai, { should, expect, assert } from 'chai'
 import request from 'supertest'
 import server from '../../server'
 import { Mood, User, Node, Decision } from '../../data/models'
@@ -93,10 +93,21 @@ export default describe('/nodes API', function() {
             return nodeIds
     }
 
-    it('GET single node', async function() {
-        const mood = await Mood.findOne({order: 'rand()'})
-        const node = await getNextNode(mood.slug)
-        node.url.should.be.string
+    describe('GET /:moodSlug/:nodeId?', function() {
+        it('GET single node', async function() {
+            const mood = await Mood.findOne({order: 'rand()'})
+            const node = await getNextNode(mood.slug)
+            node.url.should.be.string
+        })
+
+        it('should fail without proper moodSlug', async function() {
+            await user
+                    .get('/api/nodes/' + 'this_not_exists')
+                    .expect(404)
+                    .then(res => {
+                        assert(res.error.text == 'mood not found')
+                    })
+        })
     })
 
 

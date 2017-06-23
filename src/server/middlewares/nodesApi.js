@@ -49,7 +49,7 @@ export default Router()
       const previousNode = await params.nodeId
                               ? await Node.findById(params.nodeId)
                               : null
-      if (!MoodId) return res.boom.notFound()
+      if (!MoodId) return res.status(404).send('mood not found')
 
       // see function comment (hover over it)
       if (previousNode) await normalizeRating(previousNode)
