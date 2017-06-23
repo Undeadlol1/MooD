@@ -55,7 +55,7 @@ export default Router()
       if (previousNode) await normalizeRating(previousNode)
 
       /* USER IS NOT LOGGED IN */
-      if (!UserId) {
+      // if (!UserId) {
         console.log('NOT LOGGED IN');
         if(previousNode) {
           response = await Node.findOne({
@@ -67,30 +67,30 @@ export default Router()
                               order: [['rating', 'DESC']] // TODO ineed this?
                             })
         }
-      }
+      // }
 
       /* USER IS LOGGED IN */
       // TODO some of this things i do in decisionsApi
-      else {// IMPLEMENT THIS // DO NOT FORGET TO IMPLEMENT DECISIONS ON USER CREATION
-        console.log('IS LOGGED IN');
-          if (previousNode) {
-            /* set lastViewAt, increment viewedAmount and set position */
-            const where = { UserId, NodeId: previousNode.id }
-            // TODO test 'findOrCreate'
-            const previousDecision =  await Decision.findOrCreate({
-              where,
-              limit: 1,
-              defaults: {MoodId},
-            })
-            // TODO remove this in future (when availability of decision will be certain)
-            if (previousDecision) await updatePositionAndViews(previousDecision)
-            // find next node
-            response = await findHighestRatingNode(MoodId, UserId, previousDecision.NodeRating) // $qt //.position // TODO qt is not unique?
-            console.log('response: ', response);
-        }
-      }
+      // else {// IMPLEMENT THIS // DO NOT FORGET TO IMPLEMENT DECISIONS ON USER CREATION
+      //   console.log('IS LOGGED IN');
+      //     if (previousNode) {
+      //       /* set lastViewAt, increment viewedAmount and set position */
+      //       const where = { UserId, NodeId: previousNode.id }
+      //       // TODO test 'findOrCreate'
+      //       const previousDecision =  await Decision.findOrCreate({
+      //         where,
+      //         limit: 1,
+      //         defaults: {MoodId},
+      //       })
+      //       // TODO remove this in future (when availability of decision will be certain)
+      //       if (previousDecision) await updatePositionAndViews(previousDecision)
+      //       // find next node
+      //       response = await findHighestRatingNode(MoodId, UserId, previousDecision.NodeRating) // $qt //.position // TODO qt is not unique?
+      //       console.log('response: ', response);
+      //   }
+      // }
 
-      // fallback to highest rated node if nothing was found
+      // // fallback to highest rated node if nothing was found
       if (!response) response = await findHighestRatingNode(MoodId, UserId)
       // close request
       res.json(response)
