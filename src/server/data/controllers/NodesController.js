@@ -33,6 +33,8 @@ export async function normalizeRating(node) {
  */
 export async function findHighestRatingNode(UserId, MoodId, afterRating) {
     return await Node.findOne({
+    raw: true,
+    nest: true,
     where: {}, // TODO comment out?
     include: [{
         model: Decision,
