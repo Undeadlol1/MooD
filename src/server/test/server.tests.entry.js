@@ -1,4 +1,5 @@
 require('babel-polyfill')
+require('babel-register')();
 require('source-map-support').install();
 const chai = require('chai')
 const slugify = require('slug')

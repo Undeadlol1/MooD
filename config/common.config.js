@@ -33,6 +33,7 @@ var stats = {
 var baseConfig = {
     stats,
     context: path.resolve(__dirname, '../'),
+    // https://webpack.js.org/configuration/devtool/
     devtool: !isProduction && 'cheap-module-source-map',
     watch: isDevelopment || isTest,
     watchOptions: {

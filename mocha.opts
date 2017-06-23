@@ -7,3 +7,5 @@
   --prof
   --require mocha-clean
   --bail
+  --require babel-register
+  --require babel-polyfill
