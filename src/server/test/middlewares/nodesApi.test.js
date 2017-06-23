@@ -72,19 +72,13 @@ export default describe('/nodes API', function() {
         withoutUrlResponse.contentId = contentId
     })
 
-    function getNextNode(slug, previousNodeId = "") {
-        return user
+    function getNextNode(slug, previousNodeId = "", agent = user) {
+        return agent
             .get(`/api/nodes/${slug}/${previousNodeId}`)
             .expect('Content-Type', /json/)
             .expect(200)
             .then(res => res.body)
     }
-
-    it('GET single node', async function() {
-        const mood = await Mood.findOne({order: 'rand()'})
-        const node = await getNextNode(mood.slug)
-        node.url.should.be.string
-    })
 
     // make 10 subsequent node requests
     async function cycleThroughNodes(slug, nodeId) {
@@ -99,6 +93,13 @@ export default describe('/nodes API', function() {
             return nodeIds
     }
 
+    it('GET single node', async function() {
+        const mood = await Mood.findOne({order: 'rand()'})
+        const node = await getNextNode(mood.slug)
+        node.url.should.be.string
+    })
+
+
     it('nodes cycle properly for unlogged user', async function() {
         try {
             // logout user
@@ -110,6 +111,22 @@ export default describe('/nodes API', function() {
 
             expect(uniq(nodeIds).length, 'unique nodes').to.be.above(6)
         } catch (error) {
+            throw new Error(error)
+        }
+    })
+
+    // TODO check this tests
+    it('nodes cycle properly for logged in user', async function() {
+        try {
+            const agent = await login()
+
+            const mood = await Mood.findOne({order: 'rand()'})
+            const node = await getNextNode(mood.slug)
+            const nodeIds = await cycleThroughNodes(mood.slug, undefined, agent)
+
+            expect(uniq(nodeIds), 'unique nodes').to.not.be.equal(1)
+        } catch (error) {
+            console.error(error)
             throw new Error(error)
         }
     })
@@ -166,21 +183,6 @@ export default describe('/nodes API', function() {
         expect(updatedDecision.position).to.not.be.equal("0")
         // expect(updatedDecision.lastViewAt).to.be.beforeTime(currentDate) // TODO is this true?
         // expect(updatedDecision.position > 0).to.be.true
-    })
-    // check this tests
-    it('nodes cycle properly for logged in user', async function() {
-        try {
-            await login()
-
-            const mood = await Mood.findOne({order: 'rand()'})
-            const node = await getNextNode(mood.slug)
-            const nodeIds = await cycleThroughNodes(mood.slug)
-
-            expect(uniq(nodeIds), 'unique nodes').to.not.be.equal(1)
-        } catch (error) {
-            console.error(error)
-            throw new Error(error)
-        }
     })
 
 })
