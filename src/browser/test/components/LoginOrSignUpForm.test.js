@@ -20,22 +20,22 @@ describe('<LoginOrSignUpForm />', () => {
     // dialogIsOpen: true,
     // moodSlug: 'penises',
     // TODO change handleSubmit to fix this shit
-    insertMood: () => {},
+    onSubmit: () => {},
     handleSubmit: () => {},
     asyncValidating: false,
   }
 
-  const wrapper = shallow(<LoginOrSignUpForm {...props} />)
+  // const wrapper = shallow(<LoginOrSignUpForm {...props} />)
 
-  function testInput(position, name, type, text) {
-      const field = wrapper.find('Field').nodes[position]
-      const props = field.props
-      expect(field.type).to.eq(Field)
-      expect(props.name).to.eq(name)
-      expect(props.type).to.eq(type)
-      expect(props.hintText).to.eq(text)
-      expect(props.fullWidth).to.be.true
-  }
+  // function testInput(position, name, type, text) {
+  //     const field = wrapper.find('Field').nodes[position]
+  //     const props = field.props
+  //     expect(field.type).to.eq(Field)
+  //     expect(props.name).to.eq(name)
+  //     expect(props.type).to.eq(type)
+  //     expect(props.hintText).to.eq(text)
+  //     expect(props.fullWidth).to.be.true
+  // }
 
   // it('has `.LoginOrSignUpForm` class and <form>', () => {
   //   expect(wrapper).to.have.className('LoginOrSignUpForm')

@@ -18,7 +18,7 @@ describe('<LoginLogoutButton />', () => {
                             toggleDialog: () => {},
                         }
         const newProps = {...props, ...modifiers}
-        return shallow(<LoginLogoutButton {...modifiers} />)
+        return shallow(<LoginLogoutButton {...newProps} />)
     }
 
     describe('default behaviour', () => {
@@ -57,7 +57,7 @@ describe('<LoginLogoutButton />', () => {
     })
 
     describe('user logged in behaviour', () => {
-        const wrapper = createWrapper({userId: '123'})
+        const wrapper = createWrapper({userId: 123})
         it('has proper text', () => {
             assert(wrapper.props().label == translate('logout'), 'has text')
         });

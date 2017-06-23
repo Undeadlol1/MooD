@@ -72,7 +72,7 @@ describe('<NavBar />', () => {
   })
 
   it('has children', () => {
-    const wrapper = shallow(<NavBar><section /></NavBar>)
+    const wrapper = shallow(<NavBar toggleSidebar={onClick}><section /></NavBar>)
     expect(wrapper).to.have.descendants('section')
   })
 
