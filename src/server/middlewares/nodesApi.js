@@ -85,7 +85,7 @@ export default Router()
             // TODO remove this in future (when availability of decision will be certain)
             if (previousDecision) await updatePositionAndViews(previousDecision)
             // find next node
-            response = await findHighestRatingNode(MoodId, UserId, previousDecision.rating) // $qt //.position // TODO qt is not unique?
+            response = await findHighestRatingNode(MoodId, UserId, previousDecision.NodeRating) // $qt //.position // TODO qt is not unique?
             console.log('response: ', response);
         }
       }
