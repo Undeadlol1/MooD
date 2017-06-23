@@ -38,7 +38,7 @@ export async function findHighestRatingNode(MoodId, UserId, afterRating) {
         {MoodId},
         UserId && {UserId},
         afterRating && {
-            rating: {
+            NodeRating: {
                 $lt: afterRating
             }
         },
