@@ -32,6 +32,8 @@ class NodesInsert extends Component {
                             // />
                         ]
 // TODO this 'handlesubmit' just bugs me out
+        // TODO this is where it comes from
+        // Failed prop type: The prop `onSubmit` is marked as required in `Form`
         return  <Form onSubmit={handleSubmit(props.insertNode)} className="NodesInsert">
 
                     {/* BUTTON */}
