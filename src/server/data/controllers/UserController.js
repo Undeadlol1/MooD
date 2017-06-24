@@ -60,3 +60,16 @@ export async function normalizePublicInfo(UserId) {
 
     return await User.findById(user.id, {raw: true, nest: true})
 }
+/**
+ * TODO
+ * @export
+ * @param {string} authType model name
+ * @param {object} payload properties to update
+ */
+export async function updateSocialInfo(authType, payload) {
+    await models[authType]
+            .update(
+                payload,
+                {where: {id: payload.id}
+            })
+}

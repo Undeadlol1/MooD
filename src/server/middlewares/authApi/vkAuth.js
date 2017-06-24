@@ -1,4 +1,4 @@
-import { createUser, normalizePublicInfo } from 'server/data/controllers/UserController'
+import { createUser, normalizePublicInfo, updateSocialInfo } from 'server/data/controllers/UserController'
 import { Strategy as VKontakteStrategy } from "passport-vkontakte"
 import { User, Vk, Profile } from 'server/data/models'
 import passport from "passport"
@@ -15,6 +15,13 @@ passport.use(new VKontakteStrategy(
     callbackURL:  URL +  "api/auth/vkontakte/callback"
   },
   async function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) {
+    const payload = {
+      id: profile.id,
+      username: profile.username,
+      displayName: profile.displayName,
+      image: selectn('photos[0].value', profile),
+    }
+
     try {
       const existingUser = await User.findOne({
         where: {},
@@ -29,17 +36,13 @@ passport.use(new VKontakteStrategy(
       // TODO add findUser function in UsersController
 
       if (existingUser) {
+        // update social info incase it has changed
+        await updateSocialInfo('Vk', payload)
         // update user info (image, displayName) if it's not up to date
         const updatedUser = await normalizePublicInfo(existingUser.id)
         return done(null, updatedUser)
       }
       else {
-        const payload = {
-          id: profile.id,
-          username: profile.username,
-          displayName: profile.displayName,
-          image: selectn('photos[0].value', profile),
-        }
         const user = await createUser('Vk', payload)
         console.log('user: ', user);
         done(null, user)

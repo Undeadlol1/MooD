@@ -1,4 +1,4 @@
-import { createUser, normalizePublicInfo } from 'server/data/controllers/UserController'
+import { createUser, normalizePublicInfo, updateSocialInfo } from 'server/data/controllers/UserController'
 import { Strategy as TwitterStrategy } from "passport-twitter"
 import { User, Twitter, Profile } from 'server/data/models'
 import passport from "passport"
@@ -14,6 +14,13 @@ passport.use(new TwitterStrategy({
     callbackURL: URL +  "api/auth/twitter/callback"
   },
   async function(token, tokenSecret, profile, done) {
+    const payload = {
+      id: profile.id,
+      username: profile.username,
+      displayName: profile.screen_name,
+      image: selectn('photos[0].value', profile),
+    }
+
     try {
       const existingUser = await User.findOne({
         where: {},
@@ -28,18 +35,14 @@ passport.use(new TwitterStrategy({
       // TODO add findUser function in UsersController
 
       if (existingUser) {
+        // update social info incase it has changed
+        await updateSocialInfo('Twitter', payload)
         // update user info (image, displayName) if it's not up to date
         const updatedUser = await normalizePublicInfo(existingUser.id)
         return done(null, updatedUser)
       }
       else {
         // TODO rework this
-        const payload = {
-          id: profile.id,
-          username: profile.username,
-          displayName: profile.screen_name,
-          image: selectn('photos[0].value', profile),
-        }
         const user = await createUser('Twitter', payload)
         console.log('user: ', user);
         done(null, user)

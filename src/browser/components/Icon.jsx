@@ -15,11 +15,11 @@ class Icon extends Component {
     }
 
     render() {
-        const { size, style, hoverIcon, ...rest } = this.props
+        const { size, color, style, hoverIcon, ...rest } = this.props
         const iconOptions = {
-                                size: size || "2x",
+                                size,
                                 name: this.state.currentIcon,
-                                style: extendObject({color: 'white'}, style),
+                                style: extendObject({color}, style),
                             }
 
         return  <FontAwesome
@@ -31,8 +31,15 @@ class Icon extends Component {
     }
 }
 
+Icon.defaultProps = {
+    size: '2x',
+    color: 'white',
+}
+
 Icon.propTypes = {
-    hoverIcon: PropTypes.string
+    size: PropTypes.string,
+    color: PropTypes.string,
+    hoverIcon: PropTypes.string,
 }
 
 export default Icon
