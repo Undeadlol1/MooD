@@ -19,6 +19,7 @@ export class LoginDialog extends Component {
 	render() {
 		const { loginIsOpen, toggleDialog } = this.props
 		const iconStyle = {paddingBottom: '1.2rem'}
+		const iconColor = 'rgb(48, 48, 48)'
 		return <Dialog
 					open={loginIsOpen}
 					className="LoginDialog"
@@ -35,7 +36,7 @@ export class LoginDialog extends Component {
 								style={iconStyle}
 								href="/api/auth/vkontakte"
 								className="LoginDialog__icon"
-								icon={<Icon name="vk" />} />
+								icon={<Icon name="vk" color={iconColor} />} />
 						</Col>
 						<Col xs={12} sm={6}>
 							<RaisedButton
@@ -45,7 +46,7 @@ export class LoginDialog extends Component {
 								label="twitter.com"
 								href="/api/auth/twitter"
 								className="LoginDialog__icon"
-								icon={<Icon name="twitter" />} />
+								icon={<Icon name="twitter" color={iconColor} />} />
 						</Col>
 					</Row>
 					<Divider />
