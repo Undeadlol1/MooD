@@ -33,10 +33,7 @@ const emptyTwitterObject = Map({
 const emptyUserObject = Map({
 	id: undefined,
 	image: '',
-	username: '',
-	vk_id: '',
-	facebook_id: '',
-	twitter_id: '',
+	displayName: '',
 	Vk: emptyVkObject,
 	Twitter: emptyTwitterObject,
 	Profile: emptyProfileObject,

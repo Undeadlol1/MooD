@@ -42,10 +42,12 @@ export function createUser(email, username, password) {
         .send({ username, password, email })
         .expect(200)
         .then(({body}) => {
+            body.displayName.should.eq(username)
             body.should.have.property('Profile')
-            body.Local.email.should.eq(email)
-            body.Local.username.should.eq(username)
-            body.Local.password.should.not.eq(password)
+            // TODO disabled because Local should not be send to client
+            // body.Local.email.should.eq(email)
+            // body.Local.username.should.eq(username)
+            // body.Local.password.should.not.eq(password)
         })
 }
 

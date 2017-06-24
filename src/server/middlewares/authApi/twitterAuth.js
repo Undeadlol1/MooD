@@ -1,3 +1,4 @@
+import { createUser, normalizePublicInfo } from 'server/data/controllers/UserController'
 import { Strategy as TwitterStrategy } from "passport-twitter"
 import { User, Twitter, Profile } from 'server/data/models'
 import passport from "passport"
@@ -24,22 +25,24 @@ passport.use(new TwitterStrategy({
         nest: true,
       })
 
-      if (existingUser) return done(null, existingUser)
+      // TODO add findUser function in UsersController
+
+      if (existingUser) {
+        // update user info (image, displayName) if it's not up to date
+        const updatedUser = await normalizePublicInfo(existingUser.id)
+        return done(null, updatedUser)
+      }
       else {
         // TODO rework this
-        const user = await User.create({})
-        const twitter = await Twitter.create({
-          UserId: user.id,
+        const payload = {
           id: profile.id,
           username: profile.username,
           displayName: profile.screen_name,
           image: selectn('photos[0].value', profile),
-        })
-        const newUser = await User.findById(user.id, {
-          include: [Twitter, Profile]
-        })
-        console.log('newUser: ', newUser);
-        done(null, newUser)
+        }
+        const user = await createUser('Twitter', payload)
+        console.log('user: ', user);
+        done(null, user)
       }
     } catch (error) {
       console.error(error);

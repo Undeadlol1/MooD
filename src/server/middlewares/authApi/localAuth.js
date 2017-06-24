@@ -1,7 +1,9 @@
-import { Strategy as LocalStrategy } from "passport-local"
-import { User, Local, Profile } from 'server/data/models'
-import { Router } from "express"
 import passport from "passport"
+import { Router } from "express"
+import { User, Local, Profile } from 'server/data/models'
+import { Strategy as LocalStrategy } from "passport-local"
+import { createUser } from 'server/data/controllers/UserController'
+import { normalizeUserInfo } from 'server/data/controllers/UserController'
 
 const { URL } = process.env
 const router = Router()
@@ -10,36 +12,23 @@ router
   .post('/signup',   async function(req, res) {
     const { username, email, password } = req.body
     // TODO test for params
-    if(!username || !email || !password) res.status(400).end('Invalid query')
+    if(!username || !email || !password) res.status(400).end('params are required')
     // find a user whose email is the same as the forms email
     // we are checking to see if the user trying to login already exists
 
     // TODO add validation tests
-    // TODO move everything into user controller!!
     try {
-        const existingUser = await Local.findOne({
-                                    where: {
-                                      $or: [{email}, {username}]
-                                  }})
+        const existingUser =  await Local.findOne({
+                                where: {
+                                  $or: [{email}, {username}]
+                              }})
+
         if (existingUser) res.status(401).end('user already exists')
         else {
-          // TODO try include again
-          const user = await User.create({}, {raw: true})
-          const local = await Local.create({
-            email,
-            username,
-            UserId: user.id,
-            password: Local.generateHash(password) // TODO add tests
-          }, {raw: true})
-          const newUser = await User.findOne({
-            where: {id: user.id},
-            include: [Local, Profile],
-            raw: true,
-            nest: true,
-          })
-          req.login(newUser, error => {
+          const user = await createUser('Local', req.body)
+          req.login(user, error => {
             if (error) throw new Error(error)
-            else return res.json(newUser)
+            else return res.json(user)
           })
         }
     } catch (error) {
