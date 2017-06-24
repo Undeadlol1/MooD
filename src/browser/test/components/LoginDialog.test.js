@@ -31,6 +31,7 @@ describe('<LoginDialog />', () => {
       expect(props.className).to.eq('LoginDialog')
       expect(props.title).to.eq(translate('please_login'))
       expect(typeof props.onRequestClose).to.eq('function')
+      expect(props.titleStyle).to.deep.eq({textAlign: 'center'})
       expect(props.children).to.be.not.empty
   })
 

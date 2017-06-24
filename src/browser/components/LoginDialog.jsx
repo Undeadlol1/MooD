@@ -23,6 +23,7 @@ export class LoginDialog extends Component {
 					open={loginIsOpen}
 					className="LoginDialog"
 					onRequestClose={toggleDialog}
+					titleStyle={{ textAlign: 'center' }}
 					title={translate('please_login')}
 				>
 					<Row className="LoginDialog__icons">
