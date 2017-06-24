@@ -2,6 +2,7 @@
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define('User', {
     image: DataTypes.STRING,
+    displayName: DataTypes.STRING,
   }, {
     tableName: 'users',
     freezeTableName: true,
