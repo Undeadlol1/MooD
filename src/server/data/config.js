@@ -16,7 +16,13 @@ module.exports = {
     "database": "database_development",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "logging": false
+    "logging": false,
+    // charset is needed because many symbols (lyke cyrillic) are not allowed
+    "define": {
+      "charset": "utf8",
+      "collate": "utf8_general_ci",
+      "timestamps": true
+    },
   },
   "test": {
     "username": "root",
@@ -24,7 +30,13 @@ module.exports = {
     "database": "mood_test", // "database_test", TODO bring this back
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "logging": false
+    "logging": false,
+    // charset is needed because many symbols (lyke cyrillic) are not allowed
+    "define": {
+      "charset": "utf8",
+      "collate": "utf8_general_ci",
+      "timestamps": true
+    },
   },
   "production": {
     "username": config.DB_USER,
@@ -33,6 +45,12 @@ module.exports = {
     "host": config.DB_HOST,
     "port": config.DB_PORT,
     "dialect": config.DB_DIALECT,
-    "logging": false
+    "logging": false,
+    // charset is needed because many symbols (lyke cyrillic) are not allowed
+    "define": {
+      "charset": "utf8",
+      "collate": "utf8_general_ci",
+      "timestamps": true
+    },
   }
 }
