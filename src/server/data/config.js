@@ -19,8 +19,8 @@ module.exports = {
     "logging": false,
     // charset is needed because many symbols (lyke cyrillic) are not allowed
     "define": {
-      "charset": "utf8",
-      "collate": "utf8_general_ci",
+      "charset": "utf8mb4",
+      "collate": "utf8mb4_general_ci",
       "timestamps": true
     },
   },
@@ -33,8 +33,8 @@ module.exports = {
     "logging": false,
     // charset is needed because many symbols (lyke cyrillic) are not allowed
     "define": {
-      "charset": "utf8",
-      "collate": "utf8_general_ci",
+      "charset": "utf8mb4",
+      "collate": "utf8mb4_general_ci",
       "timestamps": true
     },
   },
@@ -48,8 +48,8 @@ module.exports = {
     "logging": false,
     // charset is needed because many symbols (lyke cyrillic) are not allowed
     "define": {
-      "charset": "utf8",
-      "collate": "utf8_general_ci",
+      "charset": "utf8mb4",
+      "collate": "utf8mb4_general_ci",
       "timestamps": true
     },
   }
