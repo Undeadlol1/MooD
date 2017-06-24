@@ -16,7 +16,10 @@ module.exports = {
     "database": "database_development",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "logging": false
+    "logging": false,
+    dialectOptions: {
+      charset: 'utf8mb4'
+    },
   },
   "test": {
     "username": "root",
