@@ -50,7 +50,7 @@ export async function normalizePublicInfo(UserId) {
         || select('Vk.displayName', user)
     console.log('displayName: ', displayName);
 
-    // if (!user.displayName) user.set('displayName', displayName)
+    if (!user.displayName) user.set('displayName', displayName)
 
     if (!user.image) user.set('image',
         select('Twitter.image', user)
