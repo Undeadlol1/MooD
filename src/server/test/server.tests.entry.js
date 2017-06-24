@@ -123,8 +123,8 @@ before(function(done) {
         .then(() => done())
         .catch(error => {
             console.error(error)
-            return error
             // throw new Error(error)
+            throw new Error(error)
         })
 })
 
