@@ -43,13 +43,14 @@ export async function normalizePublicInfo(UserId) {
         {include: [Profile, Local, Twitter, Vk]}
     )
 
-    if (!user.displayName) user.set('displayName',
-        select('Local.username', user)
+    const displayName = select('Local.username', user)
         || select('Twitter.username', user)
         || select('Twitter.displayName', user)
         || select('Vk.username', user)
         || select('Vk.displayName', user)
-    )
+    console.log('displayName: ', displayName);
+
+    if (!user.displayName) user.set('displayName', displayName)
 
     if (!user.image) user.set('image',
         select('Twitter.image', user)

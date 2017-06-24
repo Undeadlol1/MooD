@@ -3,6 +3,11 @@ module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define('User', {
     // TODO comment
     image: DataTypes.STRING,
+    /*
+      NOTE: with non-latin characters the only way to avoid "charset" erros using sequelize
+      was to change mysql config to accept utf-8 and changing table charsets manually via
+      ALTER TABLE db_name.table_name CONVERT TO CHARACTER SET utf8;
+    */
     displayName: DataTypes.STRING,
   }, {
     tableName: 'users',

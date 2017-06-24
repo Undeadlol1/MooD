@@ -18,7 +18,11 @@ module.exports = function(sequelize, DataTypes) {
       // allowNull: false,
       type: DataTypes.STRING,
     },
-    displayName: DataTypes.STRING,
+    displayName: {
+      type: DataTypes.STRING,
+      charset: 'utf8',
+      collate: 'utf8_unicode_ci',
+    },
     image: {
       type: DataTypes.STRING,
       allowNull: true,
