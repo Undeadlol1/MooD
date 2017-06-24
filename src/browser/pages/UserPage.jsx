@@ -16,7 +16,7 @@ import ChangeLanguageForm from 'browser/components/ChangeLanguageForm'
 export class UserPage extends Component {
 	componentWillMount() { this.props.fetchUser(this.props.params.username) }
 	@injectProps
-    render({loading, location, UserId, username, isOwnPage}) {
+    render({loading, location, UserId, displayName, isOwnPage}) {
 		const src = `https://api.adorable.io/avatars/300/${UserId}.png`
 		return 	<PageWrapper
 					preset={'pop'}
@@ -27,7 +27,7 @@ export class UserPage extends Component {
 					<Grid fluid>
 						<Row center="xs">
 							<Col xs={12}>
-								<h2 className="UserPage__username">{username}</h2>
+								<h2 className="UserPage__username">{displayName}</h2>
 							</Col>
 						</Row>
 						<Row center="xs">
@@ -46,7 +46,7 @@ export class UserPage extends Component {
 }
 
 UserPage.propTypes = {
-	username: PropTypes.string,
+	displayName: PropTypes.string,
 	loading: PropTypes.bool.isRequired,
 	isOwnPage: PropTypes.bool.isRequired,
 	fetchUser: PropTypes.func.isRequired,
@@ -61,7 +61,7 @@ export default connect(
 			loading: user.get('loading'),
 			fetchedUser: user.get('fetchedUser'),
 			isOwnPage: user.get('id') == params.username, // TODO this,
-			username: user.getIn(['fetchedUser', 'Local', 'username']),
+			displayName: user.getIn(['fetchedUser', 'displayName']),
 		}
 	},
 	(dispatch, {params}) => ({

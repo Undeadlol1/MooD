@@ -56,7 +56,6 @@ export default Router()
 
       /* USER IS NOT LOGGED IN */
       // if (!UserId) {
-        console.log('NOT LOGGED IN');
         if(previousNode) {
           response = await Node.findOne({
                               where: {
@@ -72,7 +71,6 @@ export default Router()
       /* USER IS LOGGED IN */
       // TODO some of this things i do in decisionsApi
       // else {// IMPLEMENT THIS // DO NOT FORGET TO IMPLEMENT DECISIONS ON USER CREATION
-      //   console.log('IS LOGGED IN');
       //     if (previousNode) {
       //       /* set lastViewAt, increment viewedAmount and set position */
       //       const where = { UserId, NodeId: previousNode.id }

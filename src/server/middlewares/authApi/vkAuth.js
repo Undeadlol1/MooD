@@ -1,8 +1,10 @@
+import { createUser, normalizePublicInfo } from 'server/data/controllers/UserController'
 import { Strategy as VKontakteStrategy } from "passport-vkontakte"
 import { User, Vk, Profile } from 'server/data/models'
 import passport from "passport"
 import express from "express"
 import selectn from 'selectn'
+
 const { URL, VK_ID, VK_SECRET,} = process.env
 
 /* VK AUTH */
@@ -24,22 +26,23 @@ passport.use(new VKontakteStrategy(
         nest: true,
       })
 
-      if (existingUser) return done(null, existingUser)
+      // TODO add findUser function in UsersController
+
+      if (existingUser) {
+        // update user info (image, displayName) if it's not up to date
+        const updatedUser = await normalizePublicInfo(existingUser.id)
+        return done(null, updatedUser)
+      }
       else {
-        // TODO rework this
-        const user = await User.create({})
-        const vk = await Vk.create({
-          UserId: user.id,
+        const payload = {
           id: profile.id,
           username: profile.username,
           displayName: profile.displayName,
           image: selectn('photos[0].value', profile),
-        })
-        const newUser = await User.findById(user.id, {
-          include: [Vk, Profile]
-        })
-        console.log('newUser: ', newUser);
-        done(null, newUser)
+        }
+        const user = await createUser('Vk', payload)
+        console.log('user: ', user);
+        done(null, user)
       }
     } catch (error) {
       console.error(error)
