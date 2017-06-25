@@ -3,7 +3,7 @@ import selectn from 'selectn'
 import PropTypes from 'prop-types'
 import Link from 'react-router/lib/Link'
 import { connect } from 'react-redux'
-import { Row, Col } from 'react-styled-flexboxgrid'
+import { Grid, Row, Col } from 'react-styled-flexboxgrid'
 import { translate } from 'browser/containers/Translator'
 import { Card, CardMedia, CardTitle } from 'material-ui/Card'
 import { insertNode } from 'browser/redux/actions/NodeActions'
@@ -29,15 +29,28 @@ import { insertNode } from 'browser/redux/actions/NodeActions'
     })
 )
 class YoutubeVideos extends Component {
+	/*
+		In material-ui's Dialog only way to update height and position
+		is to call 'resize' event
+	*/
+	componentWillUpdate() {
+		if (process.env.BROWSER) {
+			setTimeout(() => {
+				window.dispatchEvent(new Event('resize'))
+			}, 250)
+		}
+	}
+
 	renderItems = () => {
 		const { searchedVideos, MoodId, className, submitVideo } = this.props
 		if(searchedVideos) {
 			return searchedVideos.map( video => {
 					const { videoId } = video.id
 					const { title } = video.snippet
-					return	<Col className="YoutubeVideos__item" xs={12} sm={6} md={4} lg={3} key={videoId}>
+					const titleStyle = {fontSize: '16px', lineHeight: 'inherit'}
+					return	<Col className="YoutubeVideos__item" xs={12} sm={6} key={videoId}>
 								<Card onClick={submitVideo.bind(this, videoId, MoodId)}>
-									<CardMedia overlay={<CardTitle title={title} />}>
+									<CardMedia overlay={<CardTitle titleStyle={titleStyle} title={title} />}>
 										<img src={`http://img.youtube.com/vi/${videoId}/0.jpg`} />
 									</CardMedia>
 								</Card>
@@ -56,11 +69,10 @@ class YoutubeVideos extends Component {
 	}
 
 	render() {
-		return  <section className="YoutubeVideos">
-					<Row>
-						{this.renderItems()}
-					</Row>
-				</section>
+		if (!this.props.searchedVideos.length) return null
+		return  <Row className="YoutubeVideos">
+					{this.renderItems()}
+				</Row>
 	}
 }
 

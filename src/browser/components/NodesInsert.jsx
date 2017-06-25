@@ -3,10 +3,11 @@ import PropTypes from 'prop-types'
 import Dialog from 'material-ui/Dialog'
 import { Form, Field } from 'redux-form'
 import FlatButton from 'material-ui/FlatButton'
+import { Grid } from 'react-styled-flexboxgrid'
 import { TextField } from 'redux-form-material-ui'
-import { translate as t } from 'browser/containers/Translator'
 import ContentAdd from 'material-ui/svg-icons/content/add'
 import YoutubeSearch from 'browser/components/YoutubeSearch'
+import { translate as t } from 'browser/containers/Translator'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 
 class NodesInsert extends Component {
@@ -52,6 +53,9 @@ class NodesInsert extends Component {
                         autoScrollBodyContent={true}
                         onRequestClose={toggleDialog}
                     >
+                        <Grid className="NodesInsert__Grid">
+                            <YoutubeSearch />
+                        </Grid>
                         {/*<Field
                             name="url"
                             fullWidth
@@ -59,7 +63,6 @@ class NodesInsert extends Component {
                             disabled={isDisabled}
                             component={TextField}
                         />*/}
-                        <YoutubeSearch />
                     </Dialog>
 
                 </Form>
