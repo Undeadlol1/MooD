@@ -67,10 +67,13 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(boom()) // provides res.boom. erros dispatching
 app.use(helmet()) // security
-// rate limiter
-// only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
-// app.enable('trust proxy');
-app.use(limiter)
+
+if (process.env.NODE_ENV === 'production') {
+  // rate limiter
+  // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
+  // app.enable('trust proxy');
+  app.use(limiter)
+}
 
 // REST API
 app.use('/api/auth', authApi)
