@@ -33,7 +33,7 @@ var clientConfig =  merge(commonConfig, {
     },
     target: 'web',
     // TODO do wee need mocha!?
-    entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/browser/test/browser.tests.entry.js')],
+    entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/browser/browser.tests.entry.js')],
     output : {
         publicPath: '/',
         filename: 'client.test.js',
@@ -54,7 +54,7 @@ var clientConfig =  merge(commonConfig, {
 var serverConfig =   merge(commonConfig, {
     target: 'node',
     // TODO do wee need mocha!?
-    entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/server/test/server.tests.entry.js')],
+    entry: ['babel-polyfill', path.resolve('mocha!', __dirname, '../', 'src/server/server.tests.entry.js')],
     node: {
         __filename: true,
         __dirname: true

@@ -7,9 +7,9 @@ const uniqid = require('uniqid')
 const { expect } = require('chai')
 const isEqual = require('lodash/isEqual')
 const extend = require('lodash/assignIn')
-const { parseUrl } = require('../../shared/parsers.js')
-const userFixtures = require('../data/fixtures/users.js')
-const { User, Local, Mood, Node, Decision, Profile } = require('../data/models/index.js')
+const { parseUrl } = require('shared/parsers.js')
+const userFixtures = require('server/data/fixtures/users.js')
+const { User, Local, Mood, Node, Decision, Profile } = require('server/data/models/index.js')
 chai.should()
 
 // TODO move this to fixtures
@@ -47,7 +47,7 @@ function randomIntFromInterval(min, max) {
 // insert fixtures into database
 before(function(done) {
     // close server incase of supertest.agent server is in use
-    require('../server.js').default.close()
+    require('server/server.js').default.close()
 
     const moods = [],
           nodes = [],
