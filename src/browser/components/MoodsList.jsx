@@ -40,8 +40,6 @@ export class MoodsList extends Component {
 
 	render() {
 		const { props } = this
-		console.log('props.moods.size): ', props.moods.size);
-		console.log('props.totalPages: ', props.totalPages);
 		return  <section className="MoodsList">
 					<Row>
 						{this.renderItems()}
