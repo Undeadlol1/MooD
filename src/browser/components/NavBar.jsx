@@ -1,28 +1,35 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import classNames from 'classnames'
-import Link from 'react-router/lib/Link'
-import { connect } from 'react-redux'
-import AppBar from 'material-ui/AppBar'
-import Avatar from 'material-ui/Avatar'
-
 import LoginLogoutButton from 'browser/components/LoginLogoutButton'
 import { actions } from 'browser/redux/actions/GlobalActions'
+import Loading from 'browser/components/Loading'
+import React, { Component } from 'react'
+import Link from 'react-router/lib/Link'
+import AppBar from 'material-ui/AppBar'
+import Avatar from 'material-ui/Avatar'
+import { connect } from 'react-redux'
+import classNames from 'classnames'
+import PropTypes from 'prop-types'
 
 const titleStyles = { color: 'rgb(48, 48, 48)' }
 const LoginLogoutButtonStyles = { marginTop: '5.5px' }
+const LoadingStyles = { marginTop: '1.5px' }
+
+const titleLink =   <Link
+                        to="/"
+                        style={titleStyles}
+                        className="NavBar__home-link"
+                    >
+                        {process.env.APP_NAME}
+                    </Link>
 
 export class NavBar extends Component {
     render() {
-        const { UserId, className, children, toggleSidebar, ...rest } = this.props
-        const titleLink =   <Link
-                                to="/"
-                                style={titleStyles}
-                                className="NavBar__home-link"
-                            >
-                                {process.env.APP_NAME}
-                            </Link>
-        const loginOrAvatar = UserId
+        const { UserId, loading, className, children, toggleSidebar, ...rest } = this.props
+
+        let loginOrAvatar
+
+        if (process.env.SERVER || loading) loginOrAvatar = <Loading style={LoadingStyles} color="rgb(48, 48, 48)" condition={true} />
+        else {
+            loginOrAvatar = UserId
                             ? <Link to={`/users/${UserId}`}>
                                 <Avatar
                                     className="NavBar__avatar"
@@ -30,6 +37,7 @@ export class NavBar extends Component {
                                 />
                               </Link>
                             : <LoginLogoutButton style={LoginLogoutButtonStyles} />
+        }
 
         return  <header className={classNames('NavBar ', className)} {...rest}>
                     <AppBar
@@ -55,7 +63,8 @@ export const dispatchToProps = dispatch => ({
 export default connect(
     ({ user, global  }, ownProps) => {
         const UserId = user.get('id')
-        return { UserId, ...ownProps }
+        const loading = user.get('loading')
+        return { UserId, loading, ...ownProps }
     },
     dispatchToProps
 )(NavBar)
