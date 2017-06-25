@@ -39,6 +39,8 @@ export default class Video extends Component {
 	}
 
 	onReady = event => {
+		// TODO this is what can help
+		{/*https://android.stackexchange.com/a/109715*/}
 		if(process.env.SERVER) return
 		this.setState({playerLoaded: true})
 		// auto play does not work on IOS and Android
