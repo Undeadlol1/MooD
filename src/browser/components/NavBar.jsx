@@ -23,14 +23,15 @@ const titleLink =   <Link
 
 export class NavBar extends Component {
     render() {
-        const { UserId, loading, className, children, toggleSidebar, ...rest } = this.props
+        const { displayName, UserId, loading, className, children, toggleSidebar, ...rest } = this.props
 
         let loginOrAvatar
 
         if (process.env.SERVER || loading) loginOrAvatar = <Loading style={LoadingStyles} color="rgb(48, 48, 48)" condition={true} />
         else {
             loginOrAvatar = UserId
-                            ? <Link to={`/users/${UserId}`}>
+                            ? <Link className="Navbar__profile-link" to={`/users/${UserId}`}>
+                                <span className="Navbar__username">{displayName}</span>
                                 <Avatar
                                     className="NavBar__avatar"
                                     src={`https://api.adorable.io/avatars/100/${UserId}.png`}
@@ -64,7 +65,8 @@ export default connect(
     ({ user, global  }, ownProps) => {
         const UserId = user.get('id')
         const loading = user.get('loading')
-        return { UserId, loading, ...ownProps }
+        const displayName = user.get('displayName')
+        return { UserId, displayName, loading, ...ownProps }
     },
     dispatchToProps
 )(NavBar)

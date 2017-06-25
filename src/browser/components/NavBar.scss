@@ -14,3 +14,17 @@
 .NavBar--hidden {
 	display: none;
 }
+
+.Navbar__profile-link {
+	display: flex;
+	text-decoration: none;
+	color: rgb(48, 48, 48);
+	&:visited {
+		color: rgb(48, 48, 48);
+	}
+}
+
+.Navbar__username {
+	font-size: 1.24px;
+	margin: auto 0.5rem auto 0;
+}
