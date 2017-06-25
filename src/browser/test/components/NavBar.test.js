@@ -56,16 +56,22 @@ describe('<NavBar />', () => {
       const props = {
         UserId,
         toggleSidebar: onClick,
+        displayName: 'something',
       }
-      const wrapper = shallow(<NavBar {...props} />)
-      const link = wrapper.find('AppBar').props().iconElementRight
-      const avatar = link.props.children
+      const navBar = shallow(<NavBar {...props} />)
+      const link = navBar.find('AppBar').props().iconElementRight
       it('has <Link>', () => {
         expect(link.props.to).to.eq('/users/' + UserId)
+        expect(link.props.className).to.eq('Navbar__profile-link')
       })
-      it('has <Avatar>', () => {
-        expect(avatar.props.className).to.eq('NavBar__avatar')
-        expect(avatar.props.src).to.eq(`https://api.adorable.io/avatars/100/${UserId}.png`)
+      it('has username and <Avatar>', () => {
+        const rightElement = shallow(link)
+        const avatar = rightElement.find('Avatar')
+        const username = rightElement.find('span')
+        expect(username.text()).to.eq(props.displayName)
+        expect(username).to.have.className('Navbar__username')
+        expect(avatar).to.have.className('NavBar__avatar')
+        expect(avatar.props().src).to.eq(`https://api.adorable.io/avatars/100/${UserId}.png`)
       })
     })
 

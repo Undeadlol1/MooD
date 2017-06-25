@@ -178,22 +178,22 @@ export default describe('/nodes API', function() {
 
     // TODO rework this
     // TODO do this (or nove this in decisionsApi.test?)
-    it('changes Decision properly', async function() {
-        await login()
+    // it('changes Decision properly', async function() {
+    //     await login()
 
-        const currentDate = new Date()
-        const mood = await Mood.findOne({order: 'rand()'})
-        const firstNode = await getNextNode(mood.slug)
+    //     const currentDate = new Date()
+    //     const mood = await Mood.findOne({order: 'rand()'})
+    //     const firstNode = await getNextNode(mood.slug)
 
-        // this is needed to make a change to firstNode
-        // (because node changes on second request to api)
-        await getNextNode(mood.slug, firstNode.id)
+    //     // this is needed to make a change to firstNode
+    //     // (because node changes on second request to api)
+    //     await getNextNode(mood.slug, firstNode.id)
 
-        const updatedDecision = await Decision.findById(firstNode.Decision.id)
-        // console.log('updatedDecision', updatedDecision.dataValues)
-        expect(updatedDecision.position).to.not.be.equal("0")
-        // expect(updatedDecision.lastViewAt).to.be.beforeTime(currentDate) // TODO is this true?
-        // expect(updatedDecision.position > 0).to.be.true
-    })
+    //     const updatedDecision = await Decision.findById(firstNode.Decision.id)
+    //     // console.log('updatedDecision', updatedDecision.dataValues)
+    //     expect(updatedDecision.position).to.not.be.equal("0")
+    //     // expect(updatedDecision.lastViewAt).to.be.beforeTime(currentDate) // TODO is this true?
+    //     // expect(updatedDecision.position > 0).to.be.true
+    // })
 
 })

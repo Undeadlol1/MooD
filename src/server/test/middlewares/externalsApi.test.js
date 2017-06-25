@@ -40,7 +40,7 @@ export default describe('/externals API', function() {
                         .expect(200)
                         .expect('Content-Type', /json/)
                         .then(({body}) => {
-                            expect(body.length).to.be.equal(3)
+                            expect(body.length).to.be.equal(4)
                             body.map(video => {
                                 return expect(video.id.videoId).to.be.an('string')
                             })

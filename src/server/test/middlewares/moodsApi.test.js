@@ -34,9 +34,13 @@ export default describe('/moods API', function() {
             .send({ name: moodName })
             .expect('Content-Type', /json/)
             .expect(200)
-            .then(function(res){
-                res.body.slug.should.be.equal(slug)
-        })
+            .then(function(res) {
+                return res.body.slug.should.be.equal(slug)
+            })
+            .catch(error => {
+                console.error(error)
+                throw new Error(error)
+            })
     })
 
     it('GET moods', function(done) {

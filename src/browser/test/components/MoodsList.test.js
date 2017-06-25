@@ -26,11 +26,11 @@ describe('<MoodsList />', () => {
   });
 
   it('has pagination wrapper', () => {
-    const row = wrapper
+    const div = wrapper
                   .find('Styled(Row)')
                   .last()
-    expect(row.prop('style')).to.be.an('object')
-    expect(row).to.have.className('MoodsList__pagination-wrapper')
+                  .find('div')
+    expect(div).to.have.className('MoodsList__pagination-wrapper')
   });
 
   it('displays pagination if needed', () => {
