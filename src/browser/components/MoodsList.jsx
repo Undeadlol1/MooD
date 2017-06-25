@@ -40,35 +40,37 @@ export class MoodsList extends Component {
 
 	render() {
 		const { props } = this
+		console.log('props.moods.size): ', props.moods.size);
+		console.log('props.totalPages: ', props.totalPages);
 		return  <section className="MoodsList">
 					<Row>
 						{this.renderItems()}
 					</Row>
-					<Row
-						style={{ margin: '0 auto' }}
-						className='MoodsList__pagination-wrapper'
-					>
-						{/*Created UltimatePagination component has the following interface:
+					<Row>
+						<div className='MoodsList__pagination-wrapper'>
+							{/*Created UltimatePagination component has the following interface:
 
-							currentPage: number - current page number
-							totalPages: number - total number of pages
-							boundaryPagesRange: number, optional, default: 1 - number of always visible pages at the beginning and end
-							siblingPagesRange: number, optional, default: 1 - number of always visible pages before and after the current one
-							hideEllipsis: bool, optional, default: false - boolean flag to hide ellipsis
-							hidePreviousAndNextPageLinks: bool, optional, default: false - boolean flag to hide previous and next page links
-							hideFirstAndLastPageLink: bool, optional, default: false - boolean flag to hide first and last page links
-							onChange: function - callback that will be called with new page when it should be changed by user interaction (optional)*/}
-						{
-							props.totalPages > 1
-							? <Pagination
-								className='MoodsList__pagination'
-								onChange={props.changePage}
-								currentPage={props.currentPage}
-								totalPages={props.totalPages}
-								hidePreviousAndNextPageLinks={true}
-								hideFirstAndLastPageLink={true} />
-							: null
-						}
+								currentPage: number - current page number
+								totalPages: number - total number of pages
+								boundaryPagesRange: number, optional, default: 1 - number of always visible pages at the beginning and end
+								siblingPagesRange: number, optional, default: 1 - number of always visible pages before and after the current one
+								hideEllipsis: bool, optional, default: false - boolean flag to hide ellipsis
+								hidePreviousAndNextPageLinks: bool, optional, default: false - boolean flag to hide previous and next page links
+								hideFirstAndLastPageLink: bool, optional, default: false - boolean flag to hide first and last page links
+								onChange: function - callback that will be called with new page when it should be changed by user interaction (optional)*/}
+							{
+								props.totalPages > 1
+								? <Pagination
+									style={{ margin: '0 auto' }}
+									className='MoodsList__pagination'
+									onChange={props.changePage}
+									currentPage={props.currentPage}
+									totalPages={props.totalPages}
+									hidePreviousAndNextPageLinks={true}
+									hideFirstAndLastPageLink={true} />
+								: null
+							}
+						</div>
 					</Row>
 				</section>
 	}
