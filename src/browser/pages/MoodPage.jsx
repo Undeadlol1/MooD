@@ -50,7 +50,7 @@ class MoodPage extends Component {
 					className="MoodPage"
 				>
 					{/* TODO remove h1 (use css instead) */}
-					<h1 hidden={!contentNotFound} className="MoodPage__header">{t("currently_zero_content_here")}</h1>
+					{contentNotFound && <h1 className="MoodPage__header">{t("currently_zero_content_here")}</h1>}
 					<Video className='MoodPage__video'>
 						<NavBar className='NavBar--sticky' />
 						{!contentNotFound && <Decision className='MoodPage__decision' />}
