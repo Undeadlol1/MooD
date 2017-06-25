@@ -68,7 +68,7 @@ router
       const page = req.params.page
       const offset = page ? limit * (page -1) : 0
       const totalMoods = await Mood.count()
-      const totalPages = Math.round(totalMoods / limit)
+      const totalPages = Math.ceil(totalMoods / limit)
       const moods = await Mood.findAll({
         limit,
         offset,
