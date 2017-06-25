@@ -25,7 +25,7 @@ export default Router()
     try {
       const selector = req.query.query // TODO rework this ✏️
       if (!selector || isEmpty(selector)) return res.boom.badRequest('invalid query')
-      youTube.search(selector, 3,
+      youTube.search(selector, 4,
         (error, result) => {
           if (error) throw error
           else res.json(result.items)
