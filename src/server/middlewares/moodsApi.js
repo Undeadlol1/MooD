@@ -72,6 +72,7 @@ router
       const moods = await Mood.findAll({
         limit,
         offset,
+        order: 'rand()',
         // add preview image
         include: [{
           limit: 1,
