@@ -36,24 +36,25 @@ export async function findHighestRatingNode(MoodId, UserId, afterRating) {
     // avoid things like {UserId: undefined}, which gets unexpected results from DB
     const where = extend(
         {MoodId},
-        UserId && {UserId},
+        // UserId && {UserId},
         afterRating && {
-            NodeRating: {
+            rating: {
                 $lt: afterRating
             }
         },
     )
 
     return await Node.findOne({
+        where,
         limit: 1,
         raw: true,
         nest: true,
-        where: {}, // TODO comment out?
-        include: [{
-            where,
-            model: Decision,
-            order: [['rating', 'DESC']],
-        }],
+        order: [['rating', 'DESC']],
+        // include: [{
+        //     where,
+        //     model: Decision,
+        //     order: [['rating', 'DESC']],
+        // }],
     })
 }
 /**
