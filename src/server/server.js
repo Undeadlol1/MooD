@@ -95,7 +95,8 @@ import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
 import match from 'react-router/lib/match'
-import routes from '../browser/routes'
+import { Helmet } from 'react-helmet'
+import routes from 'browser/routes'
 
 
 // all routes are processed client side via react-router
@@ -132,8 +133,15 @@ app.get('/*', function(req, res) {
           )
           // extract css from string
           const css = sheet.getStyleTags()
+          // extract metaData for <header>
+          let headerTags = []
+          const metaData = Helmet.renderStatic()
+          for (var prop in metaData) {
+            const tag = metaData[prop].toString()
+            tag && headerTags.push(tag)
+          }
           // send markup and css to handlebars template
-          res.render('index', { markup, css })
+          res.render('index', { markup, css, headerTags })
         }
 
         else res.status(404).send('Not found')
