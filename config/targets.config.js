@@ -36,11 +36,12 @@ const clientVariables =  extend({
                         }, config)
 
 const clientProductionPlugins = isDevelopment ? [] : [
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
     // new webpack.optimize.DedupePlugin(), //dedupe similar code
     // TODO minify server
     // TODO try this https://github.com/webpack-contrib/uglifyjs-webpack-plugin
     new webpack.optimize.UglifyJsPlugin({minimize: true}), //minify everything
-    new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks
     new CompressionPlugin({//   <-- Add this
       asset: "[path].gz[query]",
       algorithm: "gzip",
