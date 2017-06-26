@@ -21,4 +21,13 @@ describe('<MetaData />', () => {
     expect(title.text()).to.eq(process.env.APP_NAME)
   })
 
+  it('has proper defaultProps', () => {
+    const actual = MetaData.defaultProps
+    const expected = {
+      appUrl: process.env.URL,
+      title: process.env.APP_NAME,
+    }
+    expect(actual).to.deep.eq(expected)
+  })
+
 })
