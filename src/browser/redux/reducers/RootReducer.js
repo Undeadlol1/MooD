@@ -8,12 +8,12 @@ import user from './UserReducer'
 import mood from './MoodReducer'
 import node from './NodeReducer'
 
-// export default combineReducers({ ...global, ...user, ...mood, ...node, form, routing, toastr })
-export default combineReducers({ global, user, mood, node, form, routing, toastr })
-// const combinedReducer = {
-//     global,
-//     user,
-//     mood,
-//     node
-// }
-// export default combineReducers({ app: combinedReducer, form, routing, toastr })
+export default combineReducers({
+    global,
+    user,
+    mood,
+    node,
+    form,
+    toastr,
+    routing,
+})

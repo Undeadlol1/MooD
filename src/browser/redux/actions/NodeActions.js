@@ -1,37 +1,32 @@
 import selectn from 'selectn'
 import { createAction, createActions } from 'redux-actions'
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
+import { stringify } from 'query-string'
 
-const moodsUrl = process.env.API_URL + 'moods/'
-const nodesUrl = process.env.API_URL + 'nodes/'
-const decisionsUrl = process.env.API_URL + 'decisions/'
-
-// // TODO add types
-// export const recieveNode = createAction('RECIEVE_NODE') // , node => node
-
-// export const fetchingInProgress = createAction('FETCHING_IN_PROGRESS')
-
-// export const toggleDialog = createAction('TOGGLE_DIALOG')
-
-// export const fetchingError = createAction('FETCHING_ERROR', reason => reason)
+const {API_URL} = process.env
+const nodesUrl = API_URL + 'nodes/'
+const decisionsUrl = API_URL + 'decisions/'
+const externalsUrl = API_URL + 'externals/search/'
 
 export const actions = createActions({
+  UNLOAD_NODE: () => null,
   TOGGLE_DIALOG: () => null,
   RECIEVE_NODE: node => node,
-  FETCHING_IN_PROGRESS: () => null,
+  UPDATE_NODE: object => object,
+  FETCHING_NODE: () => null,
   FETCHING_ERROR: reason => reason,
-  UNLOAD_NODE: () => null 
+  RECIEVE_SEARCHED_VIDEOS: videos => videos,
 })
 
 /**
  * create a node
- * @param {Object} payload content url 
+ * @param {Object} payload content url
  */
 export const insertNode = payload => (dispatch, getState) => {
-	dispatch(actions.fetchingInProgress())
+	dispatch(actions.fetchingNode())
 	fetch(nodesUrl, headersAndBody(payload))
-		.then(checkStatus)	
-		.then(parseJSON)		
+		.then(checkStatus)
+		.then(parseJSON)
 		.then(function(response) {
 			dispatch(actions.toggleDialog())
 			const {node} = getState()
@@ -40,19 +35,18 @@ export const insertNode = payload => (dispatch, getState) => {
 }
 
 /**
- * fetch node using mood slug (url friendly name)
- * @param {String} moodSLug 
+ * fetch node using mood slug
+ * @param {String} slug mood slug (optional)
  */
-export const fetchNode = moodSLug => (dispatch, getState) => {
-	
-	dispatch(actions.fetchingInProgress())
-
+export const fetchNode = slug => (dispatch, getState) => {
 	const state = getState()
-	const slug = selectn('mood.slug', state) // rename to "moodSlug" in future and remove parameter from function
-	const nodeId = selectn('node.id', state)
+	const nodeId = state.node.id
+	const moodSlug = slug || state.mood.get('slug')
 
-	fetch(
-		moodsUrl + (moodSLug || slug) + '/' + nodeId, 
+	dispatch(actions.fetchingNode())
+
+	return fetch(
+		nodesUrl + moodSlug + '/' + nodeId,
 		{ credentials: 'same-origin' }
 	)
 		.then(checkStatus)
@@ -69,12 +63,38 @@ export const fetchNode = moodSLug => (dispatch, getState) => {
 }
 
 /**
- * change Node's Decision rating
- * @param {Object} payload DecisionId:string and rating:number
+ * search youtube videos by string
+ * @param {String} query
  */
-export const changeRating = payload => (dispatch, getState) => {
-	// if (payload.rating <= 3) dispatch(requestNewVideo()) // TODO add this
-	if (!payload.NodeId) payload.NodeId = selectn('node.id', getState()) // TODO rework this
+export const youtubeSearch = query => (dispatch, getState) => {
+	fetch(
+			externalsUrl + '?' + stringify({query}),
+			{credentials: 'same-origin'},
+		)
+		.then(checkStatus)
+		.then(parseJSON)
+		.then(data => {
+			dispatch(actions.recieveSearchedVideos(data))
+		})
+		.catch(err => console.error('youtubeSearch failed!', err))
+}
+
+/**
+ * vote for node
+ * @param {Boolean} boolean value to set in Decision.vote
+ */
+export const vote = boolean => (dispatch, getState) => {
+	let payload = {}
+	payload.NodeId = getState().node.id
+	payload.vote = boolean
 	fetch(decisionsUrl, headersAndBody(payload))
 		.then(checkStatus)
+		.then(parseJSON)
+		.then(({vote}) => {
+			dispatch(actions.updateNode({vote}))
+		})
+		// TODO
+		// .catch(() => {
+		// 	dispatch(actions.voteFailure)
+		// })
 }

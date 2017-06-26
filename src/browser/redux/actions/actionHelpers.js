@@ -1,5 +1,7 @@
-import { isObject } from 'lodash'
+// import React from 'react'
+import isObject from 'lodash/isObject'
 import { toastr } from 'react-redux-toastr'
+import { translate } from 'browser/containers/Translator'
 
 // TODO add comments
 export function checkStatus(response) {
@@ -9,7 +11,7 @@ export function checkStatus(response) {
     let error = new Error(response.statusText)
     let message = ''
     error.response = response
-    if (response.statusText == 'Unauthorized') message = 'Please login'
+    if (response.statusText == 'Unauthorized') message = translate('please_login')
     const toastrType = 'warning';
 			const toastrOptions = {
 			  icon: toastrType,
@@ -34,12 +36,12 @@ export function parseJSON(response) {
 /**
  * apply boilerplate headers and body to request
  * @export
- * @param {Object} payload request data
- * @param {String} method request method ('PUT', 'POST', 'GET', 'DELETE')
- * @returns {Object} ddssd
+ * @param {object} payload request data
+ * @param {string} [method='POST'] request method ('PUT', 'POST', 'GET', 'DELETE')
+ * @returns {object} request headers
  */
 export function headersAndBody(payload, method = 'POST') {
-  // const body = isObject(payload) ? 
+  // const body = isObject(payload) ?
   return {
 		method: method.toUpperCase(),
 		headers: {

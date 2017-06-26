@@ -3,126 +3,147 @@ import csshook from 'css-modules-require-hook/preset'
 import path from 'path'
 import express from 'express'
 import boom from 'express-boom' // "boom" library for express responses
+import compression from 'compression'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 import errorhandler from 'errorhandler'
-import expressDebug from 'express-debug'
 import cookieParser from 'cookie-parser'
 import cookieSession from 'cookie-session'
 import moodsApi from './middlewares/moodsApi'
 import nodesApi from './middlewares/nodesApi'
+import usersApi from './middlewares/usersApi'
 import decisionsApi from './middlewares/decisionsApi'
+import externalsApi from './middlewares/externalsApi'
 import { mustLogin } from './services/permissions'
-import authorization, { passport } from './middlewares/authApi'
+import authApi, { passport } from './middlewares/authApi'
 import 'source-map-support/register' // do we actually need this?
 import morgan from 'morgan'
-import { buildSchema } from 'graphql'
-import graphqlHTTP from 'express-graphql'
-import { graphqlExpress } from 'graphql-server-express';
-import schema from './graphql/schema'
-import App from '../browser/app.jsx'
-
-import React from 'react'
-import { renderToString } from 'react-dom/server'
-import { match, RouterContext } from 'react-router'
-import routesConfig from '../browser/routes'
-
-// load production values to process.env
-require('dotenv').config()
+import helmet from 'helmet'
+import createLocaleMiddleware from 'express-locale';
+import RateLimiter from 'express-rate-limit'
 
 const port = process.env.PORT || 3000,
       app = express(),
       publicUrl = path.resolve('./dist', 'public'), // TODO: or use server/public?
       cookieExpires = 100 * 60 * 24 * 100 // 100 days
 
+const limiter = new RateLimiter({
+  windowMs: 15*60*1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  delayMs: 200 // disable delaying - full speed until the max limit is reached
+});
+
 // development only middlewares
 if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic applues all dev specific middlewares
   app.use(errorhandler())
-  expressDebug(app) // TODO add comments
+  app.use(morgan('dev')) // logger
+  // enable 'access control' to avoid CORS errors in browsersync
+  app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+  })
 }
 
+// some routes return 304 if
+// multiple calls to same route are made
+// (while validating user info in signup form, for example)
+app.disable('etag');
+
 // middlewares
-if (process.env.NODE_ENV === 'development') app.use(morgan('dev')) // logger
+// detect accepted languages for i18n
+app.use(createLocaleMiddleware())
+app.use(compression())
 app.use(express.static(publicUrl))
 app.use(cookieParser())
+app.set('query parser', 'simple');
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-// app.use(session({
-//   // resave: true,
-//   // saveUninitialized: true,
-//   secret: 'keyboard cat', // TODO: this
-//   // cookie:{maxAge : cookieExpires} // ?????
-// })) // ???
 app.use(cookieSession({
   name: 'session',
-  keys: [process.env.SESSION_KEY || 'keyboard cat'], // [/* secret keys */],
-  // Cookie Options
+  keys: [process.env.SESSION_KEY || 'keyboard cat'],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(boom()) // provides res.boom. erros dispatching
+app.use(helmet()) // security
+
+if (process.env.NODE_ENV === 'production') {
+  // rate limiter
+  // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
+  // app.enable('trust proxy');
+  app.use(limiter)
+}
 
 // REST API
-app.use('/api/auth', authorization)
+app.use('/api/auth', authApi)
+app.use('/api/users', usersApi)
 app.use('/api/moods', moodsApi)
 app.use('/api/nodes', nodesApi)
 app.use('/api/decisions', decisionsApi)
+app.use('/api/externals', externalsApi)
 
-// GRAPHQL
-app.use('/graphql', graphqlExpress({ schema }));
-// Construct a schema, using GraphQL schema language
-// var schema = buildSchema(`
-//   type Query {
-//     hello: String
-//   }
-// `);
-
-// // The root provides a resolver function for each API endpoint
-// var rootValue = {
-//   hello: () => {
-//     return 'Hello world!';
-//   },
-// };
-
-// app.use('/graphql', graphqlHTTP({
-//   schema,
-//   rootValue, // TODO implement this // or not? read the docs
-//   graphiql: true,
-//   formatError: error => ({
-//     message: error.message,
-//     locations: error.locations,
-//     stack: error.stack
-//   })
-// }));
-
-// SEND HTML FOR SPA
-var exphbs  = require('express-handlebars');
-var hbs = exphbs.create({ /* config */ });
-app.engine('handlebars',  hbs.engine);
+/* SEND HTML FOR SPA */
+// set handlebars as templating engine
+import exphbs from 'express-handlebars'
+const { engine } = exphbs.create({});
+app.engine('handlebars', engine);
 app.set('view engine', 'handlebars');
 app.set('views', path.resolve(__dirname, './public'));
 
+import React from 'react'
+import { renderToString } from 'react-dom/server'
+import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
+import match from 'react-router/lib/match'
+import routes from '../browser/routes'
+
+
+// all routes are processed client side via react-router
 app.get('/*', function(req, res) {
   match(
-      {routes: routesConfig, location: req.url},
+      {routes, location: req.url},
       (error, redirectLocation, renderProps) => {
-        if (error) {
-          res.status(500).send(error.message)
-        } else if (redirectLocation) {
-          res.redirect(302, redirectLocation.pathname +
-            redirectLocation.search)
-        } else if (renderProps) {
-          const markup = renderToString(<App {...renderProps} />);
-          res.render('index', {markup});
-        } else {
-          res.status(404).send('Not found')
+        if (error) res.status(500).send(error.message)
+
+        else if (redirectLocation) {
+          const location =  redirectLocation.pathname
+                            + redirectLocation.search
+          res.redirect(302, location)
         }
+        // render website content
+        else if (renderProps) {
+          // sometimes request language and browser language are not the same
+          // so we use browsers language (storred in cookie) as primary preference
+          const cookieLocale = req.cookies.locale
+          const requestLocale = req.locale.language
+          const language = cookieLocale || requestLocale
+          global.navigator = global.navigator || {language};
+          // supply userAgent for material ui prefixer in ssr
+          // http://stackoverflow.com/a/38100609
+          global.navigator.userAgent = req.headers['user-agent'] || 'all';
+
+          // render App to string
+          const App = require('browser/App.jsx').default
+          const sheet = new ServerStyleSheet()
+          const markup = renderToString(
+            <StyleSheetManager sheet={sheet.instance}>
+              <App {...renderProps} />
+            </StyleSheetManager>
+          )
+          // extract css from string
+          const css = sheet.getStyleTags()
+          // send markup and css to handlebars template
+          res.render('index', { markup, css })
+        }
+
+        else res.status(404).send('Not found')
   } );
 })
 
 // export app to use in test suits
 export default app.listen(port, () => {
-    console.info(`Environment is: ${process.env.NODE_ENV}!`)
-    console.info(`Server listening on port ${port}!`)
+    if (process.env.NODE_ENV != 'test') {
+      console.info(`Environment is: ${process.env.NODE_ENV}!`)
+      console.info(`Server listening on port ${port}!`)
+    }
 })

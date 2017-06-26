@@ -1,39 +1,61 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import YouTube from 'react-youtube'
-import { toggleState } from '../components/Utils'
-import { fetchNode } from '../redux/actions/NodeActions'
-import { toggleControls, openControls, closeControls } from '../redux/actions/GlobalActions'
-
-const { object, string } = PropTypes
+import { connect } from 'react-redux'
+import { fetchNode } from 'browser/redux/actions/NodeActions'
+import { actions } from 'browser/redux/actions/GlobalActions'
 
 @connect(
-	({node, global: {controlsAreShown}}, ownProps) => {
-		return ({node, controlsAreShown, ...ownProps})
+	({node, global}, ownProps) => {
+		console.log('node: ', node);
+		const {contentId, loading} = node,
+			  controlsAreShown = global.get('controlsAreShown')
+		return ({contentId, loading, controlsAreShown, ...ownProps})
 	},
 	(dispatch, ownProps) => ({
 		openControls() {
-			dispatch(openControls())
+			dispatch(actions.toggleControls(true))
 		},
 		closeControls() {
-			dispatch(closeControls())
-		},
-		toggleControls(boolean) {
-			// setTimeout(() => {
-			// 	dispatch(toggleControls(boolean))
-			// }, 1000);
-			console.log('toggleControls', boolean);
-			dispatch(toggleControls(boolean))
+			dispatch(actions.toggleControls(false))
 		},
 		requestNewVideo(params) {
-			dispatch(fetchNode(ownProps.moodSlug))
+			dispatch(fetchNode())
 		}
     })
 )
 export default class Video extends Component {
+	// to avoid long loading of iframe on mobile devices
+	// we hide them till they are ready
+	// TODO move this to redux
+	state = { playerLoaded: false }
+
+	timeout = null
+
+	watchMouseMove = () => {
+		clearTimeout(this.timeout)
+		this.timeout = setTimeout(() => {
+			this.props.closeControls()
+		}, 3000)
+	}
+
+	onReady = event => {
+		// TODO this is what can help
+		{/*https://android.stackexchange.com/a/109715*/}
+		if(process.env.SERVER) return
+		this.setState({playerLoaded: true})
+		// auto play does not work on IOS and Android
+		// https://developers.google.com/youtube/iframe_api_reference#Events
+		var embedCode = event.target.getVideoEmbedCode();
+		event.target.playVideo();
+		if (document.getElementById('embed-code')) {
+			document.getElementById('embed-code').innerHTML = embedCode;
+		}
+		// on android iframe after playVideo() loads <video> tag
+		// window.getElementsByTagName("video")[0].play()
+	}
+
 	render() {
-		const 	{node, controlsAreShown, contentId, slug, rating, toggleControls, requestNewVideo, className, ...rest} = this.props,
+		const 	{controlsAreShown, requestNewVideo, className, ...rest} = this.props,
 				{props, state} = this,
 				opts = {
 					height: '100%',
@@ -43,31 +65,30 @@ export default class Video extends Component {
 				}
 
 		return 	<section
+					hidden={props.loading && !state.playerLoaded}
 					className={"Video " + className}
 					// TODO add comments about iframe!!!
-					// onMouseEnter={props.openContorls} // on mouseEnter?
+					onMouseMove={this.watchMouseMove}
 					onMouseLeave={props.closeControls}
 					onMouseOver={props.openControls}
-					onMouseMove={this.test}
 				>
-					<YouTube
+					{props.contentId && <YouTube
 						opts={opts}
-						videoId={node.contentId}
-						// styles={{pointerEvents: 'none', zIndex: '-123231'}}
-						// onEnd={requestNewVideo.bind(this, {rating, contentId, slug, userId})} // rework this parameters and function
-						// onError={requestNewVideo.bind(this, {rating, contentId, slug, userId})} // rework this parameters  and function
-						onEnd={requestNewVideo}
+						videoId={props.contentId}
+						onEnd={requestNewVideo} // TODO add rating?
 						onError={requestNewVideo}
-						/>
+						// TODO move this to redux
+						onReady={this.onReady}
+						/>}
 					<div
 						hidden={controlsAreShown}
 						className="Video__controls"
-						// onMouseEnter={toggleControls}						
-						// onMouseOver={toggleControls.bind(this, true)}
+						style={{
+							// this prevents controls to be shown while InsertNode modal is open
+							pointerEvents: controlsAreShown ? "auto" : "none"
+						}}
 					>
-	    				{/*{controlsAreShown ? props.children : null}*/}
 						<div hidden={!controlsAreShown}>{props.children}</div>
-						{/* controlsAreShown */}
 					</div>
 				</section>
 	}

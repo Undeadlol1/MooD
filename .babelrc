@@ -1,6 +1,7 @@
 {
+  // TODO "compact": false,
   "presets": [
-    [ "babel-preset-es2015", { modules: false } ], "stage-3", "react", "node6",
+     "es2016", [ "es2015", { modules: false } ], "stage-3", "react", "node6", "latest"
     //, {
     //   "es2015": {
     //     "loose": true,
@@ -8,16 +9,25 @@
     //   }
     // }
   ],
+
   "plugins": [
+    // TODO this works, but mocha is not accepting "import" token.
+    // solution: "es2015", { modules: true }
+    // but this is not acceptable clientside (bundle size will be bigger)
+    // ["transform-imports", {
+    //     "redux-form": {
+    //       "transform": "redux-form/es/${member}",
+    //       "preventFullImport": true
+    //     }
+    // }],
+    // this might help
+    // ["transform-es2015-modules-commonjs", {
+    //   "allowTopLevelThis": true
+    // }],
+    "transform-runtime",
     "transform-decorators-legacy",
     "transform-class-properties",
     "transform-object-rest-spread",
-    // ["transform-imports", { // TODO ADD MATERIAL-UI
-    //     "lodash": {
-    //         "transform": "lodash/${member}",
-    //         "preventFullImport": true
-    //     }
-    //   }]
   ]
   //,
   // "experimentalDecorators": true

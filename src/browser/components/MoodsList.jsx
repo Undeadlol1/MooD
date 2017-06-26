@@ -1,24 +1,16 @@
+import { fetchMoods } from 'browser/redux/actions/MoodActions'
 import Pagination from 'react-ultimate-pagination-material-ui'
 import { Card, CardMedia, CardTitle } from 'material-ui/Card'
+import { translate } from 'browser/containers/Translator'
+import { Row, Col } from 'react-styled-flexboxgrid'
+import Link from 'react-router/lib/Link'
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Row, Col } from 'react-flexbox-grid'
-import { fetchMoods } from '../redux/actions/MoodActions'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import PropTypes from 'prop-types'
+import { List } from 'immutable'
 import selectn from 'selectn'
 
-@connect(
-	// stateToProps
-	(state, ownProps) => ({ ...ownProps }),
-	// dispatchToProps
-    (dispatch, ownProps) => ({
-		changePage(page) {
-			dispatch(fetchMoods(page))
-		}
-    })
-)
-class MoodsList extends Component {
+export class MoodsList extends Component {
 
 	renderItems = () => {
 		const { props } = this
@@ -39,27 +31,21 @@ class MoodsList extends Component {
 							</Col>
 			})
 		}
-
-		else return	<div className={(props.className || 'col s12 MoodsList')}> {/* TODO rework this for proper responsivness */}
-						<ul className="collection">
-							<li className="collection-item center-align">
-								<b>
-									<i>Список пуст...</i>
-								</b>
-							</li>
-						</ul>
-					</div>
+		else return	<Col xs={12} className={'MoodsList__empty'}>
+						<b>
+							<i>{translate('list_is_empty')}...</i>
+						</b>
+					</Col>
 	}
 
 	render() {
 		const { props } = this
-
 		return  <section className="MoodsList">
 					<Row>
 						{this.renderItems()}
 					</Row>
 					<Row>
-						<div style={{ margin: '0 auto' }}>
+						<div className='MoodsList__pagination-wrapper'>
 							{/*Created UltimatePagination component has the following interface:
 
 								currentPage: number - current page number
@@ -73,6 +59,8 @@ class MoodsList extends Component {
 							{
 								props.totalPages > 1
 								? <Pagination
+									style={{ margin: '0 auto' }}
+									className='MoodsList__pagination'
 									onChange={props.changePage}
 									currentPage={props.currentPage}
 									totalPages={props.totalPages}
@@ -88,13 +76,23 @@ class MoodsList extends Component {
 
 MoodsList.propTypes = {
   moods: PropTypes.object.isRequired,
-  totalPages: PropTypes.number,  
+  totalPages: PropTypes.number,
   currentPage: PropTypes.number,
 }
 
 MoodsList.defaultProps = {
+	moods: List(),
 	totalPages: 0,
 	currentPage: 0,
 }
 
-export default MoodsList
+export default connect(
+	// stateToProps
+	(state, ownProps) => ({ ...ownProps }),
+	// dispatchToProps
+    (dispatch, ownProps) => ({
+		changePage(page) {
+			dispatch(fetchMoods(page))
+		}
+    })
+)(MoodsList)
