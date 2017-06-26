@@ -20,6 +20,10 @@
     //       "preventFullImport": true
     //     }
     // }],
+    // this might help
+    // ["transform-es2015-modules-commonjs", {
+    //   "allowTopLevelThis": true
+    // }],
     "transform-runtime",
     "transform-decorators-legacy",
     "transform-class-properties",
