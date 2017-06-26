@@ -37,6 +37,11 @@ describe('<PageWrapper />', () => {
     expect(loading).to.have.length(1);
   });
 
+  it('has <MetaData>', () => {
+    const el = wrapper.find('MetaData')
+    expect(el).to.have.length(1)
+  })
+
   // it('returns children in SSR', () => {
   //   process.env = JSON.stringify({BROWSER: false});
   //   const wrapper = shallow(<PageWrapper {...props}><section /></PageWrapper>)
