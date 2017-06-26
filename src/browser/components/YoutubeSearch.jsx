@@ -36,6 +36,7 @@ export default class YoutubeSearch extends Component {
 							<Form onSubmit={handleSubmit(onSubmit)} className="YoutubeSearch">
 								<Field
 									fullWidth
+									autoFocus
 									name="query"
 									disabled={submitting}
 									component={TextField}
