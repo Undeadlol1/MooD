@@ -22,6 +22,8 @@ import helmet from 'helmet'
 import createLocaleMiddleware from 'express-locale';
 import RateLimiter from 'express-rate-limit'
 
+// TODO add server side bundle minification to improve perfomance
+
 const port = process.env.PORT || 3000,
       app = express(),
       publicUrl = path.resolve('./dist', 'public'), // TODO: or use server/public?
