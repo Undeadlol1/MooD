@@ -34,4 +34,6 @@ export default {
     list_is_empty: 'List is empty',
     this_video_already_exists_please_no_duplicates: 'This video already added! Please don\'t add duplicates.',
     whats_on_your_mind: "What's on your mind?",
+    // used for img's "alt" property
+    things_image: "'s image",
 }

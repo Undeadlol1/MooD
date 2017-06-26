@@ -24,7 +24,7 @@ export class MoodsList extends Component {
 								<Link to={`/mood/${mood.get('slug')}`}>
 									<Card>
 										<CardMedia overlay={<CardTitle title={mood.get('name')} />}>
-											<img src={src} />
+											<img alt={mood.get('name') + translate('things_image')} src={src} />
 										</CardMedia>
 									</Card>
 								</Link>

@@ -34,4 +34,6 @@ export default {
     list_is_empty: 'Список пуст',
     this_video_already_exists_please_no_duplicates: 'Это видео уже добавлено! Пожалуйста, не добавляйте дубликатов.',
     whats_on_your_mind: "Что у тебя на уме?",
+    // used for img's "alt" property
+    things_image: ' изображение',
 }
