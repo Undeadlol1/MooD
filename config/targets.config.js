@@ -44,7 +44,7 @@ const clientProductionPlugins = isDevelopment ? [] : [
     new CompressionPlugin({//   <-- Add this
       asset: "[path].gz[query]",
       algorithm: "gzip",
-      test: /\.js$|\.css$|\.html$/,
+      test: /\.js$|\.css$|\.svg$|\.html$/,
       threshold: 10240,
       minRatio: 0.8
     }),
