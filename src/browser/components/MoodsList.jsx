@@ -1,14 +1,14 @@
+import { fetchMoods } from 'browser/redux/actions/MoodActions'
 import Pagination from 'react-ultimate-pagination-material-ui'
 import { Card, CardMedia, CardTitle } from 'material-ui/Card'
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Row, Col } from 'react-styled-flexboxgrid'
-import { fetchMoods } from '../redux/actions/MoodActions'
-import { connect } from 'react-redux'
-import Link from 'react-router/lib/Link'
-import selectn from 'selectn'
 import { translate } from 'browser/containers/Translator'
-import { Map, List } from 'immutable'
+import { Row, Col } from 'react-styled-flexboxgrid'
+import Link from 'react-router/lib/Link'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { List } from 'immutable'
+import selectn from 'selectn'
 
 export class MoodsList extends Component {
 
