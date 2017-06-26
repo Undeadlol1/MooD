@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import React, { Component } from 'react'
 import Loading from 'browser/components/Loading'
+import MetaData from 'browser/components/MetaData'
 import { translate as t } from 'browser/containers/Translator'
 // import { RouteTransition } from 'react-router-transition'
 // import presets from 'react-router-transition/src/presets'
@@ -58,12 +59,14 @@ export default class PageWrapper extends Component {
         */
         if (isServer) return  <div className={cx}>
                                     <div style={rootStyles}>
+                                        <MetaData />
                                         <span style={textStyles}>{t('loading')}...</span>
                                         <div style={childrenStyles} className="PageWrapper_children">{children}</div>
                                     </div>
                                 </div>
         return  <div className={cx}>
                     <div style={rootStyles}>
+                        <MetaData />
                         <Loading
                             className={this.props.className}
                             condition={isBrowser && loading}

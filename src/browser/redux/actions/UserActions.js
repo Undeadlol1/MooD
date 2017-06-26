@@ -86,9 +86,8 @@ export const fetchCurrentUser = () => dispatch => {
 // TODO rename this to 'logoutUser'
 export const logoutCurrentUser = () => dispatch => {
 	return fetch(authUrl + 'logout', {credentials: 'same-origin'})
-	.then(checkStatus)
-		.then(() => dispatch(removeCurrentUser())) // TODO refactor without arrow function?
-		.catch(err => console.error('logoutCurrentUser failed!', err))
+			.then(() => dispatch(removeCurrentUser())) // TODO refactor without arrow function?
+			.catch(err => console.error('logoutCurrentUser failed!', err))
 }
 /**
  * @param {Boolean} value value to set for loginIsOpen
