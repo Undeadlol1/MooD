@@ -34,7 +34,7 @@ export class MoodPage extends Component {
 					loading={isLoading}
 					className="MoodPage"
 					title={t('current_mood') + props.moodName}
-					image={`http://img.youtube.com/vi/${props.videoId}/hqdefault.jpg`}
+					image={props.videoId && `http://img.youtube.com/vi/${props.videoId}/hqdefault.jpg`}
 				>
 					{/* TODO remove h1 (use css instead) */}
 					{contentNotFound && <h1 className="MoodPage__header">{t("currently_zero_content_here")}</h1>}
