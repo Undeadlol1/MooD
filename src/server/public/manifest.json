@@ -1,5 +1,6 @@
 {
     "name": "MooD",
+    "short_name": "MooD",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
