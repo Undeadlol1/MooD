@@ -13,23 +13,7 @@ import { fetchMood, unloadMood } from 'browser/redux/actions/MoodActions'
 import { actions as globalActions } from 'browser/redux/actions/GlobalActions'
 import { fetchNode, actions as nodeActions } from 'browser/redux/actions/NodeActions'
 
-@connect(
-	({ node, mood }, ownProps) => {
-		return {
-			contentNotFound: node.contentNotFound,
-			isLoading: mood.get('loading') || !node.finishedLoading,
-			...ownProps
-		}
-	},
-	(dispatch, ownProps) => ({ // TODO remove this and use dispatch directly?
-		fetchMood: (slug) => dispatch(fetchMood(slug)),
-	    fetchNode: (slug) => dispatch(fetchNode(slug)),
-	    unloadMood: () => dispatch(unloadMood()),
-	    unloadNode: () => dispatch(nodeActions.unloadNode()),
-		toggleHeader: (boolean) => dispatch(globalActions.toggleHeader(boolean))
-    })
-)
-class MoodPage extends Component {
+export class MoodPage extends Component {
 
 	componentWillMount() {
 		this.props.toggleHeader(false)
@@ -44,7 +28,7 @@ class MoodPage extends Component {
 	}
 
 	render() {
-		const { contentNotFound, isLoading, location, params, ...rest } = this.props
+		const { contentNotFound, isLoading, params, ...rest } = this.props
 		return 	<PageWrapper
 					loading={isLoading}
 					className="MoodPage"
@@ -61,13 +45,30 @@ class MoodPage extends Component {
 }
 
 MoodPage.propTypes = {
-	mood: PropTypes.object,
-	node: PropTypes.object,
-	// fetchMood: PropTypes.func.isRequred,
-	// fetchNode: PropTypes.func.isRequred,
-	// unloadMood: PropTypes.func.isRequred,
-	// unloadNode: PropTypes.func.isRequred,
-	// toggleHeader: PropTypes.func.isRequred,
+	contentNotFound: PropTypes.bool,
+	isLoading: PropTypes.bool.isRequired,
+	params: PropTypes.object.isRequired,
+	fetchMood: PropTypes.func.isRequred,
+	fetchNode: PropTypes.func.isRequred,
+	unloadMood: PropTypes.func.isRequred,
+	unloadNode: PropTypes.func.isRequred,
+	toggleHeader: PropTypes.func.isRequred,
 }
 
-export default MoodPage
+export const stateToProps = ({ node, mood }, ownProps) => {
+	return {
+		contentNotFound: node.contentNotFound,
+		isLoading: mood.get('loading') || !node.finishedLoading,
+		...ownProps
+	}
+}
+
+export const dispatchToProps = dispatch => ({
+	fetchMood: (slug) => dispatch(fetchMood(slug)),
+	fetchNode: (slug) => dispatch(fetchNode(slug)),
+	unloadMood: () => dispatch(unloadMood()),
+	unloadNode: () => dispatch(nodeActions.unloadNode()),
+	toggleHeader: (boolean) => dispatch(globalActions.toggleHeader(boolean))
+})
+
+export default connect(stateToProps, dispatchToProps)(MoodPage)
