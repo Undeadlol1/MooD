@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 export class MetaData extends Component {
 	// copy+paste from https://megatags.co/#generate-tags
 	render() {
-		const { appUrl, title, description, image, } = this.props
+		const { appUrl, appName, title, description, image, } = this.props
 	    return  <Helmet>
 					{/* COMMON TAGS */}
 					<meta charset="utf-8" />
@@ -35,8 +35,7 @@ export class MetaData extends Component {
 					{/* Recommended dimension: 1200px x 630px; minimum dimension: 600px x 315px */}
 					<meta name="og:image" content={image} />
 					<meta name="og:url" content={appUrl} />
-					{/* TODO: sietename or site title? */}
-					<meta name="og:site_name" content={title} />
+					<meta name="og:site_name" content={appName} />
 					{/* TODO dynamic locales */}
 					<meta name="og:locale" content="ru_RU" />
 					{/*<meta name="og:video" content="https://www.youtube.com/watch?v=EDJsVbSZb-Q" />*/}
@@ -51,6 +50,7 @@ export class MetaData extends Component {
 MetaData.defaultProps = {
 	appUrl: process.env.URL,
 	title: process.env.APP_NAME,
+	appName: process.env.APP_NAME,
 	description: 'MooD - музыка твоего настроения',
 	image: "http://moodx.ru/android-chrome-192x192.png",
 }
@@ -59,6 +59,7 @@ MetaData.PropTypes = {
 	title: PropTypes.string.isRequired,
 	image: PropTypes.string.isRequired,
 	appUrl: PropTypes.string.isRequired,
+	appName: PropTypes.string.isRequired,
 	description: PropTypes.string.isRequired,
 }
 
