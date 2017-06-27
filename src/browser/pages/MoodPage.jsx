@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import React, { Component } from 'react'
+import NavBar from 'browser/components/NavBar'
+import Video from 'browser/components/Video.jsx'
+import Loading from 'browser/components/Loading'
 import { Row, Col } from 'react-styled-flexboxgrid'
-import { connect } from 'react-redux';
-import Loading from '../components/Loading'
-import NodesInsert from '../containers/NodesInsertContainer'
-import Decision from '../components/Decision.jsx'
-import Video from '../components/Video.jsx'
-import NavBar from '../components/NavBar'
-import { fetchMood, unloadMood } from '../redux/actions/MoodActions'
-import { fetchNode, actions as nodeActions } from '../redux/actions/NodeActions'
-import { actions as globalActions } from '../redux/actions/GlobalActions'
-import { translate as t } from 'browser/containers/Translator'
+import Decision from 'browser/components/Decision.jsx'
 import PageWrapper from 'browser/components/PageWrapper'
+import { translate as t } from 'browser/containers/Translator'
+import NodesInsert from 'browser/containers/NodesInsertContainer'
+import { fetchMood, unloadMood } from 'browser/redux/actions/MoodActions'
+import { actions as globalActions } from 'browser/redux/actions/GlobalActions'
+import { fetchNode, actions as nodeActions } from 'browser/redux/actions/NodeActions'
 
 @connect(
 	({ node, mood }, ownProps) => {
