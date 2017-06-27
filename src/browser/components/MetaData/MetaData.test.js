@@ -26,6 +26,9 @@ describe('<MetaData />', () => {
     const expected = {
       appUrl: process.env.URL,
       title: process.env.APP_NAME,
+      appName: process.env.APP_NAME,
+      description: 'MooD - музыка твоего настроения',
+      image: "http://moodx.ru/android-chrome-192x192.png",
     }
     expect(actual).to.deep.eq(expected)
   })
