@@ -31,7 +31,6 @@ export class NavBar extends Component {
         else {
             loginOrAvatar = UserId
                             ? <Link className="Navbar__profile-link" to={`/users/${UserId}`}>
-                                <span className="Navbar__username">{displayName}</span>
                                 <Avatar
                                     className="NavBar__avatar"
                                     src={`https://api.adorable.io/avatars/100/${UserId}.png`}

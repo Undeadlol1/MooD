@@ -64,12 +64,10 @@ describe('<NavBar />', () => {
         expect(link.props.to).to.eq('/users/' + UserId)
         expect(link.props.className).to.eq('Navbar__profile-link')
       })
-      it('has username and <Avatar>', () => {
+      it('<Avatar>', () => {
         const rightElement = shallow(link)
         const avatar = rightElement.find('Avatar')
-        const username = rightElement.find('span')
         expect(username.text()).to.eq(props.displayName)
-        expect(username).to.have.className('Navbar__username')
         expect(avatar).to.have.className('NavBar__avatar')
         expect(avatar.props().src).to.eq(`https://api.adorable.io/avatars/100/${UserId}.png`)
       })
