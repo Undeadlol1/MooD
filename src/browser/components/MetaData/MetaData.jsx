@@ -54,8 +54,8 @@ MetaData.defaultProps = {
 }
 
 MetaData.PropTypes = {
-	title: PropTypes.string,
-	appUrl: PropTypes.string,
+	title: PropTypes.string.isRequired,
+	appUrl: PropTypes.string.isRequired,
 }
 
 export default MetaData
