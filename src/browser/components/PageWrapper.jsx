@@ -63,22 +63,22 @@ export default class PageWrapper extends Component {
             while server side rendered content is on page show loading screen and
             hide children beneath it so they can still be crawled for SEO
         */
-        if (isServer) return  <div className={cx}>
-                                    <div style={rootStyles}>
-                                        <MetaData {...metaTags} />
-                                        <span style={textStyles}>{t('loading')}...</span>
-                                        <div style={childrenStyles} className="PageWrapper_children">{children}</div>
-                                    </div>
-                                </div>
+        // if (isServer) return  <div className={cx}>
+        //                             <div style={rootStyles}>
+        //                                 <MetaData {...metaTags} />
+        //                                 <span style={textStyles}>{t('loading')}...</span>
+        //                                 <div style={childrenStyles} className="PageWrapper_children">{children}</div>
+        //                             </div>
+        //                         </div>
         return  <div className={cx}>
                     <div style={rootStyles}>
                         <MetaData {...metaTags} />
-                        <Loading
+                        {/*<Loading
                             className={this.props.className}
                             condition={isBrowser && loading}
-                        >
+                        >*/}
                             {children}
-                        </Loading>
+                        {/*</Loading>*/}
                     </div>
                 </div>
 		// return  <RouteTransition
