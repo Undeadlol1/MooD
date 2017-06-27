@@ -7,6 +7,7 @@ import NodesInsert from '../containers/NodesInsertContainer'
 import Decision from '../components/Decision.jsx'
 import Video from '../components/Video.jsx'
 import NavBar from '../components/NavBar'
+import ShareButton from 'browser/components/ShareButton'
 import { fetchMood, unloadMood } from '../redux/actions/MoodActions'
 import { fetchNode, actions as nodeActions } from '../redux/actions/NodeActions'
 import { actions as globalActions } from '../redux/actions/GlobalActions'
@@ -54,6 +55,7 @@ class MoodPage extends Component {
 					<Video className='MoodPage__video'>
 						<NavBar className='NavBar--sticky' />
 						{!contentNotFound && <Decision className='MoodPage__decision' />}
+						<ShareButton />
 						<NodesInsert moodSlug={params.moodSlug} /> {/* TODO rework passing of moodSlug */}
 					</Video>
 				</PageWrapper>
