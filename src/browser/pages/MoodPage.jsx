@@ -55,11 +55,11 @@ MoodPage.propTypes = {
 	contentNotFound: PropTypes.bool,
 	isLoading: PropTypes.bool.isRequired,
 	params: PropTypes.object.isRequired,
-	fetchMood: PropTypes.func.isRequred,
-	fetchNode: PropTypes.func.isRequred,
-	unloadMood: PropTypes.func.isRequred,
-	unloadNode: PropTypes.func.isRequred,
-	toggleHeader: PropTypes.func.isRequred,
+	fetchMood: PropTypes.func.isRequired,
+	fetchNode: PropTypes.func.isRequired,
+	unloadMood: PropTypes.func.isRequired,
+	unloadNode: PropTypes.func.isRequired,
+	toggleHeader: PropTypes.func.isRequired,
 }
 
 export const stateToProps = ({ node, mood }, ownProps) => {
