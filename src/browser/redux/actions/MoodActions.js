@@ -56,7 +56,7 @@ export const fetchMoods = (pageNumber = 1) => dispatch => {
  */
 export const fetchMood = slug => dispatch => {
 	dispatch(fetchingInProgress())
-	fetch(moodsUrl + 'mood/' + slug || '')
+	return fetch(moodsUrl + 'mood/' + slug || '')
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(mood => dispatch(recieveMood((mood))))

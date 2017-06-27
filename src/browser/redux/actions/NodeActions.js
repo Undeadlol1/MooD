@@ -57,7 +57,7 @@ export const fetchNode = slug => (dispatch, getState) => {
 				mutability does node load youtube video if node is the same
 			*/
 			dispatch(actions.unloadNode())
-			dispatch(actions.recieveNode((data)))
+			return dispatch(actions.recieveNode((data)))
 		})
 		.catch(err => console.error('fetchNode failed!', err))
 }
