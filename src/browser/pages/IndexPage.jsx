@@ -19,9 +19,7 @@ export class IndexPage extends Component {
     render() {
 		const {loading, moods, currentPage, totalPages, location} = this.props
 		return 	<PageWrapper
-					preset={'pop'}
 					loading={loading}
-					location={location}
 					className='IndexPage'
 				>
 					<Grid fluid>
