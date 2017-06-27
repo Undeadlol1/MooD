@@ -31,6 +31,7 @@ export class MoodPage extends Component {
 	render() {
 		const { props } = this
 		const { contentNotFound, isLoading, params, ...rest } = this.props
+		// https://stackoverflow.com/a/42956044/4380989 might get you better preview images
 		return 	<PageWrapper
 					loading={isLoading}
 					className="MoodPage"
