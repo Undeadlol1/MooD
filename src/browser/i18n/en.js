@@ -17,6 +17,7 @@ export default {
     choose_your_language: 'Choose your language',
     currently_zero_content_here: 'Currently zero content here',
 
+    current_mood: 'Current mood: ',
     incorrent_password: 'incorrect password',
     user_does_not_exists: 'user does not exists',
     user_already_exists: 'user already exists',

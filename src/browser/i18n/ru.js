@@ -17,6 +17,7 @@ export default {
     choose_your_language: 'Выберите ваш язык',
     currently_zero_content_here: 'Пока контента нет',
 
+    current_mood: 'Мое настроение: ',
     incorrent_password: 'неправильный пароль',
     user_does_not_exists: 'пользователя не существует',
     user_already_exists: 'пользователь уже существует',

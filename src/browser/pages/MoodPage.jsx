@@ -28,10 +28,13 @@ export class MoodPage extends Component {
 	}
 
 	render() {
+		const { props } = this
 		const { contentNotFound, isLoading, params, ...rest } = this.props
 		return 	<PageWrapper
 					loading={isLoading}
 					className="MoodPage"
+					title={t('current_mood') + props.moodName}
+					image={`http://img.youtube.com/vi/${props.videoId}/hqdefault.jpg`}
 				>
 					{/* TODO remove h1 (use css instead) */}
 					{contentNotFound && <h1 className="MoodPage__header">{t("currently_zero_content_here")}</h1>}
@@ -45,6 +48,8 @@ export class MoodPage extends Component {
 }
 
 MoodPage.propTypes = {
+	videoId: PropTypes.string,
+	moodName: PropTypes.string,
 	contentNotFound: PropTypes.bool,
 	isLoading: PropTypes.bool.isRequired,
 	params: PropTypes.object.isRequired,
@@ -57,6 +62,8 @@ MoodPage.propTypes = {
 
 export const stateToProps = ({ node, mood }, ownProps) => {
 	return {
+		videoId: node.contentId,
+		moodName: mood.get('name'),
 		contentNotFound: node.contentNotFound,
 		isLoading: mood.get('loading') || !node.finishedLoading,
 		...ownProps
