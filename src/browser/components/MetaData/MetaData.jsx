@@ -1,3 +1,4 @@
+import { withRouter } from 'react-router'
 import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
 import PropTypes from 'prop-types'
@@ -5,7 +6,9 @@ import PropTypes from 'prop-types'
 export class MetaData extends Component {
 	// copy+paste from https://megatags.co/#generate-tags
 	render() {
-		const { appUrl, appName, title, description, image, } = this.props
+		const { appUrl, location, appName, title, description, image, } = this.props
+		// current url (slice of '/' before adding pathname)
+		const url = appUrl.slice(0, -1) + location.pathname
 	    return  <Helmet>
 					{/* COMMON TAGS */}
 					<meta charset="utf-8" />
@@ -34,7 +37,7 @@ export class MetaData extends Component {
 					<meta name="og:description" content={description} />
 					{/* Recommended dimension: 1200px x 630px; minimum dimension: 600px x 315px */}
 					<meta name="og:image" content={image} />
-					<meta name="og:url" content={appUrl} />
+					<meta name="og:url" content={url} />
 					<meta name="og:site_name" content={appName} />
 					{/* TODO dynamic locales */}
 					<meta name="og:locale" content="ru_RU" />
@@ -60,7 +63,9 @@ MetaData.PropTypes = {
 	image: PropTypes.string.isRequired,
 	appUrl: PropTypes.string.isRequired,
 	appName: PropTypes.string.isRequired,
+	location: PropTypes.object.isRequired,
 	description: PropTypes.string.isRequired,
 }
 
-export default MetaData
+// 'withRouter' provedes 'location' object
+export default withRouter(MetaData)
