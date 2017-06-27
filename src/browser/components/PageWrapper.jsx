@@ -29,10 +29,16 @@ export default class PageWrapper extends Component {
     }
 
     render() {
+        const { props } = this
 		const isServer = process.env.SERVER
 		const isBrowser = process.env.BROWSER
 		const {location, loading, children, preset} = this.props
         const cx = classNames('PageWrapper', this.props.className)
+        const metaTags = {
+            title: props.title,
+            image: props.image,
+            description: props.description,
+        }
         // RouterTransition creates it's own 'div'
         // which makes it harder to apply styles on root class
         const rootStyles =  {
@@ -59,14 +65,14 @@ export default class PageWrapper extends Component {
         */
         if (isServer) return  <div className={cx}>
                                     <div style={rootStyles}>
-                                        <MetaData />
+                                        <MetaData {...metaTags} />
                                         <span style={textStyles}>{t('loading')}...</span>
                                         <div style={childrenStyles} className="PageWrapper_children">{children}</div>
                                     </div>
                                 </div>
         return  <div className={cx}>
                     <div style={rootStyles}>
-                        <MetaData />
+                        <MetaData {...metaTags} />
                         <Loading
                             className={this.props.className}
                             condition={isBrowser && loading}
