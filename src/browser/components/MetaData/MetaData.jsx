@@ -23,9 +23,10 @@ export class MetaData extends Component {
 					<meta itemprop="description" content={description} />
 					<meta itemprop="image" content={image} />
 					{/* Twitter */}
-					<meta name="twitter:card" content="summary" />
+					<meta name="twitter:card" content="summary_large_image" />
 					<meta name="twitter:title" content={title} />
 					<meta name="twitter:description" content={description} />
+					<meta name="twitter:url" content={url} />
 					{/*<meta name="twitter:site" content="@publishehadle_sdd" />*/}
 					{/*<meta name="twitter:creator" content="@auth_handledee" />*/}
 					{/* Maximum dimension: 1024px x 512px; minimum dimension: 440px x 220px */}
