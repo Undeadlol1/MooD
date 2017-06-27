@@ -7,6 +7,7 @@ import Loading from 'browser/components/Loading'
 import { Row, Col } from 'react-styled-flexboxgrid'
 import Decision from 'browser/components/Decision.jsx'
 import PageWrapper from 'browser/components/PageWrapper'
+import ShareButton from 'browser/components/ShareButton'
 import { translate as t } from 'browser/containers/Translator'
 import NodesInsert from 'browser/containers/NodesInsertContainer'
 import { fetchMood, unloadMood } from 'browser/redux/actions/MoodActions'
@@ -41,6 +42,7 @@ export class MoodPage extends Component {
 					<Video className='MoodPage__video'>
 						<NavBar className='NavBar--sticky' />
 						{!contentNotFound && <Decision className='MoodPage__decision' />}
+						<ShareButton />
 						<NodesInsert moodSlug={params.moodSlug} /> {/* TODO rework passing of moodSlug */}
 					</Video>
 				</PageWrapper>

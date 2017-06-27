@@ -11,6 +11,8 @@
   ],
 
   "plugins": [
+    // TODO try this
+    // https://www.npmjs.com/package/babel-plugin-material-ui
     // TODO this works, but mocha is not accepting "import" token.
     // solution: "es2015", { modules: true }
     // but this is not acceptable clientside (bundle size will be bigger)
