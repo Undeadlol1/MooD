@@ -60,7 +60,12 @@ export default class Video extends Component {
 					height: '100%',
 					width: '100%',
 					// https://developers.google.com/youtube/player_parameters
-					playerVars: {autoplay: 1, controls: 1}
+					playerVars: {
+						fs: 0, // hide fullscreen button
+						rel: 0,
+						controls: 1,
+						autoplay: 1,
+					}
 				}
 
 		return 	<section
