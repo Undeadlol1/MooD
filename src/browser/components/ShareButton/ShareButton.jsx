@@ -25,8 +25,8 @@ export class ShareButton extends Component {
 		const className = cls(props.className, "ShareButton")
 		return <div className={className}>
 					<SpeedDial
-						fabContentOpen={<SocialShare />}
-						fabContentClose={<NavigationClose />}
+						fabContentOpen={<SocialShare className='ShareButton__main-icon' />}
+						fabContentClose={<NavigationClose className='ShareButton__main-icon' />}
 					>
 						<SpeedDialItem
 							fabContent={<Icon size="lg" name="vk" />}
