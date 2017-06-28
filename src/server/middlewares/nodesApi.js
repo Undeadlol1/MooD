@@ -6,7 +6,7 @@ import sequelize from "sequelize"
 import { Router } from "express"
 import { normalizeRating } from 'server/data/controllers/NodesController'
 import { updatePositionAndViews } from 'server/data/controllers/DecisionsController'
-import { findHighestRatingNode } from 'server/data/controllers/NodesController'
+import { findHighestRatingNode, findRandomNode } from 'server/data/controllers/NodesController'
 
 // routes
 export default Router()
@@ -56,17 +56,17 @@ export default Router()
 
       /* USER IS NOT LOGGED IN */
       // if (!UserId) {
-        if(previousNode) {
-          response = await Node.findOne({
-                              where: {
-                                MoodId,
-                                id: { $not: previousNode.id }, // TODO i most likely don't need this
-                                rating: { $lt: previousNode.rating },
-                              },
-                              order: [['rating', 'DESC']] // TODO ineed this?
-                            })
-        }
-      // }
+      //   if(previousNode) {
+      //     response = await Node.findOne({
+      //                         where: {
+      //                           MoodId,
+      //                           id: { $not: previousNode.id }, // TODO i most likely don't need this
+      //                           rating: { $lt: previousNode.rating },
+      //                         },
+      //                         order: [['rating', 'DESC']] // TODO ineed this?
+      //                       })
+      //   }
+      // // }
 
       /* USER IS LOGGED IN */
       // TODO some of this things i do in decisionsApi
@@ -89,7 +89,8 @@ export default Router()
       // }
 
       // // fallback to highest rated node if nothing was found
-      if (!response) response = await findHighestRatingNode(MoodId, UserId)
+      // if (!response) response = await findHighestRatingNode(MoodId, UserId)
+      if (!response) response = await findRandomNode(MoodId)
       // close request
       res.json(response)
     } catch (error) {

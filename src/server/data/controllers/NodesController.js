@@ -85,8 +85,9 @@ export async function findHighestPositionNode(UserId, MoodId, beforePosition) {
   })
 }
 
-// export default class {
-//     update(selector) {
-
-//     }
-// }
+export async function findRandomNode(MoodId) {
+  return await Node.findOne({
+    where: {MoodId},
+    order: 'rand()',
+  })
+}
