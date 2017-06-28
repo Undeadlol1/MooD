@@ -41,7 +41,7 @@ export default class Video extends Component {
 		// TODO this is what can help
 		{/*https://android.stackexchange.com/a/109715*/}
 		if(process.env.SERVER) return
-		this.setState({playerLoaded: true})
+		// this.setState({playerLoaded: true})
 		// auto play does not work on IOS and Android
 		// https://developers.google.com/youtube/iframe_api_reference#Events
 		var embedCode = event.target.getVideoEmbedCode();
@@ -69,7 +69,8 @@ export default class Video extends Component {
 				}
 
 		return 	<section
-					hidden={props.loading && !state.playerLoaded}
+					// && !state.playerLoaded
+					hidden={props.loading}
 					className={"Video " + className}
 					// TODO add comments about iframe!!!
 					onMouseMove={this.watchMouseMove}
