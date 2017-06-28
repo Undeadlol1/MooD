@@ -41,6 +41,9 @@ export class MetaData extends Component {
 					<meta name="og:image" content={image} />
 					<meta name="og:url" content={url} />
 					<meta name="og:site_name" content={appName} />
+					{/* this is a test */}
+					<meta property="og:image:width" content="968" />
+					<meta property="og:image:height" content="504" />
 					{/* TODO dynamic locales */}
 					<meta name="og:locale" content="ru_RU" />
 					{/*<meta name="og:video" content="https://www.youtube.com/watch?v=EDJsVbSZb-Q" />*/}
