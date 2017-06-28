@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types'
+import classNames from 'classnames'
 import React, { Component } from 'react'
-import FontAwesome from 'react-fontawesome'
 import extendObject from 'lodash/assignIn'
+import FontAwesome from 'react-fontawesome'
 
 class Icon extends Component {
     state = {
@@ -15,7 +16,7 @@ class Icon extends Component {
     }
 
     render() {
-        const { size, color, style, hoverIcon, ...rest } = this.props
+        const { className, size, color, style, hoverIcon, ...rest } = this.props
         const iconOptions = {
                                 size,
                                 name: this.state.currentIcon,
@@ -25,6 +26,7 @@ class Icon extends Component {
         return  <FontAwesome
                     {...rest}
                     {...iconOptions}
+                    className={classNames('Icon', className)}
                     onMouseEnter={this.toggleHoverIcon.bind(this, true)}
                     onMouseLeave={this.toggleHoverIcon.bind(this, false)}
                 />
