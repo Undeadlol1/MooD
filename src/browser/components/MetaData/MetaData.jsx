@@ -57,7 +57,7 @@ MetaData.defaultProps = {
 	title: process.env.APP_NAME,
 	appName: process.env.APP_NAME,
 	description: 'MooD - музыка твоего настроения',
-	image: "http://moodx.ru/android-chrome-192x192.png",
+	image: process.env.URL + "android-chrome-192x192.png",
 }
 
 MetaData.PropTypes = {
