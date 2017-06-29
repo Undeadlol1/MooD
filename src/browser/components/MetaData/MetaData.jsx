@@ -9,7 +9,6 @@ export class MetaData extends Component {
 		const { appUrl, location, appName, title, description, image, } = this.props
 		// current url (slice of '/' before adding pathname)
 		const url = appUrl.slice(0, -1) + location.pathname
-		console.log('url: ', url);
 	    return  <Helmet>
 					{/* COMMON TAGS */}
 					<meta charset="utf-8" />
