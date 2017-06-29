@@ -3,14 +3,18 @@ import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
 import PropTypes from 'prop-types'
 
+const defaultTitle = 'MooD - музыка твоего настроения'
+
 export class MetaData extends Component {
 	// copy+paste from https://megatags.co/#generate-tags
 	render() {
 		const { appUrl, location, appName, title, description, image, } = this.props
 		// current url (slice of '/' before adding pathname)
 		const url = appUrl.slice(0, -1) + location.pathname
-		console.log('url: ', url);
-	    return  <Helmet>
+	    return  <Helmet
+					// this insures title to change if data is undefined
+					defaultTitle={defaultTitle}
+				>
 					{/* COMMON TAGS */}
 					<meta charset="utf-8" />
 					<title>{title}</title>
@@ -57,9 +61,9 @@ export class MetaData extends Component {
 
 MetaData.defaultProps = {
 	appUrl: process.env.URL,
-	title: 'MooD - музыка твоего настроения',
+	title: defaultTitle,
 	appName: process.env.APP_NAME,
-	description: 'MooD - музыка твоего настроения',
+	description: defaultTitle,
 	image: process.env.URL + "android-chrome-192x192.png",
 }
 
