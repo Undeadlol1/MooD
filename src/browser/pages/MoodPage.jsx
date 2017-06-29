@@ -69,14 +69,13 @@ export class MoodPage extends Component {
 		const moodName = selectn('prefetchedMood.name', props)
 		const title = moodName && t('current_mood') + moodName
 		const contentId = selectn('prefetchedNode.contentId', props)
-		console.log('props.prefetchedMood: ', props.prefetchedMood)
-		console.log('props.prefetchedNode: ', props.prefetchedNode)
+		const image = contentId && `http://img.youtube.com/vi/${contentId}/hqdefault.jpg`
 		// https://stackoverflow.com/a/42956044/4380989 might get you better preview images
 		return 	<PageWrapper
 					loading={isLoading}
 					className="MoodPage"
 					title={title}
-					image={`http://img.youtube.com/vi/${contentId}/hqdefault.jpg`}
+					image={image}
 				>
 					{/* TODO remove h1 (use css instead) */}
 					{contentNotFound && <h1 className="MoodPage__header">{t("currently_zero_content_here")}</h1>}
