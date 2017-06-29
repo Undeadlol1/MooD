@@ -25,8 +25,8 @@ const nodeStructure = 	{
 						}
 const initialState = 	{
 							error: '',
-							loading: true,
-							finishedLoading: false,
+							loading: false,
+							finishedLoading: true,
 							dialogIsOpen: false,
 							contentNotFound: false,
 							searchIsActive: false, // TODO do i need this?

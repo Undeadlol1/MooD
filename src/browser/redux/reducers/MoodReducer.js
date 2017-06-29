@@ -21,7 +21,7 @@ const initialState = 	Map({
 							Nodes: List(),
 							totalPages: 0,
 							currentPage: 0,
-							loading: true,
+							loading: false,
 						})
 
 export default (state = initialState, {type, payload}) => {
