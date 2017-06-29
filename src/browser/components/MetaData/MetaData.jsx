@@ -57,7 +57,7 @@ export class MetaData extends Component {
 
 MetaData.defaultProps = {
 	appUrl: process.env.URL,
-	title: process.env.APP_NAME,
+	title: 'MooD - музыка твоего настроения',
 	appName: process.env.APP_NAME,
 	description: 'MooD - музыка твоего настроения',
 	image: process.env.URL + "android-chrome-192x192.png",
