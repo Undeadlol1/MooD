@@ -12,43 +12,12 @@ import ShareButton from 'browser/components/ShareButton'
 import { translate as t } from 'browser/containers/Translator'
 import { parseJSON } from 'browser/redux/actions/actionHelpers'
 import NodesInsert from 'browser/containers/NodesInsertContainer'
-import { fetchMood, unloadMood } from 'browser/redux/actions/MoodActions'
+import { recieveMood, fetchMood, unloadMood } from 'browser/redux/actions/MoodActions'
 import { actions as globalActions } from 'browser/redux/actions/GlobalActions'
 import { fetchNode, actions as nodeActions } from 'browser/redux/actions/NodeActions'
 import selectn from 'selectn'
+import store from 'browser/redux/store'
 
-const {API_URL} = process.env
-const moodsUrl = API_URL + 'moods/'
-const nodesUrl = API_URL + 'nodes/'
-
-@asyncConnect([
-	{
-		key: 'prefetchedMood',
-		promise: ({ params, helpers }) => {
-			console.log('is active! prefetchedMood');
-			return fetch(moodsUrl + 'mood/' + params.moodSlug || '')
-			.then(parseJSON)
-			.then(mood => mood)
-			.catch(error => {
-				console.error(error)
-				throw new Error(error)
-			})
-		}
-	},
-	{
-		key: 'prefetchedNode',
-		promise: ({ params, helpers }) => {
-			console.log('is active! prefetchedNode');
-			return fetch(nodesUrl + params.moodSlug || '')
-			.then(parseJSON)
-			.then(node => node)
-			.catch(error => {
-				console.error(error)
-				throw new Error(error)
-			})
-		}
-	},
-])
 export class MoodPage extends Component {
 
 	componentWillMount() {
@@ -66,9 +35,9 @@ export class MoodPage extends Component {
 	render() {
 		const { props } = this
 		const { contentNotFound, isLoading, params, ...rest } = this.props
-		const moodName = selectn('prefetchedMood.name', props)
+		const moodName = selectn('moodName', props)
 		const title = moodName && t('current_mood') + moodName
-		const contentId = selectn('prefetchedNode.contentId', props)
+		const contentId = selectn('videoId', props)
 		const image = contentId && `http://img.youtube.com/vi/${contentId}/hqdefault.jpg`
 		// TODO https://stackoverflow.com/a/42956044/4380989 might get you better preview images
 		return 	<PageWrapper
@@ -79,7 +48,7 @@ export class MoodPage extends Component {
 				>
 					{/* TODO remove h1 (use css instead) */}
 					{contentNotFound && <h1 className="MoodPage__header">{t("currently_zero_content_here")}</h1>}
-					<Video className='MoodPage__video' contentId={contentId}>
+					<Video className='MoodPage__video'>
 						<NavBar className='NavBar--sticky' />
 						{!contentNotFound && <Decision className='MoodPage__decision' />}
 						<ShareButton />
@@ -120,4 +89,41 @@ export const dispatchToProps = dispatch => ({
 	toggleHeader: (boolean) => dispatch(globalActions.toggleHeader(boolean))
 })
 
-export default connect(stateToProps, dispatchToProps)(MoodPage)
+const {API_URL} = process.env
+const moodsUrl = API_URL + 'moods/'
+const nodesUrl = API_URL + 'nodes/'
+
+export default asyncConnect([
+	{
+		key: 'prefetchedMood',
+		promise: ({ params, helpers }) => {
+			console.log('is active! prefetchedMood');
+			return fetch(moodsUrl + 'mood/' + params.moodSlug || '')
+			.then(parseJSON)
+			.then(mood => {
+				return store.dispatch(recieveMood(mood))
+				// return mood
+			})
+			.catch(error => {
+				console.error(error)
+				throw new Error(error)
+			})
+		}
+	},
+	{
+		key: 'prefetchedNode',
+		promise: ({ params, helpers }) => {
+			console.log('is active! prefetchedNode');
+			return fetch(nodesUrl + params.moodSlug || '')
+			.then(parseJSON)
+			.then(node => {
+				return store.dispatch(nodeActions.recieveNode(node))
+				// return node
+			})
+			.catch(error => {
+				console.error(error)
+				throw new Error(error)
+			})
+		}
+	},
+])(connect(stateToProps, dispatchToProps)(MoodPage))
