@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux'
 import { reducer as form } from 'redux-form'
-import { routerReducer as routing } from 'react-router-redux'
 import { reducer as toastr } from 'react-redux-toastr'
+import { reducer as reduxAsyncConnect } from 'redux-connect'
+import { routerReducer as routing } from 'react-router-redux'
 
 import global from './GlobalReducer'
 import user from './UserReducer'
@@ -16,4 +17,5 @@ export default combineReducers({
     form,
     toastr,
     routing,
-})
+    reduxAsyncConnect,
+}, process.env.BROWSER ? window.__data : undefined) // redux-connect initial data

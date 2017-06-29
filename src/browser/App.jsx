@@ -17,6 +17,7 @@ import store from './redux/store'
 import routesConfig from './routes'
 import Translator from './containers/Translator'
 import { syncHistoryWithStore } from 'react-router-redux'
+import { ReduxAsyncConnect } from 'redux-connect'
 
 /* STYLES */
 if (process.env.BROWSER) require('./styles.scss')
@@ -32,17 +33,17 @@ const muiTheme = getMuiTheme(darkBaseTheme)
 class App extends Component {
   render() {
     return  <MuiThemeProvider muiTheme={muiTheme}>
-              <ReduxProvider store={store}>
                 <ThemeProvider theme={BASE_CONF}>
-                  <Translator>
+                  <ReduxProvider store={store} key="provider">
+                    <Translator>
                       {
                         process.env.BROWSER
-                        ? <Router history={syncHistoryWithStore(browserHistory, store)} routes={routesConfig} />
-                        : <RouterContext {...this.props} />
+                        ? <Router render={(props) => <ReduxAsyncConnect {...props}/>} history={syncHistoryWithStore(browserHistory, store)} routes={routesConfig} />
+                        : <ReduxAsyncConnect {...this.props} />
                       }
-                  </Translator>
+                    </Translator>
+                  </ReduxProvider>
                 </ThemeProvider>
-              </ReduxProvider>
             </MuiThemeProvider>
   }
 }
