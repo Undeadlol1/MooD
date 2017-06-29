@@ -17,22 +17,24 @@ import { translate } from '../containers/Translator'
 })
 @connect(
 	({user}, ownProps) => {
-		const username = user.get('username')
-		return ({username, ...ownProps})
+		const UserId = user.get('id')
+		console.log('UserId: ', UserId);
+		return ({UserId, ...ownProps})
 	},
     (dispatch, ownProps) => ({
-        changeLanguage(username, language) {
+        changeLanguage(UserId, language) {
+			console.log('UserId: ', UserId);
 			cookies.set('locale', language)
             dispatch(
-				updateUser(username, {language})
+				updateUser(UserId, {language})
 			)
         }
     })
 )
 export default class ChangeLanguageForm extends Component {
 	handleChange = (event, language) => {
-		const {username, changeLanguage} = this.props
-		changeLanguage(username, language)
+		const {UserId, changeLanguage} = this.props
+		changeLanguage(UserId, language)
 	}
 
 	render() {

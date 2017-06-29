@@ -110,13 +110,13 @@ export const fetchUser = username => dispatch => {
 }
 /**
  * update user profile
- * @param {String} username user identifier
- * @param {Object} body profile attributes to update
+ * @param {UserId} UserId user identifier
+ * @param {object} body profile attributes to update
  */
-export const updateUser = (username, body) => dispatch => {
+export const updateUser = (UserId, body) => dispatch => {
 	// dispatch(fetchingUser())
 	return fetch(
-		`${usersUrl}user/${username}`,
+		`${usersUrl}user/${UserId}`,
 		headersAndBody({...body}, 'PUT')
 	)
 		.then(checkStatus)
