@@ -70,7 +70,7 @@ export class MoodPage extends Component {
 		const title = moodName && t('current_mood') + moodName
 		const contentId = selectn('prefetchedNode.contentId', props)
 		const image = contentId && `http://img.youtube.com/vi/${contentId}/hqdefault.jpg`
-		// https://stackoverflow.com/a/42956044/4380989 might get you better preview images
+		// TODO https://stackoverflow.com/a/42956044/4380989 might get you better preview images
 		return 	<PageWrapper
 					loading={isLoading}
 					className="MoodPage"
