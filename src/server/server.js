@@ -150,6 +150,7 @@ app.get('/*', function(req, res) {
             tag && headerTags.push(tag)
           }
           // get prefetched data from redux
+          // TODO make sure to reset state afterwards
           const initialData = JSON.stringify(store.getState())//.replace(/</g, '\\u003c')
           // send data to handlebars template
           res.render('index', { markup, css, headerTags, initialData })
