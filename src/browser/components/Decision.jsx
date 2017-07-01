@@ -8,7 +8,13 @@ import { vote, fetchNode } from 'browser/redux/actions/NodeActions'
 // TODO change name to 'controls'?
 @connect(
 	// state to props
-	({ node }, ownProps) => ({ decision: node.Decision, decisionVote: node.Decision.vote, ...ownProps }),
+	({ node }, ownProps) => {
+		return {
+			decision: node.get('Decision'),
+			decisionVote: node.getIn('Decision', 'vote'),
+			...ownProps
+		}
+	},
 	// dispatch to props
 	(dispatch) => ({
 		fetchNode() {
