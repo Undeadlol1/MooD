@@ -116,6 +116,7 @@ app.get('/*',
 
       entries.forEach(console.log.bind(console));
     })
+    next()
   },
   // TODO setup caching for logged in and unlogged
   // TODO setup caching for /mood/something
