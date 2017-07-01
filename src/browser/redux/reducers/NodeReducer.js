@@ -43,23 +43,25 @@ export default (state = initialState, {type, payload}) => {
 				contentNotFound: false,
 			})
 		case 'RECIEVE_NODE':
-			return state.mergeDeep({
-				...payload,
-				loading: false,
-				finishedLoading: true,
-				contentNotFound: isEmpty(payload),
-			})
+			return state
+				.merge(payload)
+				.merge({
+					loading: false,
+					finishedLoading: true,
+					contentNotFound: isEmpty(payload),
+				})
 		case 'UPDATE_NODE':
 			return state.mergeDeep(payload)
 		case 'TOGGLE_DIALOG':
 			return state.set('dialogIsOpen', !state.dialogIsOpen)
 		case 'UNLOAD_NODE':
-			return state.mergeDeep({
-				...nodeStructure,
-				loading: false,
-				finishedLoading: false,
-				contentNotFound: false,
-			})
+			return state
+				.merge(nodeStructure)
+				.merge({
+					loading: false,
+					finishedLoading: false,
+					contentNotFound: false,
+				})
 		case 'RECIEVE_SEARCHED_VIDEOS':
 			return state.merge({
 				searchIsActive: false,
