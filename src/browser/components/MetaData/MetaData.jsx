@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 
 const defaultTitle = 'MooD - музыка твоего настроения'
 
-export class MetaData extends Component {
+class MetaData extends Component {
 	// copy+paste from https://megatags.co/#generate-tags
 	render() {
 		const { appUrl, location, appName, title, description, image, } = this.props
@@ -75,6 +75,8 @@ MetaData.PropTypes = {
 	location: PropTypes.object.isRequired,
 	description: PropTypes.string.isRequired,
 }
+
+export { MetaData }
 
 // 'withRouter' provedes 'location' object
 export default withRouter(MetaData)

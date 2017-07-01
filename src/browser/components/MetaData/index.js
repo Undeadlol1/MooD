@@ -1,1 +1,1 @@
-export { default } from './MetaData.jsx'
+export { default, MetaData } from './MetaData.jsx'
