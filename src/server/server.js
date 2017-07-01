@@ -99,7 +99,6 @@ import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
 import match from 'react-router/lib/match'
 import { Helmet } from 'react-helmet'
 import routes from 'browser/routes'
-import { loadOnServer } from 'redux-connect'
 import serialize from 'serialize-javascript'
 import { Provider } from 'react-redux'
 import store from 'browser/redux/store'
@@ -119,43 +118,41 @@ app.get('/*', function(req, res) {
         }
         // render website content
         else if (renderProps) {
-          loadOnServer({ ...renderProps, store }).then(() => {
-            const sheet = new ServerStyleSheet()
-            /*
-              sometimes request language and browser language are not the same
-              so we use browsers language (storred in cookie) as primary preference
-            */
-            const cookieLocale = req.cookies.locale
-            const requestLocale = req.locale.language
-            const language = cookieLocale || requestLocale
-            global.navigator = global.navigator || {language};
-            /*
-              supply userAgent for material ui prefixer in ssr
-              http://stackoverflow.com/a/38100609
-            */
-            global.navigator.userAgent = req.headers['user-agent'] || 'all';
-            // require App after userAgent is set
-            const App = require('browser/App').default
-            // render App to string
-            const markup = renderToString(
-              <StyleSheetManager sheet={sheet.instance}>
-                <App {...renderProps}/>
-              </StyleSheetManager>
-            )
-            // extract css from string
-            const css = sheet.getStyleTags()
-            // extract metaData for <header>
-            let headerTags = []
-            const metaData = Helmet.renderStatic()
-            for (var prop in metaData) {
-              const tag = metaData[prop].toString()
-              tag && headerTags.push(tag)
-            }
-            // get prefetched data from redux-connect
-            const initialData = serialize(store.getState())
-            // send data to handlebars template
-            res.render('index', { markup, css, headerTags, initialData })
-          })
+          const sheet = new ServerStyleSheet()
+          /*
+            sometimes request language and browser language are not the same
+            so we use browsers language (storred in cookie) as primary preference
+          */
+          const cookieLocale = req.cookies.locale
+          const requestLocale = req.locale.language
+          const language = cookieLocale || requestLocale
+          global.navigator = global.navigator || {language};
+          /*
+            supply userAgent for material ui prefixer in ssr
+            http://stackoverflow.com/a/38100609
+          */
+          global.navigator.userAgent = req.headers['user-agent'] || 'all';
+          // require App after userAgent is set
+          const App = require('browser/App').default
+          // render App to string
+          const markup = renderToString(
+            <StyleSheetManager sheet={sheet.instance}>
+              <App {...renderProps}/>
+            </StyleSheetManager>
+          )
+          // extract css from string
+          const css = sheet.getStyleTags()
+          // extract metaData for <header>
+          let headerTags = []
+          const metaData = Helmet.renderStatic()
+          for (var prop in metaData) {
+            const tag = metaData[prop].toString()
+            tag && headerTags.push(tag)
+          }
+          // get prefetched data from redux
+          const initialData = JSON.stringify(store.getState())//.replace(/</g, '\\u003c')
+          // send data to handlebars template
+          res.render('index', { markup, css, headerTags, initialData })
         }
 
         else res.status(404).send('Not found')
