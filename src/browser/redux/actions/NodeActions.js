@@ -1,7 +1,7 @@
 import selectn from 'selectn'
+import { stringify } from 'query-string'
 import { createAction, createActions } from 'redux-actions'
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
-import { stringify } from 'query-string'
 
 const {API_URL} = process.env
 const nodesUrl = API_URL + 'nodes/'
@@ -67,14 +67,14 @@ export const fetchNode = slug => (dispatch, getState) => {
  * @param {String} query
  */
 export const youtubeSearch = query => (dispatch, getState) => {
-	fetch(
+	return fetch(
 			externalsUrl + '?' + stringify({query}),
 			{credentials: 'same-origin'},
 		)
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(data => {
-			dispatch(actions.recieveSearchedVideos(data))
+			return dispatch(actions.recieveSearchedVideos(data))
 		})
 		.catch(err => console.error('youtubeSearch failed!', err))
 }
