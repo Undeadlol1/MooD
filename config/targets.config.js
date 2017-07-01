@@ -35,7 +35,7 @@ const clientVariables =  extend({
                             isServer: false,
                         }, config)
 
-const clientProductionPlugins = isDevelopment ? [] : [
+const clientProductionPlugins = isProduction ? [
     new webpack.optimize.ModuleConcatenationPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
     // new webpack.optimize.DedupePlugin(), //dedupe similar code
@@ -53,7 +53,13 @@ const clientProductionPlugins = isDevelopment ? [] : [
     //     name: 'vendor.js',
     //     minChunks: Infinity, // <-- the way to avoid "webpackJsonp is not defined"
     // }),
-]
+] : []
+
+const serverProductionPlugins = isProduction ? [
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(), //Merge chunks
+    new webpack.optimize.UglifyJsPlugin({minimize: true}), //minify everything
+] : []
 
 const clientDevelopmentPlugins = isDevelopment ? [
                                     new BrowserSyncPlugin({
@@ -94,6 +100,7 @@ var serverConfig = merge(commonConfig, {
             from: 'src/server/public',
             to: 'public'
         }]),
+        ...serverProductionPlugins
     ],
     // this is important. Without nodeModules in "externals" bundle will throw and error
     // bundling for node requires modules not to be packed on top of bundle, but to be found via "require"
