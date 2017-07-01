@@ -1,7 +1,7 @@
 import selectn from 'selectn'
+import { stringify } from 'query-string'
 import { createAction, createActions } from 'redux-actions'
 import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
-import { stringify } from 'query-string'
 
 const {API_URL} = process.env
 const nodesUrl = API_URL + 'nodes/'
@@ -23,14 +23,14 @@ export const actions = createActions({
  * @param {Object} payload content url
  */
 export const insertNode = payload => (dispatch, getState) => {
-	dispatch(actions.fetchingNode())
-	fetch(nodesUrl, headersAndBody(payload))
+	// dispatch(actions.fetchingNode())
+	return fetch(nodesUrl, headersAndBody(payload))
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(function(response) {
 			dispatch(actions.toggleDialog())
 			const {node} = getState()
-			if(!node.id) dispatch(actions.recieveNode(response))
+			if(!node.get('id')) return dispatch(actions.recieveNode(response))
 		})
 }
 
@@ -67,14 +67,14 @@ export const fetchNode = slug => (dispatch, getState) => {
  * @param {String} query
  */
 export const youtubeSearch = query => (dispatch, getState) => {
-	fetch(
+	return fetch(
 			externalsUrl + '?' + stringify({query}),
 			{credentials: 'same-origin'},
 		)
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(data => {
-			dispatch(actions.recieveSearchedVideos(data))
+			return dispatch(actions.recieveSearchedVideos(data))
 		})
 		.catch(err => console.error('youtubeSearch failed!', err))
 }

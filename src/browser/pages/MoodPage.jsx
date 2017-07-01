@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { asyncConnect } from 'redux-connect'
 import NavBar from 'browser/components/NavBar'
 import Video from 'browser/components/Video.jsx'
 import Loading from 'browser/components/Loading'
@@ -12,49 +11,16 @@ import ShareButton from 'browser/components/ShareButton'
 import { translate as t } from 'browser/containers/Translator'
 import { parseJSON } from 'browser/redux/actions/actionHelpers'
 import NodesInsert from 'browser/containers/NodesInsertContainer'
-import { fetchMood, unloadMood } from 'browser/redux/actions/MoodActions'
+import { recieveMood, fetchMood, unloadMood } from 'browser/redux/actions/MoodActions'
 import { actions as globalActions } from 'browser/redux/actions/GlobalActions'
 import { fetchNode, actions as nodeActions } from 'browser/redux/actions/NodeActions'
 import selectn from 'selectn'
+import store from 'browser/redux/store'
 
-const {API_URL} = process.env
-const moodsUrl = API_URL + 'moods/'
-const nodesUrl = API_URL + 'nodes/'
-
-@asyncConnect([
-	{
-		key: 'prefetchedMood',
-		promise: ({ params, helpers }) => {
-			console.log('is active! prefetchedMood');
-			return fetch(moodsUrl + 'mood/' + params.moodSlug || '')
-			.then(parseJSON)
-			.then(mood => mood)
-			.catch(error => {
-				console.error(error)
-				throw new Error(error)
-			})
-		}
-	},
-	{
-		key: 'prefetchedNode',
-		promise: ({ params, helpers }) => {
-			console.log('is active! prefetchedNode');
-			return fetch(nodesUrl + params.moodSlug || '')
-			.then(parseJSON)
-			.then(node => node)
-			.catch(error => {
-				console.error(error)
-				throw new Error(error)
-			})
-		}
-	},
-])
 export class MoodPage extends Component {
 
 	componentWillMount() {
 		this.props.toggleHeader(false)
-		// this.props.fetchMood(this.props.params.moodSlug)
-		// this.props.fetchNode(this.props.params.moodSlug)
 	}
 
 	componentWillUnmount() {
@@ -66,9 +32,9 @@ export class MoodPage extends Component {
 	render() {
 		const { props } = this
 		const { contentNotFound, isLoading, params, ...rest } = this.props
-		const moodName = selectn('prefetchedMood.name', props)
+		const moodName = selectn('moodName', props)
 		const title = moodName && t('current_mood') + moodName
-		const contentId = selectn('prefetchedNode.contentId', props)
+		const contentId = selectn('videoId', props)
 		const image = contentId && `http://img.youtube.com/vi/${contentId}/hqdefault.jpg`
 		// TODO https://stackoverflow.com/a/42956044/4380989 might get you better preview images
 		return 	<PageWrapper
@@ -79,7 +45,7 @@ export class MoodPage extends Component {
 				>
 					{/* TODO remove h1 (use css instead) */}
 					{contentNotFound && <h1 className="MoodPage__header">{t("currently_zero_content_here")}</h1>}
-					<Video className='MoodPage__video' contentId={contentId}>
+					<Video className='MoodPage__video'>
 						<NavBar className='NavBar--sticky' />
 						{!contentNotFound && <Decision className='MoodPage__decision' />}
 						<ShareButton />
@@ -104,10 +70,10 @@ MoodPage.propTypes = {
 
 export const stateToProps = ({ node, mood }, ownProps) => {
 	return {
-		videoId: node.contentId,
 		moodName: mood.get('name'),
-		contentNotFound: node.contentNotFound,
-		isLoading: mood.get('loading') || !node.finishedLoading,
+		videoId: node.get('contentId'),
+		contentNotFound: node.get('contentNotFound'),
+		isLoading: mood.get('loading') || !node.get('finishedLoading'),
 		...ownProps
 	}
 }
@@ -120,4 +86,8 @@ export const dispatchToProps = dispatch => ({
 	toggleHeader: (boolean) => dispatch(globalActions.toggleHeader(boolean))
 })
 
-export default connect(stateToProps, dispatchToProps)(MoodPage)
+const {API_URL} = process.env
+const moodsUrl = API_URL + 'moods/'
+const nodesUrl = API_URL + 'nodes/'
+
+export default (connect(stateToProps, dispatchToProps)(MoodPage))

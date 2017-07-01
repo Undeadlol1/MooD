@@ -6,9 +6,12 @@ import { actions } from 'browser/redux/actions/GlobalActions'
 
 @connect(
 	({node, global}, ownProps) => {
-		const {contentId, loading} = node,
-			  controlsAreShown = global.get('controlsAreShown')
-		return ({contentId, loading, controlsAreShown, ...ownProps})
+		return ({
+			contentId: node.get('contentId'),
+			loading: node.get('loading'),
+			controlsAreShown: global.get('controlsAreShown'),
+			...ownProps
+		})
 	},
 	(dispatch, ownProps) => ({
 		openControls() {

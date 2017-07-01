@@ -17,7 +17,6 @@ import store from './redux/store'
 import routesConfig from './routes'
 import Translator from './containers/Translator'
 import { syncHistoryWithStore } from 'react-router-redux'
-import { ReduxAsyncConnect } from 'redux-connect'
 
 /* STYLES */
 if (process.env.BROWSER) require('./styles.scss')
@@ -38,8 +37,8 @@ class App extends Component {
                     <Translator>
                       {
                         process.env.BROWSER
-                        ? <Router render={(props) => <ReduxAsyncConnect {...props}/>} history={syncHistoryWithStore(browserHistory, store)} routes={routesConfig} />
-                        : <ReduxAsyncConnect {...this.props} />
+                        ? <Router history={syncHistoryWithStore(browserHistory, store)} routes={routesConfig} />
+                        : <RouterContext {...this.props} />
                       }
                     </Translator>
                   </ReduxProvider>
