@@ -53,7 +53,7 @@ export default (state = initialState, {type, payload}) => {
 		case 'UPDATE_NODE':
 			return state.mergeDeep(payload)
 		case 'TOGGLE_DIALOG':
-			return state.set('dialogIsOpen', !state.dialogIsOpen)
+			return state.set('dialogIsOpen', !state.get('dialogIsOpen'))
 		case 'UNLOAD_NODE':
 			return state
 				.merge(nodeStructure)
