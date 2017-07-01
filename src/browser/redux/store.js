@@ -1,7 +1,7 @@
 import thunk from 'redux-thunk'
 import { fromJS } from 'immutable'
 import promiseMiddleware from 'redux-promise'
-import rootReducer from './reducers/RootReducer'
+import rootReducer, { initialState as stateWithoutPlugins } from './reducers/RootReducer'
 import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction'
 
@@ -21,9 +21,14 @@ function getInitialState() {
         // Data cannot be saved in template while being immutale.
         // Pick it up, and form immutable state again
         let state = {}
+        const immutableKeys = Object.keys(stateWithoutPlugins)
         Object
         .keys(window.__data)
-        .map(key => state[key] = fromJS(window.__data[key]))
+        .map(key => {
+            // TODO comment this or delete
+            // state[key] = immutableKeys.includes(key) ? fromJS(window.__data[key]) : window.__data[key]
+            state[key] = fromJS(window.__data[key])
+        })
         // example: state = {
         //     something: Map(),
         //     otherthing: Map(),
