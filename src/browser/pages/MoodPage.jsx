@@ -70,10 +70,10 @@ MoodPage.propTypes = {
 
 export const stateToProps = ({ node, mood }, ownProps) => {
 	return {
-		videoId: node.contentId,
 		moodName: mood.get('name'),
-		contentNotFound: node.contentNotFound,
-		isLoading: mood.get('loading') || !node.finishedLoading,
+		videoId: node.get('contentId'),
+		contentNotFound: node.get('contentNotFound'),
+		isLoading: mood.get('loading') || !node.get('finishedLoading'),
 		...ownProps
 	}
 }
