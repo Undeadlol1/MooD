@@ -26,8 +26,9 @@ export class NavBar extends Component {
         const { displayName, UserId, loading, className, children, toggleSidebar, ...rest } = this.props
 
         let loginOrAvatar
-
-        if (process.env.SERVER || loading) loginOrAvatar = <Loading style={LoadingStyles} color="rgb(48, 48, 48)" condition={true} />
+        // show loading animation if user is being fetched
+        if (!UserId && loading) loginOrAvatar = <Loading style={LoadingStyles} color="rgb(48, 48, 48)" condition={true} />
+        // else show avatar or login button
         else {
             loginOrAvatar = UserId
                             ? <Link className="Navbar__profile-link" to={`/users/${UserId}`}>

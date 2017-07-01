@@ -7,7 +7,8 @@ injectTapEventPlugin();
 
 /* DEPENDENCIES */
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
 import Router from 'react-router/lib/Router'
 import RouterContext from 'react-router/lib/RouterContext'
 import browserHistory from 'react-router/lib/browserHistory'
@@ -17,6 +18,7 @@ import store from './redux/store'
 import routesConfig from './routes'
 import Translator from './containers/Translator'
 import { syncHistoryWithStore } from 'react-router-redux'
+import { actions } from 'browser/redux/actions/UserActions'
 
 /* STYLES */
 if (process.env.BROWSER) require('./styles.scss')
@@ -30,6 +32,13 @@ darkBaseTheme.userAgent = navigator.userAgent
 const muiTheme = getMuiTheme(darkBaseTheme)
 
 class App extends Component {
+  // if SSR provided logged in user, put object in state
+  componentWillMount() {
+    store.dispatch(
+      actions.recieveCurrentUser(this.props.user)
+    )
+  }
+
   render() {
     return  <MuiThemeProvider muiTheme={muiTheme}>
                 <ThemeProvider theme={BASE_CONF}>
@@ -48,5 +57,9 @@ class App extends Component {
 }
 
 if (process.env.BROWSER) ReactDOM.render(<App />, document.getElementById('react-root'));
+
+App.propTypes = {
+  user: PropTypes.object
+}
 
 export default App

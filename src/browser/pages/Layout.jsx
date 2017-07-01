@@ -50,10 +50,6 @@ export default class Layout extends React.Component {
 	// 	$('input[type=url]:focus:not([readonly])').css('box-shadow', 'none !important')
 	// }
 
-	componentDidMount() {
-		this.props.fetchCurrentUser()
-	}
-
 	showChildren = () => {
 		clearInterval(timeout)
 		// $('.Decision').show()
