@@ -24,13 +24,13 @@ export const actions = createActions({
  */
 export const insertNode = payload => (dispatch, getState) => {
 	dispatch(actions.fetchingNode())
-	fetch(nodesUrl, headersAndBody(payload))
+	return fetch(nodesUrl, headersAndBody(payload))
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(function(response) {
 			dispatch(actions.toggleDialog())
 			const {node} = getState()
-			if(!node.id) dispatch(actions.recieveNode(response))
+			if(!node.get('id')) return dispatch(actions.recieveNode(response))
 		})
 }
 
