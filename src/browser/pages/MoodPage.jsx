@@ -21,8 +21,6 @@ export class MoodPage extends Component {
 
 	componentWillMount() {
 		this.props.toggleHeader(false)
-		// this.props.fetchMood(this.props.params.moodSlug)
-		// this.props.fetchNode(this.props.params.moodSlug)
 	}
 
 	componentWillUnmount() {
