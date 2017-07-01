@@ -1,9 +1,9 @@
-import { fromJS } from 'immutable'
+import { Map } from 'immutable'
 import isBoolean from 'lodash/isBoolean'
 
 // TODO this is a mess, reworking needed
 // TODO rename to UiReducer
-export const initialState =	fromJS({
+export const initialState =	Map({
 								headerIsShown: true,
 								sidebarIsOpen: false,
 								playerIsReady: false,

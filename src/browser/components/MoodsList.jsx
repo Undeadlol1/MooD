@@ -10,6 +10,10 @@ import PropTypes from 'prop-types'
 import { List } from 'immutable'
 import selectn from 'selectn'
 
+const itemStyles = {
+	marginBottom: '1rem'
+}
+
 export class MoodsList extends Component {
 
 	renderItems = () => {
@@ -20,7 +24,7 @@ export class MoodsList extends Component {
 					const src = nodeContent
 								? `http://img.youtube.com/vi/${nodeContent}/0.jpg`
 								: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2000px-No_image_available.svg.png'
-					return	<Col className="MoodsList__item" xs={12} sm={6} md={4} lg={3} key={mood.get('id')}>
+					return	<Col className="MoodsList__item" style={itemStyles} xs={12} sm={6} md={4} lg={3} key={mood.get('id')}>
 								<Link to={`/mood/${mood.get('slug')}`}>
 									<Card>
 										<CardMedia overlay={<CardTitle title={mood.get('name')} />}>
