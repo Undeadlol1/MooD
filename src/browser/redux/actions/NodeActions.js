@@ -23,7 +23,7 @@ export const actions = createActions({
  * @param {Object} payload content url
  */
 export const insertNode = payload => (dispatch, getState) => {
-	dispatch(actions.fetchingNode())
+	// dispatch(actions.fetchingNode())
 	return fetch(nodesUrl, headersAndBody(payload))
 		.then(checkStatus)
 		.then(parseJSON)
