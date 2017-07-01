@@ -66,7 +66,7 @@ app.use(cookieSession({
   name: 'session',
   store: new RedisStore(),
   keys: [process.env.SESSION_KEY || 'keyboard cat'],
-  maxAge: 24 * 60 * 60 * 1000 * 30 // 1 month // TODO this is the reason of reauth
+  maxAge: 24 * 60 * 60 * 1000 // 1 day // TODO this is the reason of reauth // TODO test this
 }))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -123,8 +123,16 @@ app.get('/*',
   // TODO setup caching for /mood/something
   // middleware to define cache prefix
   function (req, res, next) {
+    // TODO user cache
     // set cache name
     res.express_redis_cache_name = 'url-' + req.url
+    next();
+  },
+
+  // middleware to decide if using cache
+  function (req, res, next) {
+    // Use only cache if user not signed in
+    res.use_express_redis_cache = !req.user.id;
     next();
   },
 
@@ -163,7 +171,7 @@ app.get('/*',
             // render App to string
             const markup = renderToString(
               <StyleSheetManager sheet={sheet.instance}>
-                <App {...renderProps}/>
+                <App user={req.user} {...renderProps}/>
               </StyleSheetManager>
             )
             // extract css from string
