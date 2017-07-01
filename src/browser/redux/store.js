@@ -23,7 +23,8 @@ function getInitialState() {
         let state = {}
         const immutableKeys = Object.keys(stateWithoutPlugins)
         Object
-        .keys(window.__data)
+         // in testing window.__data is undefined
+        .keys(window.__data || {})
         .map(key => {
             // TODO comment this or delete
             // state[key] = immutableKeys.includes(key) ? fromJS(window.__data[key]) : window.__data[key]

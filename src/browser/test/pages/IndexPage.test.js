@@ -14,13 +14,7 @@ describe('<IndexPage />', () => {
                   fetchMoods: sinon.spy(),
                   location: {pathname: 'some'},
                 }
-  sinon.spy(IndexPage.prototype, 'componentWillMount');
   const wrapper = shallow(<IndexPage {...props} />)
-
-  it('calls componentWillMount', () => {
-    assert(IndexPage.prototype.componentWillMount.calledOnce)
-    assert(props.fetchMoods.calledOnce, 'called fetchMoods()')
-  });
 
   it('has className and tagName', () => {
     expect(wrapper).to.have.className('IndexPage')

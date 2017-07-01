@@ -32,13 +32,13 @@ describe('<PageWrapper />', () => {
     expect(wrapper.hasClass(className)).to.equal(true);
   });
 
-  it('has <Loading />', () => {
-    const loading = wrapper.find('Loading')
-    expect(loading).to.have.length(1);
-  });
+  // it('has <Loading />', () => {
+  //   const loading = wrapper.find('Loading')
+  //   expect(loading).to.have.length(1);
+  // });
 
   it('has <MetaData>', () => {
-    const el = wrapper.find('MetaData')
+    const el = wrapper.find('withRouter(MetaData)')
     expect(el).to.have.length(1)
   })
 
