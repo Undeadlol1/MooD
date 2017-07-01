@@ -21,6 +21,7 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import createLocaleMiddleware from 'express-locale';
 import RateLimiter from 'express-rate-limit'
+const RedisStore = require('connect-redis')(session)
 
 // TODO add server side bundle minification to improve perfomance
 
@@ -62,6 +63,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieSession({
   name: 'session',
+  store: new RedisStore(),
   keys: [process.env.SESSION_KEY || 'keyboard cat'],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
