@@ -110,14 +110,15 @@ import 'isomorphic-fetch' // fetch polyfill
 // TODO move this to middleware
 // all routes are processed client side via react-router
 app.get('/*',
-  function (req, res, next) {
-    cache.get(function (error, entries) {
-      if ( error ) throw error
+  // caching console middleware
+  // function (req, res, next) {
+  //   cache.get(function (error, entries) {
+  //     if ( error ) throw error
 
-      entries.forEach(console.log.bind(console));
-    })
-    next()
-  },
+  //     entries.forEach(console.log.bind(console));
+  //   })
+  //   next()
+  // },
   // TODO setup caching for logged in and unlogged
   // TODO setup caching for /mood/something
   // middleware to define cache prefix
