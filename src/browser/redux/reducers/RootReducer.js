@@ -1,13 +1,19 @@
 import { combineReducers } from 'redux'
 import { reducer as form } from 'redux-form'
 import { reducer as toastr } from 'react-redux-toastr'
-import { reducer as reduxAsyncConnect } from 'redux-connect'
 import { routerReducer as routing } from 'react-router-redux'
 
-import global from './GlobalReducer'
-import user from './UserReducer'
-import mood from './MoodReducer'
-import node from './NodeReducer'
+import global, { initialState as globalState } from './GlobalReducer'
+import user, { initialState as userState } from './UserReducer'
+import mood, { initialState as moodState } from './MoodReducer'
+import node, { initialState as nodeState } from './NodeReducer'
+
+export const initialState = {
+    global: globalState,
+    user: userState,
+    mood: moodState,
+    node: nodeState,
+}
 
 export default combineReducers({
     global,
@@ -17,5 +23,4 @@ export default combineReducers({
     form,
     toastr,
     routing,
-    reduxAsyncConnect,
-}, process.env.BROWSER ? window.__data : undefined) // redux-connect initial data
+})

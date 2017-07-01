@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { asyncConnect } from 'redux-connect'
 import NavBar from 'browser/components/NavBar'
 import Video from 'browser/components/Video.jsx'
 import Loading from 'browser/components/Loading'
@@ -22,8 +21,6 @@ export class MoodPage extends Component {
 
 	componentWillMount() {
 		this.props.toggleHeader(false)
-		// this.props.fetchMood(this.props.params.moodSlug)
-		// this.props.fetchNode(this.props.params.moodSlug)
 	}
 
 	componentWillUnmount() {
@@ -73,10 +70,10 @@ MoodPage.propTypes = {
 
 export const stateToProps = ({ node, mood }, ownProps) => {
 	return {
-		videoId: node.contentId,
 		moodName: mood.get('name'),
-		contentNotFound: node.contentNotFound,
-		isLoading: mood.get('loading') || !node.finishedLoading,
+		videoId: node.get('contentId'),
+		contentNotFound: node.get('contentNotFound'),
+		isLoading: mood.get('loading') || !node.get('finishedLoading'),
 		...ownProps
 	}
 }
@@ -93,37 +90,4 @@ const {API_URL} = process.env
 const moodsUrl = API_URL + 'moods/'
 const nodesUrl = API_URL + 'nodes/'
 
-export default asyncConnect([
-	{
-		key: 'prefetchedMood',
-		promise: ({ params, helpers }) => {
-			console.log('is active! prefetchedMood');
-			return fetch(moodsUrl + 'mood/' + params.moodSlug || '')
-			.then(parseJSON)
-			.then(mood => {
-				return store.dispatch(recieveMood(mood))
-				// return mood
-			})
-			.catch(error => {
-				console.error(error)
-				throw new Error(error)
-			})
-		}
-	},
-	{
-		key: 'prefetchedNode',
-		promise: ({ params, helpers }) => {
-			console.log('is active! prefetchedNode');
-			return fetch(nodesUrl + params.moodSlug || '')
-			.then(parseJSON)
-			.then(node => {
-				return store.dispatch(nodeActions.recieveNode(node))
-				// return node
-			})
-			.catch(error => {
-				console.error(error)
-				throw new Error(error)
-			})
-		}
-	},
-])(connect(stateToProps, dispatchToProps)(MoodPage))
+export default (connect(stateToProps, dispatchToProps)(MoodPage))

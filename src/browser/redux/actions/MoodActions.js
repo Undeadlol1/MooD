@@ -39,12 +39,12 @@ export const unloadMood = createAction('UNLOAD_MOOD')
 
 export const fetchMoods = (pageNumber = 1) => dispatch => {
 	dispatch(fetchingInProgress())
-	fetch(moodsUrl + (pageNumber ? '/' + pageNumber : ''))
+	return fetch(moodsUrl + (pageNumber ? '/' + pageNumber : ''))
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(data => {
 			data.currentPage = pageNumber
-			dispatch(recieveMoods((data)))
+			return dispatch(recieveMoods((data)))
 		})
 		.catch(error => {
 			console.error(error)
@@ -54,12 +54,14 @@ export const fetchMoods = (pageNumber = 1) => dispatch => {
  * fetch mood by slug
  * @param {String} slug
  */
-export const fetchMood = slug => dispatch => {
+export const fetchMood = (slug) => dispatch => {
 	dispatch(fetchingInProgress())
 	return fetch(moodsUrl + 'mood/' + slug || '')
 		.then(checkStatus)
 		.then(parseJSON)
-		.then(mood => dispatch(recieveMood((mood))))
+		.then(mood => {
+			return dispatch(recieveMood((mood)))
+		})
 }
 /**
  * create mood

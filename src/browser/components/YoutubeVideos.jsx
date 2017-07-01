@@ -11,8 +11,8 @@ import { insertNode } from 'browser/redux/actions/NodeActions'
 @connect(
 	// stateToProps
 	(state, ownProps) => {
-		const {searchedVideos} = state.node
 		const MoodId = state.mood.get('id')
+		const searchedVideos = state.node.get('searchedVideos')
 		return {searchedVideos, MoodId, ...ownProps}
 	},
 	// dispatchToProps
@@ -43,8 +43,9 @@ class YoutubeVideos extends Component {
 
 	renderItems = () => {
 		const { searchedVideos, MoodId, className, submitVideo } = this.props
-		if(searchedVideos) {
-			return searchedVideos.map( video => {
+		const videos = searchedVideos.toJS()
+		if(videos.length) {
+			return videos.map(video => {
 					const { videoId } = video.id
 					const { title } = video.snippet
 					const titleStyle = {fontSize: '16px', lineHeight: 'inherit'}
@@ -69,7 +70,7 @@ class YoutubeVideos extends Component {
 	}
 
 	render() {
-		if (!this.props.searchedVideos.length) return null
+		if (!this.props.searchedVideos.size) return null
 		return  <Row className="YoutubeVideos">
 					{this.renderItems()}
 				</Row>

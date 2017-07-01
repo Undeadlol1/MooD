@@ -2,7 +2,6 @@
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { asyncConnect } from 'redux-connect'
 import { Grid, Row } from 'react-styled-flexboxgrid'
 // project files
 import store from 'browser/redux/store'
@@ -50,30 +49,19 @@ IndexPage.propTypes = {
 }
 
 export default
-asyncConnect([
-	{
-		key: 'prefetchedMoods',
-		promise: ({ params, helpers }) => {
-			return fetch(moodsUrl)
-			.then(parseJSON)
-			.then(response => 	{
-				return store.dispatch(recieveMoods((response)))
-			})
-			.catch(error => {
-				console.error(error)
-				throw new Error(error)
-			})
-		}
-	}
-])
-(connect(
-	({ mood }) => ({
-		moods: mood.get('moods'),
-		loading: mood.get('loading'),
-		totalPages: mood.get('totalPages'),
-		currentPage: mood.get('currentPage'),
-	}),
+connect(
+	(state) => {
+		const { mood } = state
+		// console.log('state: ', state.mood);
+		return ({
+			moods: mood.get('moods'),
+			loading: mood.get('loading'),
+			totalPages: mood.get('totalPages'),
+			currentPage: mood.get('currentPage'),
+	})},
 	dispatch => ({
-		fetchMoods() {dispatch(fetchMoods())}
+		fetchMoods() {
+			dispatch(fetchMoods()).then()
+		}
 	})
-)(IndexPage))
+)(IndexPage)
