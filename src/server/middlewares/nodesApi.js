@@ -22,10 +22,7 @@ export default Router()
       // find nodes
       .then(MoodId => findRandomNodes(MoodId))
       // respond
-      .then(nodes => {
-        console.log('nodes: ', nodes);
-        res.json(nodes || [])
-      })
+      .then(nodes => res.json(nodes || []))
     } catch (error) {
       console.error(error);
       res.boom.internal(error)
