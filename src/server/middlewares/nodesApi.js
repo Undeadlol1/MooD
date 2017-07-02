@@ -1,9 +1,9 @@
-import { Node, Mood, Decision, User } from '../data/models'
-import { mustLogin } from '../services/permissions'
-import { parseUrl } from '../../shared/parsers'
-import extend from 'lodash/assignIn'
-import sequelize from "sequelize"
 import { Router } from "express"
+import sequelize from "sequelize"
+import extend from 'lodash/assignIn'
+import { parseUrl } from 'shared/parsers'
+import { mustLogin } from 'server/services/permissions'
+import { Node, Mood, Decision, User } from 'server/data/models'
 import { normalizeRating } from 'server/data/controllers/NodesController'
 import { updatePositionAndViews } from 'server/data/controllers/DecisionsController'
 import { findHighestRatingNode, findRandomNode } from 'server/data/controllers/NodesController'
