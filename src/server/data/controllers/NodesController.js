@@ -91,3 +91,13 @@ export async function findRandomNode(MoodId) {
     order: 'rand()',
   })
 }
+
+export async function findRandomNodes(MoodId) {
+  return await Node.findAll({
+    raw: true,
+    nest: true,
+    where: {MoodId},
+    order: 'rand()',
+    limit: 100,
+  })
+}

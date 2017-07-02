@@ -6,18 +6,39 @@ import { mustLogin } from 'server/services/permissions'
 import { Node, Mood, Decision, User } from 'server/data/models'
 import { normalizeRating } from 'server/data/controllers/NodesController'
 import { updatePositionAndViews } from 'server/data/controllers/DecisionsController'
-import { findHighestRatingNode, findRandomNode } from 'server/data/controllers/NodesController'
+import { findHighestRatingNode, findRandomNode, findRandomNodes } from 'server/data/controllers/NodesController'
 
 // routes
 export default Router()
+
+  .get('/:moodSlug/', async function(req, res) {
+    const { moodSlug } = req.params
+    try {
+      // validate params
+      if (!moodSlug) return res.status(400).end('mood slug is required')
+      // const MoodId = await Mood.findIdBySlug(moodSlug)
+      Mood
+      .findIdBySlug(moodSlug)
+      // find nodes
+      .then(MoodId => findRandomNodes(MoodId))
+      // respond
+      .then(nodes => {
+        console.log('nodes: ', nodes);
+        res.json(nodes || [])
+      })
+    } catch (error) {
+      console.error(error);
+      res.boom.internal(error)
+    }
+  })
 
   // get node for async validation in node adding form
   .get('/validate/:MoodId/:contentId', async function(req, res) {
     const { params } = req
     try {
       // validate params
-      if (!params.MoodId) return res.status(400).send('mood id is required')
-      if (!params.contentId) return res.status(400).send('content id is required')
+      if (!params.MoodId) return res.status(400).end('mood id is required')
+      if (!params.contentId) return res.status(400).end('content id is required')
       // find node
       Node.findOne({where: params})
       // respond
@@ -28,7 +49,7 @@ export default Router()
     }
   })
 
-  .get('/:moodSlug/:nodeId?', async function({ params, user }, res) {
+  .get('/deprecated/:moodSlug/:nodeId?', async function({ params, user }, res) {
     /*
       If user is NOT logged in:
         1. Show highest rated Node
