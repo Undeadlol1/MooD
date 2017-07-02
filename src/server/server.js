@@ -74,6 +74,7 @@ app.use(boom()) // provides res.boom. erros dispatching
 app.use(helmet()) // security
 
 if (process.env.NODE_ENV === 'production') {
+  app.use(morgan('dev')) // logger
   // rate limiter
   // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
   // app.enable('trust proxy');
