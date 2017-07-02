@@ -94,53 +94,53 @@ export default describe('/nodes API', function() {
     }
 
     describe('GET /:moodSlug/:nodeId?', function() {
-        it('GET single node', async function() {
-            const mood = await Mood.findOne({order: 'rand()'})
-            const node = await getNextNode(mood.slug)
-            node.url.should.be.string
-        })
+        // it('GET single node', async function() {
+        //     const mood = await Mood.findOne({order: 'rand()'})
+        //     const node = await getNextNode(mood.slug)
+        //     node.url.should.be.string
+        // })
 
-        it('should fail without proper moodSlug', async function() {
-            await user
-                    .get('/api/nodes/' + 'this_not_exists')
-                    .expect(404)
-                    .then(res => {
-                        assert(res.error.text == 'mood not found')
-                    })
-        })
+        // it('should fail without proper moodSlug', async function() {
+        //     await user
+        //             .get('/api/nodes/' + 'this_not_exists')
+        //             .expect(404)
+        //             .then(res => {
+        //                 assert(res.error.text == 'mood not found')
+        //             })
+        // })
     })
 
 
-    it('nodes cycle properly for unlogged user', async function() {
-        try {
-            // logout user
-            await user.get('/api/auth/logout').expect(200)
+    // it('nodes cycle properly for unlogged user', async function() {
+    //     try {
+    //         // logout user
+    //         await user.get('/api/auth/logout').expect(200)
 
-            const mood = await Mood.findOne()
-            const initialNode = await getNextNode(mood.slug)
-            const nodeIds = await cycleThroughNodes(mood.slug, initialNode.id)
-            // TODO
-            // expect(uniq(nodeIds).length, 'unique nodes').to.be.above(6)
-        } catch (error) {
-            throw new Error(error)
-        }
-    })
+    //         const mood = await Mood.findOne()
+    //         const initialNode = await getNextNode(mood.slug)
+    //         const nodeIds = await cycleThroughNodes(mood.slug, initialNode.id)
+    //         // TODO
+    //         // expect(uniq(nodeIds).length, 'unique nodes').to.be.above(6)
+    //     } catch (error) {
+    //         throw new Error(error)
+    //     }
+    // })
 
-    // TODO check this tests
-    it('nodes cycle properly for logged in user', async function() {
-        try {
-            const agent = await login()
+    // // TODO check this tests
+    // it('nodes cycle properly for logged in user', async function() {
+    //     try {
+    //         const agent = await login()
 
-            const mood = await Mood.findOne({order: 'rand()'})
-            const node = await getNextNode(mood.slug)
-            const nodeIds = await cycleThroughNodes(mood.slug, undefined, agent)
+    //         const mood = await Mood.findOne({order: 'rand()'})
+    //         const node = await getNextNode(mood.slug)
+    //         const nodeIds = await cycleThroughNodes(mood.slug, undefined, agent)
 
-            expect(uniq(nodeIds), 'unique nodes').to.not.be.equal(1)
-        } catch (error) {
-            console.error(error)
-            throw new Error(error)
-        }
-    })
+    //         expect(uniq(nodeIds), 'unique nodes').to.not.be.equal(1)
+    //     } catch (error) {
+    //         console.error(error)
+    //         throw new Error(error)
+    //     }
+    // })
 
     // describe('/validate/:MoodId/:contentId', async function() {
     //     const route = '/api/nodes/validate/'

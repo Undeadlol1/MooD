@@ -9,7 +9,7 @@ import AboutPage from './pages/AboutPage';
 import NotFound from './pages/NotFound';
 import store from 'browser/redux/store'
 import { fetchMoods, fetchMood } from 'browser/redux/actions/MoodActions'
-import { fetchNode, actions as nodeActions } from 'browser/redux/actions/NodeActions'
+import { fetchNodes, actions as nodeActions } from 'browser/redux/actions/NodeActions'
 
 const routesConfig = {
   path: '/',
@@ -17,14 +17,14 @@ const routesConfig = {
   indexRoute: {
     component: IndexPage,
     // fetch data
-    onEnter({params}, replace, callback) {
+    onEnter({params}, replace, done) {
       const fetchedMoods = store.getState().mood.get('moods')
       // check if fetching is needed
-      if (fetchedMoods.size) return callback()
+      if (fetchedMoods.size) return done()
       else {
         store
         .dispatch(fetchMoods())
-        .then(() => callback())
+        .then(() => done())
       }
     }
   },
@@ -35,13 +35,13 @@ const routesConfig = {
       component: MoodPage,
       path: 'mood/(:moodSlug)',
       // fetch data
-      onEnter({params}, replace, callback) {
+      onEnter({params}, replace, done) {
         Promise
         .all([
           store.dispatch(fetchMood(params.moodSlug)),
-          store.dispatch(fetchNode(params.moodSlug)),
+          store.dispatch(fetchNodes(params.moodSlug)),
         ])
-        .then(() => callback())
+        .then(() => done())
       }
     },
     { path: 'search', component: SearchPage },

@@ -1,36 +1,52 @@
-import { Node, Mood, Decision, User } from '../data/models'
-import { mustLogin } from '../services/permissions'
-import { parseUrl } from '../../shared/parsers'
-import extend from 'lodash/assignIn'
-import sequelize from "sequelize"
 import { Router } from "express"
+import sequelize from "sequelize"
+import extend from 'lodash/assignIn'
+import { parseUrl } from 'shared/parsers'
+import { mustLogin } from 'server/services/permissions'
+import { Node, Mood, Decision, User } from 'server/data/models'
 import { normalizeRating } from 'server/data/controllers/NodesController'
 import { updatePositionAndViews } from 'server/data/controllers/DecisionsController'
-import { findHighestRatingNode, findRandomNode } from 'server/data/controllers/NodesController'
+import { findHighestRatingNode, findRandomNode, findRandomNodes } from 'server/data/controllers/NodesController'
 
 // routes
 export default Router()
 
-  // TODO: rework to query instead of params
-  // get node for async validation in node adding form
-  .get('/validate/:MoodId/:contentId', async function(req, res) {
+  .get('/:moodSlug/', async function(req, res) {
+    const { moodSlug } = req.params
     try {
-      const { MoodId, contentId } = req.params
-
-      if (!contentId || !MoodId) return res.boom.badRequest('invalid query')
-
-      const node = await Node.findOne({
-                          raw: true,
-                          where: { MoodId, contentId },
-                        })
-      res.json(node || {})
+      // validate params
+      if (!moodSlug) return res.status(400).end('mood slug is required')
+      // const MoodId = await Mood.findIdBySlug(moodSlug)
+      Mood
+      .findIdBySlug(moodSlug)
+      // find nodes
+      .then(MoodId => findRandomNodes(MoodId))
+      // respond
+      .then(nodes => res.json(nodes || []))
     } catch (error) {
       console.error(error);
       res.boom.internal(error)
     }
   })
 
-  .get('/:moodSlug/:nodeId?', async function({ params, user }, res) {
+  // get node for async validation in node adding form
+  .get('/validate/:MoodId/:contentId', async function(req, res) {
+    const { params } = req
+    try {
+      // validate params
+      if (!params.MoodId) return res.status(400).end('mood id is required')
+      if (!params.contentId) return res.status(400).end('content id is required')
+      // find node
+      Node.findOne({where: params})
+      // respond
+      .then(node => res.json(node || {}))
+    } catch (error) {
+      console.error(error);
+      res.boom.internal(error)
+    }
+  })
+
+  .get('/deprecated/:moodSlug/:nodeId?', async function({ params, user }, res) {
     /*
       If user is NOT logged in:
         1. Show highest rated Node
