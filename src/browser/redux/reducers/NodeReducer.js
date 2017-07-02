@@ -24,6 +24,7 @@ const nodeStructure = 	Map({
 							Decision: decisionStructure.toJS()
 						})
 const initialState = 	Map({
+							nodes: List(),
 							error: '',
 							loading: false,
 							finishedLoading: true,
@@ -47,7 +48,16 @@ export default (state = initialState, {type, payload}) => {
 				.merge(payload)
 				.merge({
 					loading: false,
-					finishedLoading: true,
+					// finishedLoading: true,
+					contentNotFound: isEmpty(payload),
+				})
+		case 'RECIEVE_NODES':
+			return state
+				.mergeDeep({
+					...payload[0],
+					nodes: payload,
+					loading: false,
+					// finishedLoading: true,
 					contentNotFound: isEmpty(payload),
 				})
 		case 'UPDATE_NODE':
@@ -57,7 +67,8 @@ export default (state = initialState, {type, payload}) => {
 		case 'UNLOAD_NODE':
 			return state
 				.merge(nodeStructure)
-				.merge({
+				.merge({nodes: List()})
+				.mergeDeep({
 					loading: false,
 					finishedLoading: false,
 					contentNotFound: false,

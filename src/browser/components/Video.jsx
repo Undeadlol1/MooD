@@ -1,19 +1,23 @@
 import React, { Component } from 'react'
 import YouTube from 'react-youtube'
 import { connect } from 'react-redux'
-import { fetchNode } from 'browser/redux/actions/NodeActions'
+import { fetchNode, nextVideo } from 'browser/redux/actions/NodeActions'
 import { actions } from 'browser/redux/actions/GlobalActions'
 
 @connect(
 	({node, global}, ownProps) => {
 		return ({
-			contentId: node.get('contentId'),
+			nodes: node.get('nodes').toJS(),
 			loading: node.get('loading'),
+			contentId: node.get('contentId'),
 			controlsAreShown: global.get('controlsAreShown'),
-			...ownProps
+			...ownProps,
 		})
 	},
 	(dispatch, ownProps) => ({
+		nextVideo() {
+			dispatch(nextVideo())
+		},
 		openControls() {
 			dispatch(actions.toggleControls(true))
 		},
@@ -56,8 +60,12 @@ export default class Video extends Component {
 		// window.getElementsByTagName("video")[0].play()
 	}
 
+	onChange = ({target, data}) => {
+		if(data == 0) target.playVideo()
+	}
+
 	render() {
-		const 	{controlsAreShown, requestNewVideo, className, ...rest} = this.props,
+		const 	{controlsAreShown, nextVideo, contentId, nodes, requestNewVideo, className, ...rest} = this.props,
 				{props, state} = this,
 				opts = {
 					height: '100%',
@@ -68,6 +76,7 @@ export default class Video extends Component {
 						rel: 0,
 						controls: 1,
 						autoplay: 1,
+						playlist: [nodes.map(node => node.contentId)]
 					}
 				}
 
@@ -80,12 +89,13 @@ export default class Video extends Component {
 					onMouseLeave={props.closeControls}
 					onMouseOver={props.openControls}
 				>
-					{props.contentId && <YouTube
+					{contentId && <YouTube
 						opts={opts}
-						videoId={props.contentId}
-						onEnd={requestNewVideo} // TODO add rating?
-						onError={requestNewVideo}
+						videoId={contentId}
+						onEnd={nextVideo} // TODO add rating?
+						onError={nextVideo}
 						// TODO move this to redux
+						onStateChange={this.onChange}
 						onReady={this.onReady}
 						/>}
 					<div
