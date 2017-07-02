@@ -11,19 +11,17 @@ import { findHighestRatingNode, findRandomNode } from 'server/data/controllers/N
 // routes
 export default Router()
 
-  // TODO: rework to query instead of params
   // get node for async validation in node adding form
   .get('/validate/:MoodId/:contentId', async function(req, res) {
+    const { params } = req
     try {
-      const { MoodId, contentId } = req.params
-
-      if (!contentId || !MoodId) return res.boom.badRequest('invalid query')
-
-      const node = await Node.findOne({
-                          raw: true,
-                          where: { MoodId, contentId },
-                        })
-      res.json(node || {})
+      // validate params
+      if (!params.MoodId) return res.status(400).send('mood id is required')
+      if (!params.contentId) return res.status(400).send('content id is required')
+      // find node
+      Node.findOne({where: params})
+      // respond
+      .then(node => res.json(node || {}))
     } catch (error) {
       console.error(error);
       res.boom.internal(error)
