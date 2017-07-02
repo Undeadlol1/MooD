@@ -33,7 +33,7 @@ export class MoodPage extends Component {
 		const { props } = this
 		const { contentNotFound, isLoading, params, ...rest } = this.props
 		const moodName = selectn('moodName', props)
-		const title = moodName && t('current_mood') + moodName
+		const title = moodName && 'Мое настроение: ' + moodName
 		const contentId = selectn('videoId', props)
 		const image = contentId && `http://img.youtube.com/vi/${contentId}/hqdefault.jpg`
 		// TODO https://stackoverflow.com/a/42956044/4380989 might get you better preview images
