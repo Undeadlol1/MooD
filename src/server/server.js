@@ -132,7 +132,7 @@ app.get('/*',
   // middleware to decide if using cache
   function (req, res, next) {
     // Use only cache if user not signed in
-    res.use_express_redis_cache = !req.user.id;
+    res.use_express_redis_cache = !req.user;
     next();
   },
 
