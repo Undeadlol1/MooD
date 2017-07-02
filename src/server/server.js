@@ -66,7 +66,7 @@ app.use(cookieSession({
   name: 'session',
   store: new RedisStore(),
   keys: [process.env.SESSION_KEY || 'keyboard cat'],
-  maxAge: 24 * 60 * 60 * 1000 // 1 day // TODO this is the reason of reauth // TODO test this
+  maxAge: 24 * 60 * 60 * 1000 * 30 * 3 // 3 months
 }))
 app.use(passport.initialize())
 app.use(passport.session())
