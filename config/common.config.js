@@ -34,7 +34,7 @@ var baseConfig = {
     stats,
     context: path.resolve(__dirname, '../'),
     // https://webpack.js.org/configuration/devtool/
-    devtool: !isProduction && 'eval',
+    devtool: isProduction ? 'cheap-module-source-map' : 'eval',
     watch: isDevelopment || isTest,
     watchOptions: {
         ignored: /node_modules/,
