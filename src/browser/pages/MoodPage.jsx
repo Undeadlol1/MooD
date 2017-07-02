@@ -1,3 +1,4 @@
+import selectn from 'selectn'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
@@ -11,11 +12,9 @@ import ShareButton from 'browser/components/ShareButton'
 import { translate as t } from 'browser/containers/Translator'
 import { parseJSON } from 'browser/redux/actions/actionHelpers'
 import NodesInsert from 'browser/containers/NodesInsertContainer'
-import { recieveMood, fetchMood, unloadMood } from 'browser/redux/actions/MoodActions'
 import { actions as globalActions } from 'browser/redux/actions/GlobalActions'
 import { fetchNode, actions as nodeActions } from 'browser/redux/actions/NodeActions'
-import selectn from 'selectn'
-import store from 'browser/redux/store'
+import { recieveMood, fetchMood, unloadMood } from 'browser/redux/actions/MoodActions'
 
 export class MoodPage extends Component {
 
