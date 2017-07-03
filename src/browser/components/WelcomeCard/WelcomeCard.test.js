@@ -52,15 +52,19 @@ describe('<WelcomeCard />', () => {
 
     it('has <CardActions>', () => {
       const cardActions = card.find('CardActions')
-      const button = cardActions.find('RaisedButton')
+      const button = cardActions.find('FlatButton')
+      const props = button.props()
       assert(cardActions.exists())
       assert(button.exists())
-      expect(button.props()).to.have.property('label', t('ok'))
+      expect(props.onClick).to.be.a('function')
+      expect(props).to.have.property('primary', true)
+      expect(props).to.have.property('label', t('ok'))
+      expect(props).to.have.property('fullWidth', true)
     })
 
     it('handles click', () => {
       const welcomeCard = shallow(<WelcomeCard />)
-      const button = welcomeCard.find('RaisedButton')
+      const button = welcomeCard.find('FlatButton')
       button.simulate('click')
       // wrapper.update()
       expect(welcomeCard.node).to.be.a('null')

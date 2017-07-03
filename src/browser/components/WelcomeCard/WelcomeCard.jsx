@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Paper from 'material-ui/Paper'
 import React, { Component } from 'react'
 import { Row, Col } from 'react-styled-flexboxgrid'
-import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 import { translate as t } from 'browser/containers/Translator'
 import { Card, CardText, CardActions } from 'material-ui/Card'
 
@@ -21,6 +21,7 @@ class WelcomeCard extends Component {
 		const {state, props} = this
 		const className = cls(props.className, "WelcomeCard")
 		// TODO provide cookies to app for SSR
+		// https://www.npmjs.com/package/react-cookie
 		if (process.env.SERVER || state.isHidden || cookies.get('hideWelcomeCard')) return null
 		return 	<Row className={className}>
 					<Col xs={12}>
@@ -31,7 +32,7 @@ class WelcomeCard extends Component {
 									<p>{t('pick_your_mood_and_service_will_generate')}</p>
 								</CardText>
 								<CardActions>
-									<RaisedButton onClick={this.handleClick} label={t('ok')} />
+									<FlatButton fullWidth primary={true} onClick={this.handleClick} label={t('ok')} />
 								</CardActions>
 							</Card>
 						</Paper>
