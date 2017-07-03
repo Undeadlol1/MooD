@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { injectProps } from 'relpers'
 import { connect } from 'react-redux'
 import Avatar from 'material-ui/Avatar'
+import React, { Component } from 'react'
 import Loading from 'browser/components/Loading'
 import MoodsList from 'browser/components/MoodsList'
 import MoodsFind from 'browser/components/MoodsFind'
@@ -10,11 +10,9 @@ import MoodsInsert from 'browser/components/MoodsInsert'
 import PageWrapper from 'browser/components/PageWrapper'
 import { Grid, Row, Col } from 'react-styled-flexboxgrid'
 import YoutubeSearch from 'browser/components/YoutubeSearch'
-import { fetchUser } from 'browser/redux/actions/UserActions'
 import ChangeLanguageForm from 'browser/components/ChangeLanguageForm'
 
 export class UserPage extends Component {
-	componentWillMount() { this.props.fetchUser(this.props.params.username) }
 	@injectProps
     render({loading, location, UserId, displayName, isOwnPage}) {
 		const src = `https://api.adorable.io/avatars/300/${UserId}.png`
@@ -49,13 +47,11 @@ UserPage.propTypes = {
 	displayName: PropTypes.string,
 	loading: PropTypes.bool.isRequired,
 	isOwnPage: PropTypes.bool.isRequired,
-	fetchUser: PropTypes.func.isRequired,
 }
 
 export default connect(
 	({user}, {params}) => {
 		const UserId = user.getIn(['fetchedUser', 'id'])
-		console.log('fetchedUser: ', user.get('fetchedUser').toJS());
 		return {
 			UserId,
 			loading: user.get('loading'),
@@ -64,7 +60,4 @@ export default connect(
 			displayName: user.getIn(['fetchedUser', 'displayName']),
 		}
 	},
-	(dispatch, {params}) => ({
-		fetchUser: () => dispatch(fetchUser(params.username)) // TOOD rework this
-	})
 )(UserPage)
