@@ -16,16 +16,27 @@
     // TODO this works, but mocha is not accepting "import" token.
     // solution: "es2015", { modules: true }
     // but this is not acceptable clientside (bundle size will be bigger)
-    // ["transform-imports", {
-    //     "redux-form": {
-    //       "transform": "redux-form/es/${member}",
-    //       "preventFullImport": true
-    //     }
-    // }],
     // this might help
     // ["transform-es2015-modules-commonjs", {
     //   "allowTopLevelThis": true
     // }],
+    /*
+      transform-imports helps reducing bundle size and code readability
+      by transforming "import { isEmpty } from 'lodash'"
+      to "import isEmpty from 'lodash/isEmpty'"
+      thus not importing full 'lodash' library
+      (not all libraries support this feature, google "es6 imports bundle size")
+    */
+    ["transform-imports", {
+        // "redux-form": {
+        //   "transform": "redux-form/es/${member}",
+        //   "preventFullImport": true
+        // },
+        "lodash": {
+            "transform": "lodash/${member}",
+            "preventFullImport": true
+        },
+    }],
     "transform-runtime",
     "transform-decorators-legacy",
     "transform-class-properties",
