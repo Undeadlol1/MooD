@@ -1,7 +1,7 @@
 // dependencies
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { Grid, Row } from 'react-styled-flexboxgrid'
 // project files
 import store from 'browser/redux/store'
@@ -11,26 +11,19 @@ import MoodsList from 'browser/components/MoodsList'
 import MoodsInsert from 'browser/components/MoodsInsert'
 import PageWrapper from 'browser/components/PageWrapper'
 import WelcomeCard from 'browser/components/WelcomeCard'
-import YoutubeSearch from 'browser/components/YoutubeSearch'
-import { parseJSON } from 'browser/redux/actions/actionHelpers'
-import { fetchMoods, recieveMoods } from 'browser/redux/actions/MoodActions'
 
-const {API_URL} = process.env
-const moodsUrl = API_URL + 'moods/'
-
-export class IndexPage extends Component {
+export class IndexPage extends PureComponent {
     render() {
 		const { props } = this
-		const {prefetchedMoods, loading} = props
 		return 	<PageWrapper
-					loading={loading}
+					loading={props.loading}
 					className='IndexPage'
 				>
 					<Grid fluid>
 						<WelcomeCard />
 						<MoodsInsert />
 						{/* TODO what to do with this loading? */}
-						<Loading condition={loading}>
+						<Loading condition={props.loading}>
 							<MoodsList
 								moods={props.moods}
 								totalPages={props.totalPages}
@@ -47,23 +40,16 @@ IndexPage.propTypes = {
 	currentPage: PropTypes.number,
 	loading: PropTypes.bool.isRequired,
 	location: PropTypes.object.isRequired,
-	fetchMoods: PropTypes.func.isRequired,
 }
 
 export default
 connect(
 	(state) => {
 		const { mood } = state
-		// console.log('state: ', state.mood);
 		return ({
 			moods: mood.get('moods'),
 			loading: mood.get('loading'),
 			totalPages: mood.get('totalPages'),
 			currentPage: mood.get('currentPage'),
 	})},
-	dispatch => ({
-		fetchMoods() {
-			dispatch(fetchMoods()).then()
-		}
-	})
 )(IndexPage)

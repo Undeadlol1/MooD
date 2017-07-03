@@ -11,7 +11,6 @@ chai.use(chaiEnzyme())
 describe('<IndexPage />', () => {
   const props = {
                   loading: false,
-                  fetchMoods: sinon.spy(),
                   location: {pathname: 'some'},
                 }
   const wrapper = shallow(<IndexPage {...props} />)
@@ -23,6 +22,10 @@ describe('<IndexPage />', () => {
 
   it('has <Grid>', () => {
     expect(wrapper.find('Styled(Grid)')).to.have.length(1);
+  });
+
+  it('has <WelcomeCard>', () => {
+    expect(wrapper.find('WelcomeCard')).to.have.length(1);
   });
 
   it('has <MoodsInsert>', () => {
