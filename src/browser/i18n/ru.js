@@ -19,7 +19,7 @@ export default {
 
 
     mood_is_a_content_consumption_service: 'Mood - это сервис потребления контента.',
-    pick_your_mood_and_service_will_generate: 'Выберите свое настроение и и сервис сгенерирует для вас уникальный персональный плейлист.',
+    pick_your_mood_and_service_will_generate: 'Выберите свое настроение и сервис сгенерирует для вас уникальный персональный плейлист.',
     ok: 'OK',
     current_mood: 'Мое настроение: ',
     incorrent_password: 'неправильный пароль',
