@@ -12,7 +12,7 @@ import MoodsInsert from 'browser/components/MoodsInsert'
 import PageWrapper from 'browser/components/PageWrapper'
 import WelcomeCard from 'browser/components/WelcomeCard'
 
-export class IndexPage extends PureComponent {
+class IndexPage extends PureComponent {
     render() {
 		const { props } = this
 		return 	<PageWrapper
@@ -41,6 +41,8 @@ IndexPage.propTypes = {
 	loading: PropTypes.bool.isRequired,
 	location: PropTypes.object.isRequired,
 }
+
+export { IndexPage }
 
 export default
 connect(
