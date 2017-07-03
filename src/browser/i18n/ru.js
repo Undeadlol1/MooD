@@ -17,6 +17,10 @@ export default {
     choose_your_language: 'Выберите ваш язык',
     currently_zero_content_here: 'Пока контента нет',
 
+
+    mood_is_a_content_consumption_service: 'Mood - это сервис потребления контента.',
+    pick_your_mood_and_service_will_generate: 'Выберите свое настроение и и сервис сгенерирует для вас уникальный персональный плейлист.',
+    ok: 'OK',
     current_mood: 'Мое настроение: ',
     incorrent_password: 'неправильный пароль',
     user_does_not_exists: 'пользователя не существует',

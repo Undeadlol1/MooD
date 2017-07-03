@@ -10,6 +10,7 @@ import MoodsFind from 'browser/components/MoodsFind'
 import MoodsList from 'browser/components/MoodsList'
 import MoodsInsert from 'browser/components/MoodsInsert'
 import PageWrapper from 'browser/components/PageWrapper'
+import WelcomeCard from 'browser/components/WelcomeCard'
 import YoutubeSearch from 'browser/components/YoutubeSearch'
 import { parseJSON } from 'browser/redux/actions/actionHelpers'
 import { fetchMoods, recieveMoods } from 'browser/redux/actions/MoodActions'
@@ -26,6 +27,7 @@ export class IndexPage extends Component {
 					className='IndexPage'
 				>
 					<Grid fluid>
+						<WelcomeCard />
 						<MoodsInsert />
 						{/* TODO what to do with this loading? */}
 						<Loading condition={loading}>
