@@ -99,7 +99,7 @@ app.use('/api/decisions', decisionsApi)
 app.use('/api/externals', externalsApi)
 
 // SPA
-app.use('/*', SSR)
+app.use(SSR)
 
 // export app to use in test suits
 export default app.listen(port, () => {

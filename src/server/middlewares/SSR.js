@@ -15,7 +15,7 @@ const cache = require('express-redis-cache')();
 export default
   express.Router()
   // all routes are processed client side via react-router
-  .get('/*',
+  .get('*',
   // TODO setup caching for logged in and unlogged
   // TODO setup caching for /mood/something
   // middleware to define cache prefix
