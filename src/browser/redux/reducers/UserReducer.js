@@ -1,36 +1,36 @@
 import isEmpty from 'lodash/isEmpty'
-import { Map } from 'immutable'
+import { Map, fromJS } from 'immutable'
 
-const emptyProfileObject = Map({
+const emptyProfileObject = {
 	id: '',
 	language: '',
 	UserId: '',
-})
+}
 
-const emptyLocalObject = Map({
+const emptyLocalObject = {
 	id: '',
 	username: '',
 	email: '',
 	UserId: '',
-})
+}
 
-const emptyVkObject = Map({
+const emptyVkObject = {
 	id: '',
 	image: '',
 	UserId: '',
 	username: '',
 	displayName: '',
-})
+}
 
-const emptyTwitterObject = Map({
+const emptyTwitterObject = {
 	id: '',
 	image: '',
 	UserId: '',
 	username: '',
 	displayName: '',
-})
+}
 
-const emptyUserObject = Map({
+const emptyUserObject = {
 	id: undefined,
 	image: '',
 	displayName: '',
@@ -38,10 +38,10 @@ const emptyUserObject = Map({
 	Twitter: emptyTwitterObject,
 	Profile: emptyProfileObject,
 	Local: emptyLocalObject,
-})
+}
 
-export const initialState = Map({
-	...emptyUserObject.toJS(),
+export const initialState = fromJS({
+	...emptyUserObject,
 	loading: false,
 	loginIsOpen: false,
 	fetchedUser: emptyUserObject,
