@@ -55,8 +55,8 @@ export default connect(
 		return {
 			UserId,
 			loading: user.get('loading'),
+			isOwnPage: user.get('id') == UserId,
 			fetchedUser: user.get('fetchedUser'),
-			isOwnPage: user.get('id') == params.username, // TODO this,
 			displayName: user.getIn(['fetchedUser', 'displayName']),
 		}
 	},
