@@ -12,9 +12,9 @@ import ShareButton from 'browser/components/ShareButton'
 import { translate as t } from 'browser/containers/Translator'
 import { parseJSON } from 'browser/redux/actions/actionHelpers'
 import NodesInsert from 'browser/containers/NodesInsertContainer'
+import { actions as nodeActions } from 'browser/redux/actions/NodeActions'
+import { recieveMood, unloadMood } from 'browser/redux/actions/MoodActions'
 import { actions as globalActions } from 'browser/redux/actions/GlobalActions'
-import { fetchNode, actions as nodeActions } from 'browser/redux/actions/NodeActions'
-import { recieveMood, fetchMood, unloadMood } from 'browser/redux/actions/MoodActions'
 
 export class MoodPage extends Component {
 
@@ -43,7 +43,10 @@ export class MoodPage extends Component {
 					image={image}
 				>
 					{/* TODO remove h1 (use css instead) */}
-					{contentNotFound && <h1 className="MoodPage__header">{t("currently_zero_content_here")}</h1>}
+					{
+						contentNotFound
+						&& <h1 className="MoodPage__header">{t("currently_zero_content_here")}</h1>
+					}
 					<Video className='MoodPage__video'>
 						<NavBar className='NavBar--sticky' />
 						{!contentNotFound && <Decision className='MoodPage__decision' />}
@@ -60,8 +63,6 @@ MoodPage.propTypes = {
 	contentNotFound: PropTypes.bool,
 	isLoading: PropTypes.bool.isRequired,
 	params: PropTypes.object.isRequired,
-	fetchMood: PropTypes.func.isRequired,
-	fetchNode: PropTypes.func.isRequired,
 	unloadMood: PropTypes.func.isRequired,
 	unloadNode: PropTypes.func.isRequired,
 	toggleHeader: PropTypes.func.isRequired,
@@ -78,15 +79,9 @@ export const stateToProps = ({ node, mood }, ownProps) => {
 }
 
 export const dispatchToProps = dispatch => ({
-	fetchMood: (slug) => dispatch(fetchMood(slug)),
-	fetchNode: (slug) => dispatch(fetchNode(slug)),
 	unloadMood: () => dispatch(unloadMood()),
 	unloadNode: () => dispatch(nodeActions.unloadNode()),
 	toggleHeader: (boolean) => dispatch(globalActions.toggleHeader(boolean))
 })
-
-const {API_URL} = process.env
-const moodsUrl = API_URL + 'moods/'
-const nodesUrl = API_URL + 'nodes/'
 
 export default (connect(stateToProps, dispatchToProps)(MoodPage))

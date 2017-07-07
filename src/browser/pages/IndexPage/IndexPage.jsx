@@ -22,7 +22,6 @@ class IndexPage extends PureComponent {
 					<Grid fluid>
 						<WelcomeCard />
 						<MoodsInsert />
-						{/* TODO what to do with this loading? */}
 						<Loading condition={props.loading}>
 							<MoodsList
 								moods={props.moods}
