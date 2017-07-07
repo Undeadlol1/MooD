@@ -23,7 +23,7 @@ const props = {
                 fetchUser: sinon.spy(),
                 params: { username },
               }
-sinon.spy(UserPage.prototype, 'componentWillMount');
+// sinon.spy(UserPage.prototype, 'componentWillMount');
 const wrapper = shallow(<UserPage {...props} />)
 
 describe('<UserPage />', () => {
