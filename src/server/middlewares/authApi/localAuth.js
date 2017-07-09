@@ -69,13 +69,13 @@ router
   // TODO tests
   .get('/validate/:username', async (req, res) => {
     const {username} = req.params
-    const user = await Local.findOne({
+    Local
+    .findOne({
       where: {
         $or: [{username}, {email: username}]
-      },
-      raw: true,
+      }
     })
-    res.json(user || {})
+    .then(user => res.json(user || {}))
   })
 
 export default router
