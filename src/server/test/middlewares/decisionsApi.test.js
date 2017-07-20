@@ -1,15 +1,14 @@
-// TODO
 import 'babel-polyfill'
-import chai, { should, expect } from 'chai'
-import request from 'supertest'
-import server from '../../server'
-import { Mood, User, Node, Decision } from '../../data/models'
 import slugify from 'slug'
-import uniq from 'lodash/uniq'
 import colors from 'colors'
-import users from '../../data/fixtures/users'
+import uniq from 'lodash/uniq'
+import request from 'supertest'
+import server from 'server/server'
 import { stringify } from 'query-string'
 import { loginUser } from './authApi.test'
+import chai, { should, expect } from 'chai'
+import users from 'server/data/fixtures/users'
+import { Mood, User, Node, Decision } from 'server/data/models'
 chai.use(require('chai-datetime'));
 chai.should();
 
