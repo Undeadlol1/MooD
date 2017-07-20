@@ -30,15 +30,10 @@ export default describe('/decisions API', function() {
 
 
     describe('POST decision', async function() {
-        const route = '/api/externals/search'
 
         it('fails if not logged in', async function() {
             await agent.post(apiUrl).expect(401)
         })
-
-        // it('fails without "selector"', async function() {
-        //     await user.get(`${route}?`).expect(400)
-        // })
 
         it('handles upvote', async function() {
             const user = users[0]
@@ -60,5 +55,4 @@ export default describe('/decisions API', function() {
                     })
         })
     })
-
 })

@@ -1,13 +1,8 @@
-import { Node, Mood, Decision, User } from '../data/models'
-import { mustLogin } from '../services/permissions'
-import extend from 'lodash/assignIn'
+import { Node, Mood, Decision, User } from 'server/data/models'
+import { mustLogin } from 'server/services/permissions'
 import { Router } from "express"
-import selectn from "selectn"
-
-// TODO add comments
 
 export default Router()
-  // TODO change to 'put'
   .post('/', mustLogin, async function({user, body}, res) {
 
     /*
@@ -27,11 +22,9 @@ export default Router()
                       UserId,
                       MoodId: node.MoodId
                     }
-      // const nextViewAt = new Date().setDate(new Date().getDate() + 1) // tommorow // TEST VALUE
       const NodeRating = Number(node.rating) + (vote ? 1 : -1)
       const defaults = {
                           vote,
-                          // nextViewAt,
                           NodeRating
                         }
 
@@ -50,8 +43,6 @@ export default Router()
          defaults: { NodeRating }
         })
       })
-
-      // TODO change Decision.position
 
       const reponse = await Decision.findOne({where})
 
