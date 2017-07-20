@@ -1,12 +1,12 @@
-import { Node, Mood, Decision, User } from '../data/models'
-import { mustLogin } from '../services/permissions'
-import { parseUrl } from '../../shared/parsers'
-import extend from 'lodash/assignIn'
-import sequelize from "sequelize"
-import { Router } from "express"
+import { Node, Mood, Decision, User } from 'server/data/models'
+import { mustLogin } from 'server/services/permissions'
 import { parse as parseQuery } from 'query-string'
+import { parseUrl } from 'shared/parsers'
+import extend from 'lodash/assignIn'
 import isEmpty from 'lodash/isEmpty'
 import YouTube from 'youtube-node'
+import sequelize from "sequelize"
+import { Router } from "express"
 /*
   ⚠️ note about YouTube API ⚠️
   currently youtube key works only on specific IP's
