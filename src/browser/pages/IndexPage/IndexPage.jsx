@@ -16,8 +16,8 @@ class IndexPage extends PureComponent {
     render() {
 		const { props } = this
 		return 	<PageWrapper
-					loading={props.loading}
 					className='IndexPage'
+					loading={props.loading}
 				>
 					<Grid fluid>
 						<WelcomeCard />
@@ -45,12 +45,10 @@ export { IndexPage }
 
 export default
 connect(
-	(state) => {
-		const { mood } = state
-		return ({
-			moods: mood.get('moods'),
-			loading: mood.get('loading'),
-			totalPages: mood.get('totalPages'),
-			currentPage: mood.get('currentPage'),
-	})},
+	({mood}) => ({
+		moods: mood.get('moods'),
+		loading: mood.get('loading'),
+		totalPages: mood.get('totalPages'),
+		currentPage: mood.get('currentPage'),
+	}),
 )(IndexPage)
