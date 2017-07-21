@@ -10,11 +10,12 @@ const externalsUrl = API_URL + 'externals/search/'
 
 export const actions = createActions({
   UNLOAD_NODE: () => null,
+  REMOVE_NODE: id => id,
   TOGGLE_DIALOG: () => null,
   RECIEVE_NODE: node => node,
   RECIEVE_NODES: nodes => nodes,
   UPDATE_NODE: object => object,
-  FETCHING_NODE: () => null,
+//   FETCHING_NODE: () => null,
   FETCHING_ERROR: reason => reason,
   RECIEVE_SEARCHED_VIDEOS: videos => videos,
 })
@@ -127,17 +128,24 @@ export const youtubeSearch = query => (dispatch, getState) => {
  * @param {Boolean} boolean value to set in Decision.vote
  */
 export const vote = boolean => (dispatch, getState) => {
+	const { node } = getState()
 	let payload = {}
-	payload.NodeId = getState().node.id
+	payload.NodeId = node.get('id')
+	payload.id = node.getIn(['Decision', 'id'])
 	payload.vote = boolean
-	fetch(decisionsUrl, headersAndBody(payload))
+	return fetch(decisionsUrl, headersAndBody(payload, payload.id ? 'PUT' : 'POST'))
 		.then(checkStatus)
 		.then(parseJSON)
-		.then(({vote}) => {
-			dispatch(actions.updateNode({vote}))
+		.then(({vote, NodeId}) => {
+			if (vote) dispatch(actions.updateNode({Decision: {vote}}))
+			else {
+				dispatch(actions.removeNode(NodeId))
+				dispatch(nextVideo())
+			}
 		})
 		// TODO
-		// .catch(() => {
-		// 	dispatch(actions.voteFailure)
-		// })
+		.catch(error => {
+			console.error(error);
+			// dispatch(actions.voteFailure)
+		})
 }
