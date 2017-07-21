@@ -106,18 +106,18 @@ before(function(done) {
         // create nodes
         .then(() => Node.bulkCreate(nodes))
         .then(() => Node.findAll({raw: true}))
-        .each((node, index) => {
-            return createdUsers.forEach((user, index2) => {
-                decisions.push({
-                    position: index,
-                    NodeId: node.id,
-                    MoodId: node.MoodId,
-                    UserId: user.id,
-                    NodeRating: node.rating,
-                    rating: Number(randomIntFromInterval(-3, 20)),
-                })
-            })
-        })
+        // .each((node, index) => {
+        //     return createdUsers.forEach((user, index2) => {
+        //         decisions.push({
+        //             position: index,
+        //             NodeId: node.id,
+        //             MoodId: node.MoodId,
+        //             UserId: user.id,
+        //             NodeRating: node.rating,
+        //             rating: Number(randomIntFromInterval(-3, 20)),
+        //         })
+        //     })
+        // })
         // create decisions
         .then(() => Decision.bulkCreate(decisions))
         .then(() => done())
@@ -160,7 +160,7 @@ describe('fixture data setup', function() {
             expect(moods).to.have.length(10)
             expect(nodes).to.have.length(100) // 10 moods * 10 nodes
             expect(profiles).to.have.length(10)
-            expect(decisions).to.have.length(1000) // 10 moods * 10 nodes * 10 decisions
+            // expect(decisions).to.have.length(1000) // 10 moods * 10 nodes * 10 decisions
 
             moods.forEach(mood => {
                 const moodNodes = nodes.filter(
@@ -172,28 +172,28 @@ describe('fixture data setup', function() {
                 ).to.be.equal(10)
             })
 
-            nodes.forEach(async node => {
-                const nodeDecisions = decisions.filter(
-                    decision => decision.NodeId == node.id
-                )
-                expect(
-                    nodeDecisions.length,
-                    'each node must have 10 decisions'
-                ).to.be.equal(10)
-            })
+            // nodes.forEach(async node => {
+            //     const nodeDecisions = decisions.filter(
+            //         decision => decision.NodeId == node.id
+            //     )
+            //     expect(
+            //         nodeDecisions.length,
+            //         'each node must have 10 decisions'
+            //     ).to.be.equal(10)
+            // })
 
-            users.forEach(user => {
-                nodes.forEach(node => {
-                    const userDecisions = decisions.filter(
-                        decision => (decision.MoodId == node.MoodId
-                                    && decision.UserId == user.id)
-                    )
-                    expect(
-                        userDecisions.length,
-                        'each user in mood must have 10 decisions'
-                    ).to.be.equal(10)
-                })
-            })
+            // users.forEach(user => {
+            //     nodes.forEach(node => {
+            //         const userDecisions = decisions.filter(
+            //             decision => (decision.MoodId == node.MoodId
+            //                         && decision.UserId == user.id)
+            //         )
+            //         expect(
+            //             userDecisions.length,
+            //             'each user in mood must have 10 decisions'
+            //         ).to.be.equal(10)
+            //     })
+            // })
         } catch (error) {
             console.log(error)
             throw new Error(error)
