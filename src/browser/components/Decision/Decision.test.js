@@ -9,8 +9,8 @@ chai.use(chaiEnzyme())
 
 describe('<Decision />', () => {
   const props = {
-    decision: {},
     vote: sinon.spy(),
+    decisionVote: false,
     nextVideo: sinon.spy(),
   }
   const wrapper = shallow(<Decision {...props} />)
@@ -27,7 +27,9 @@ describe('<Decision />', () => {
     expect(icon).to.have.length(1)
                 .and.prop('hoverIcon', 'thumbs-o-up')
     icon.simulate('click')
+    // icon.update()
     assert(props.vote.calledOnce)
+    // expect(icon).to.have.prop('color', 'rgb(0, 151, 167)')
   })
 
   it('has skip icon', () => {
@@ -42,7 +44,9 @@ describe('<Decision />', () => {
     expect(icon).to.have.length(1)
                 .and.prop('hoverIcon', 'thumbs-o-down')
     icon.simulate('click')
+    // icon.update()
     assert(props.vote.calledTwice)
+    // expect(icon).to.have.prop('color', 'rgb(255, 64, 129)')
   })
 
 })
