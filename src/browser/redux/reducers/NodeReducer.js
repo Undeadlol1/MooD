@@ -1,7 +1,6 @@
 import isEmpty from 'lodash/isEmpty'
 import { Map, List } from 'immutable'
 
-// TODO add immutable
 const decisionStructure = Map({
 								rating: '',
 								UserId: '',
@@ -23,7 +22,7 @@ const nodeStructure = 	Map({
 							contentId: '',
 							Decision: decisionStructure.toJS()
 						})
-const initialState = 	Map({
+export const initialState = Map({
 							nodes: List(),
 							error: '',
 							loading: false,
@@ -37,12 +36,12 @@ const initialState = 	Map({
 
 export default (state = initialState, {type, payload}) => {
 	switch(type) {
-		case 'FETCHING_NODE':
-			return state.merge({
-				loading: true,
-				finishedLoading: false,
-				contentNotFound: false,
-			})
+		// case 'FETCHING_NODE':
+		// 	return state.merge({
+		// 		loading: true,
+		// 		finishedLoading: false,
+		// 		contentNotFound: false,
+		// 	})
 		case 'RECIEVE_NODE':
 			return state
 				.merge(payload)
@@ -70,8 +69,16 @@ export default (state = initialState, {type, payload}) => {
 				.merge({nodes: List()})
 				.mergeDeep({
 					loading: false,
-					finishedLoading: false,
+					// finishedLoading: false,
 					contentNotFound: false,
+				})
+		// remove node from nodes list
+		case 'REMOVE_NODE':
+			return state
+				.merge({
+					nodes: state
+							.get('nodes')
+							.filter(node => node.get('id') !== payload)
 				})
 		case 'RECIEVE_SEARCHED_VIDEOS':
 			return state.merge({
