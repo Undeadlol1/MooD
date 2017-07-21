@@ -93,11 +93,21 @@ export async function findRandomNode(MoodId) {
 }
 
 export async function findRandomNodes(MoodId) {
-  return await Node.findAll({
+  const nodes = await Node.findAll({
     raw: true,
     nest: true,
     where: {MoodId},
     order: 'rand()',
     limit: 100,
+    include: [Decision],
+  })
+  /*
+    remove downvoted by user nodes
+    (i could not make sequelize to filter data by children values,
+    so had to filter manually)
+  */
+  return nodes.filter(node => {
+      const { vote } = node.Decision
+      return !(vote == 0 || vote === false)
   })
 }
