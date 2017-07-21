@@ -9,17 +9,17 @@ import { vote, fetchNode, nextVideo } from 'browser/redux/actions/NodeActions'
 // TODO change name to 'controls'?
 export class Decision extends PureComponent {
 	static propTypes = {
-		decisionVote: PropTypes.object,
+		decisionVote: PropTypes.number,
 		vote: PropTypes.func.isRequired,
 		nextVideo: PropTypes.func.isRequired,
-		content: PropTypes.object.isRequired,
 	}
 	render() {
-		const { decision, className, decisionVote, vote, nextVideo, ...rest } = this.props
+		const { decisionVote, className, vote, nextVideo, ...rest } = this.props
 		return 	<div className={'Decision ' + className}>
 					<Icon
 						name="thumbs-up"
 						hoverIcon='thumbs-o-up'
+						color={decisionVote ? 'rgb(0, 151, 167)' : undefined}
 						onClick={vote.bind(this, true)} />
 					<Icon
 						onClick={nextVideo}
@@ -27,6 +27,7 @@ export class Decision extends PureComponent {
 					<Icon
 						name="thumbs-down"
 						hoverIcon='thumbs-o-down'
+						color={decisionVote === false || 0 ? 'rgb(255, 64, 129)' : undefined}
 						onClick={vote.bind(this, false)} />
 				</div>
 	}
@@ -36,8 +37,7 @@ export default connect(
 	// state to props
 	({ node }, ownProps) => {
 		return {
-			decision: node.get('Decision'),
-			decisionVote: node.getIn('Decision', 'vote'),
+			decisionVote: node.getIn(['Decision', 'vote']),
 			...ownProps
 		}
 	},
