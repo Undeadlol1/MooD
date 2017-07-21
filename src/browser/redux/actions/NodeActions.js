@@ -22,13 +22,13 @@ export const actions = createActions({
 
 // TODO comments
 export const nextVideo = () => (dispatch, getState) => {
-	const state = getState().node
-	const nodes = state.get('nodes')
-	const currentNode = nodes.find(node => {
-		return node.get('id') == state.get('id')
-	})
-	const position = nodes.indexOf(currentNode)
-	const nextNode = nodes.get(position + 1)
+	const 	state = getState().node,
+			nodes = state.get('nodes'),
+			currentNode = nodes.find(node => {
+				return node.get('id') == state.get('id')
+			}),
+			position = nodes.indexOf(currentNode),
+			nextNode = nodes.get(position + 1)
 
 	if (nextNode) dispatch(actions.recieveNode(nextNode))
 	else dispatch(actions.recieveNode(nodes.get(0)))
