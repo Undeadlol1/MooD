@@ -17,10 +17,16 @@ class Icon extends Component {
 
     render() {
         const { className, size, color, style, hoverIcon, ...rest } = this.props
+        // add dark outline to icon
+        // (needed in Decision when background is white)
+        const iconStyles = {
+            '-webkit-text-stroke-width': '1px',
+            '-webkit-text-stroke-color': 'rgb(48, 48, 48)',
+        }
         const iconOptions = {
                                 size,
                                 name: this.state.currentIcon,
-                                style: extendObject({color}, style),
+                                style: extendObject({color}, iconStyles, style),
                             }
 
         return  <FontAwesome
