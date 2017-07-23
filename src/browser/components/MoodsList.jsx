@@ -26,7 +26,7 @@ export class MoodsList extends Component {
 								? `http://img.youtube.com/vi/${nodeContent}/0.jpg`
 								: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2000px-No_image_available.svg.png'
 					return	<Col className="MoodsList__item" style={itemStyles} xs={12} sm={6} md={4} lg={3} key={mood.get('id')}>
-							<Paper zDepth={5}>
+								<Paper zDepth={5}>
 									<Link to={`/mood/${mood.get('slug')}`}>
 										<Card>
 											<CardMedia overlay={<CardTitle title={mood.get('name')} />}>
