@@ -20,8 +20,8 @@ class Icon extends Component {
         // add dark outline to icon
         // (needed in Decision when background is white)
         const iconStyles = {
-            '-webkit-text-stroke-width': '1px',
-            '-webkit-text-stroke-color': 'rgb(48, 48, 48)',
+            'WebkitTextStrokeWidth': '1px',
+            'WebkitTextStrokeColor': 'rgb(48, 48, 48)',
         }
         const iconOptions = {
                                 size,
