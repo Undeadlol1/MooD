@@ -10,7 +10,6 @@ const router = Router()
 
 router
   .post('/signup',   async function(req, res) {
-    console.log('req.body: ', req.body);
     const { username, email, password } = req.body
     // TODO test for params
     if(!username || !email || !password) res.status(400).end('params are required')
