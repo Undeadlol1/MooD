@@ -62,6 +62,7 @@ const routesConfig = {
     { path: 'search', component: SearchPage },
     { path: 'about', component: AboutPage },
     { path: '*', component: NotFound },
+    // ⚠️ Hook for cli! Do not remove 💀
   ]
 }
 
