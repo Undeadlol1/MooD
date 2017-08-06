@@ -3,60 +3,112 @@ const path = require('path')
 const shell = require('shelljs')
 const replace = require('replace')
 const inquirer = require('inquirer')
+const upperCaseFirst = require('change-case').upperCaseFirst
+const lowerCaseFirst = require('change-case').lowerCaseFirst
+const imageToAscii = require('image-to-ascii')
 
 // show cli menu with few options
 const launchText = 'launch project'
 const updateText = 'update project'
 const pageText = 'create page'
 const componentText = 'create component'
-inquirer.prompt([{
-    type: 'list',
-    name: 'name',
-    choices: [launchText, componentText, pageText, updateText],
-    message: 'What do you want to do?',
-}])
-// show prompt depending on users decision
-.then(function ({name}) {
-    switch (name) {
-        case launchText:
-            shell.exec('yarn; yarn start')
-            break;
-        case componentText:
-            inquirer
-            .prompt([{
-                name: 'name',
-                type: 'input',
-                message: 'component name',
-            }])
-            .then(input => createComponent(input.name))
-            break;
-        case pageText:
-            inquirer
-            .prompt([{
-                name: 'name',
-                type: 'input',
-                message: 'page file name?',
-            }])
-            .then(({name: pageName}) => {
+const apiText = 'create API'
+const hook = "// ⚠️ Hook for cli! Do not remove 💀"
+
+imageToAscii(path.resolve(__dirname, '../duck.jpeg'), (err, converted) => {
+    // show image
+    console.log(err || converted);
+    // show cli ui
+    inquirer.prompt([{
+        type: 'list',
+        name: 'name',
+        choices: [launchText, componentText, pageText, updateText, apiText],
+        message: 'What do you want to do?',
+    }])
+    // show prompt depending on users decision
+    .then(function ({name}) {
+        switch (name) {
+            case launchText:
+                shell.exec('yarn; yarn start')
+                break;
+            case componentText:
                 inquirer
                 .prompt([{
-                    name: 'path',
+                    name: 'name',
                     type: 'input',
-                    message: 'routing path(no first slash)?',
+                    message: 'component name',
                 }])
-                .then(({path}) => createPage(pageName, path))
-            })
-            break;
-        case updateText:
-            // shell.exec('git remote add upstream https://github.com/developer-expirience/boilerplate')
-            shell.exec('git pull upstream master --allow-unrelated-histories')
-            shell.exec('yarn')
-            shell.echo('😎  all done 😎')
-            break;
-        default:
-            break;
-    }
+                .then(input => createComponent(input.name))
+                break;
+            case pageText:
+                inquirer
+                .prompt([{
+                    name: 'name',
+                    type: 'input',
+                    message: 'page file name?',
+                }])
+                .then(({name: pageName}) => {
+                    inquirer
+                    .prompt([{
+                        name: 'path',
+                        type: 'input',
+                        message: 'routing path(no first slash)?',
+                    }])
+                    .then(({path}) => createPage(pageName, path))
+                })
+                break;
+            case updateText:
+                // shell.exec('git remote add upstream https://github.com/developer-expirience/boilerplate')
+                shell.exec('git pull upstream master --allow-unrelated-histories')
+                shell.exec('yarn')
+                shell.echo('😎  all done 😎')
+                break;
+            case apiText:
+                inquirer
+                .prompt([{
+                    name: 'name',
+                    type: 'input',
+                    message: 'api name (ex. "posts", "messages", "users")?',
+                }])
+                .then(({name}) => createApi(name))
+                break;
+            default:
+                break;
+        }
+    });
 });
+
+function createApi(name) {
+    const upperCase = upperCaseFirst(name)
+    const lowerCase = lowerCaseFirst(name)
+    /**
+     * 1) create model
+     * 2) create migration for model
+     * 3) create controller
+     * 4) create API middleware
+     * 5) create test for middleware
+     * 6) add line to server.js
+     */
+    shell.exec(`sequelize model:create --name ${name} --attributes 'name:string'`)
+    copyFolderAndReplace(
+        path.resolve(__dirname, '../templates/controller'),
+        'controllerName',
+        upperCase + 'Controller',
+        path.resolve(__dirname, '../../src/server/data/controllers')
+    )
+    copyFolderAndReplace(
+        path.resolve(__dirname, '../templates/apiMiddleware'),
+        'apiName',
+        lowerCase + 'Api',
+        path.resolve(__dirname, '../../src/server/middlewares')
+    )
+    addLineToFile(
+        path.resolve(__dirname, '../../src/server/server.js'),
+        hook,
+        `app.use(${'/api/' + lowerCase}, require(${'./middlewares/' + lowerCase + 'Api'})`
+    )
+    console.log('don\'t forget to edit all the files!')
+}
 
 /**
  * Copy files from folder and replace parts of text and file name
@@ -93,12 +145,23 @@ function copyFolderAndReplace(folderPath, replaceWhat, replaceText, outputPath) 
     }
 }
 
+function addLineToFile(filePath, regex, replaceText) {
+    replace({
+        regex,
+        silent: true,
+        paths: [filePath],
+        // replace 'regex' text with appropriate text, and add regex text again afterwards,
+        // in order to this function reusable
+        replacement: replaceText + ` ,\n${regex}`,
+    })
+}
+
 function createPage(pageName, routePath) {
-    const hook = "// ⚠️ Hook for cli! Do not remove 💀"
     const folderName = pageName
     const folderPath = path.resolve(__dirname, '../../src/browser/pages')
     const templatesPath = path.resolve(__dirname, '../templates/page')
     // add route to 'routes.js'
+    // TODO use 'addLineToFile' function
     replace({
         regex: hook,
         silent: true,

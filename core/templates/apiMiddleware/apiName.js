@@ -1,10 +1,10 @@
-import { mustLogin } from '../services/permissions'
-import { Mood, Node } from '../data/models'
+import { mustLogin } from 'server/services/permissions'
+import { Mood, Node } from 'server/data/models'
 import express from 'express'
 import slugify from 'slug'
 
 // routes
-const router = express.Router(); // TODO refactor without "const"?
+const router = express.Router()
 const limit = 12
 
 router
