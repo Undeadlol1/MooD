@@ -83,6 +83,7 @@ export class MoodsList extends Component {
 
 MoodsList.propTypes = {
   moods: PropTypes.object.isRequired,
+  selector: PropTypes.string,
   totalPages: PropTypes.number,
   currentPage: PropTypes.number,
 }
@@ -99,7 +100,7 @@ export default connect(
 	// dispatchToProps
     (dispatch, ownProps) => ({
 		changePage(page) {
-			dispatch(fetchMoods(page))
+			dispatch(fetchMoods(ownProps.selector, page))
 		}
     })
 )(MoodsList)
