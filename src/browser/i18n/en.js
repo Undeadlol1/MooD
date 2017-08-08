@@ -44,4 +44,8 @@ export default {
     new: 'new',
     random: 'random',
     created_moods: 'Created moods',
+    your_avatar: 'Your avatar',
+    i_like_it: 'i like it',
+    skip: 'skip',
+    dont_like_it_dont_show_again: 'i don\'t like it (you will never see this again here)',
 }

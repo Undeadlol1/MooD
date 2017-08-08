@@ -45,4 +45,8 @@ export default {
     new: 'новое',
     random: 'случайное',
     created_moods: 'Созданные настроения',
+    your_avatar: 'Ваш аватар',
+    i_like_it: 'мне нравится',
+    skip: 'пропустить',
+    dont_like_it_dont_show_again: 'мне не нравится (вы больше не увидите это видео)',
 }
