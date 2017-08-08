@@ -23,7 +23,6 @@ import { translate } from '../containers/Translator'
 	},
     (dispatch, ownProps) => ({
         changeLanguage(UserId, language) {
-			console.log('UserId: ', UserId);
 			cookies.set('locale', language)
             dispatch(
 				updateUser(UserId, {language})

@@ -33,12 +33,8 @@ describe('<IndexPage />', () => {
     expect(wrapper.find('ReduxForm')).to.have.length(1);
   });
 
-  it('has <Loading />', () => {
-    expect(wrapper.find('Loading')).to.have.length(1);
-  });
-
-  it('has <MoodsList />', () => {
-    expect(wrapper.find('Connect(MoodsList)')).to.have.length(1);
+  it('has <MoodTabs>', () => {
+    expect(wrapper.find('Connect(MoodTabs)')).to.have.length(1);
   });
 
 });
