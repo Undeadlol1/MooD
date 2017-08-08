@@ -41,4 +41,7 @@ export default {
     whats_on_your_mind: "Что у тебя на уме?",
     // used for img's "alt" property
     things_image: ' изображение',
+    popular: 'популярное',
+    new: 'новое',
+    random: 'случайное',
 }

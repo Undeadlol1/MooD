@@ -40,4 +40,7 @@ export default {
     whats_on_your_mind: "What's on your mind?",
     // used for img's "alt" property
     things_image: "'s image",
+    popular: 'popular',
+    new: 'new',
+    random: 'random',
 }
