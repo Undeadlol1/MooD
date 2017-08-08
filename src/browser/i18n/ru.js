@@ -44,4 +44,5 @@ export default {
     popular: 'популярное',
     new: 'новое',
     random: 'случайное',
+    created_moods: 'Созданные настроения',
 }

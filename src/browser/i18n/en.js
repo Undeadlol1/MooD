@@ -43,4 +43,5 @@ export default {
     popular: 'popular',
     new: 'new',
     random: 'random',
+    created_moods: 'Created moods',
 }

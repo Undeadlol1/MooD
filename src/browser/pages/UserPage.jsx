@@ -10,11 +10,12 @@ import MoodsInsert from 'browser/components/MoodsInsert'
 import PageWrapper from 'browser/components/PageWrapper'
 import { Grid, Row, Col } from 'react-styled-flexboxgrid'
 import YoutubeSearch from 'browser/components/YoutubeSearch'
+import { translate as t } from 'browser/containers/Translator'
 import ChangeLanguageForm from 'browser/components/ChangeLanguageForm'
 
 export class UserPage extends Component {
 	@injectProps
-    render({loading, location, UserId, displayName, isOwnPage}) {
+    render({moods, loading, location, UserId, displayName, isOwnPage}) {
 		const src = `https://api.adorable.io/avatars/300/${UserId}.png`
 		return 	<PageWrapper
 					preset={'pop'}
@@ -38,6 +39,12 @@ export class UserPage extends Component {
 								{isOwnPage ? <ChangeLanguageForm /> : null}
 							</Col>
 						</Row>
+						<Row>
+							<Col xs={12}>
+								<center><h3>{t('created_moods')}</h3></center>
+							</Col>
+						</Row>
+						<MoodsList moods={moods} />
 					</Grid>
 				</PageWrapper>
     }
@@ -57,6 +64,7 @@ export default connect(
 			loading: user.get('loading'),
 			isOwnPage: user.get('id') == UserId,
 			fetchedUser: user.get('fetchedUser'),
+			moods: user.getIn(['fetchedUser', 'moods']),
 			displayName: user.getIn(['fetchedUser', 'displayName']),
 		}
 	},
