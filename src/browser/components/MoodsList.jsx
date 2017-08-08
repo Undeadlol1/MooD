@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { List } from 'immutable'
 import selectn from 'selectn'
+import Loading from 'browser/components/Loading'
 
 const itemStyles = {
 	marginBottom: '1rem'
@@ -47,6 +48,7 @@ export class MoodsList extends Component {
 
 	render() {
 		const { props } = this
+		if (props.loading) return <Loading />
 		return  <section className="MoodsList">
 					<Row>
 						{this.renderItems()}
@@ -86,6 +88,7 @@ MoodsList.propTypes = {
   selector: PropTypes.string,
   totalPages: PropTypes.number,
   currentPage: PropTypes.number,
+  loading: PropTypes.bool,
 }
 
 MoodsList.defaultProps = {
@@ -96,7 +99,10 @@ MoodsList.defaultProps = {
 
 export default connect(
 	// stateToProps
-	(state, ownProps) => ({ ...ownProps }),
+	({mood}, ownProps) => ({
+		loading: mood.get('loading'),
+		...ownProps
+	}),
 	// dispatchToProps
     (dispatch, ownProps) => ({
 		changePage(page) {
