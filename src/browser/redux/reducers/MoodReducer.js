@@ -7,20 +7,22 @@ const emptyMoodStructure = {
 	id: '',
 	name: '',
 	slug: '',
-	Nodes: List() // TODO do i need this?
+	Nodes: List(),
 }
+
+export const emptyMoodsObject = Map({
+	moods: List(),
+	totalPages: 0,
+	currentPage: 0,
+})
 
 const initialState = 	Map({
 							...emptyMoodStructure,
-							moods: List(),
-							searchedMoods: Map({
-								moods: List(),
-								totalPages: 0,
-								currentPage: 0,
-							}), // TODO rework this
-							Nodes: List(),
-							totalPages: 0,
-							currentPage: 0,
+							// moods: List(),
+							new: emptyMoodsObject,
+							random: emptyMoodsObject,
+							popular: emptyMoodsObject,
+							searchedMoods: emptyMoodsObject,
 							loading: false,
 						})
 
@@ -28,10 +30,9 @@ export default (state = initialState, {type, payload}) => {
 	switch(type) {
 		case 'RECIEVE_MOODS':
 		// ... payload? or something else?
-			return state.merge({
-						...payload,
-						loading: false,
-					})
+			return state
+					.merge({loading: false})
+					.mergeIn([payload.selector], payload)
 		case 'RECIEVE_MOOD':
 			return state.merge({
 						...payload,
