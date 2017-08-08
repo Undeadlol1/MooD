@@ -1,6 +1,6 @@
-import { getUsersMoods } from '../data/controllers/MoodsController'
-import { mustLogin } from '../services/permissions'
-import { Mood, Node } from '../data/models'
+import { getUsersMoods } from 'server/data/controllers/MoodsController'
+import { mustLogin } from 'server/services/permissions'
+import { Mood, Node } from 'server/data/models'
 import express from 'express'
 import slugify from 'slug'
 

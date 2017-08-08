@@ -18,7 +18,7 @@ export const emptyMoodsObject = Map({
 
 const initialState = 	Map({
 							...emptyMoodStructure,
-							// moods: List(),
+							dialogIsOpen: false,
 							new: emptyMoodsObject,
 							random: emptyMoodsObject,
 							popular: emptyMoodsObject,
@@ -29,7 +29,6 @@ const initialState = 	Map({
 export default (state = initialState, {type, payload}) => {
 	switch(type) {
 		case 'RECIEVE_MOODS':
-		// ... payload? or something else?
 			return state
 					.merge({loading: false})
 					.mergeIn([payload.selector], payload)
@@ -38,6 +37,9 @@ export default (state = initialState, {type, payload}) => {
 						...payload,
 						loading: false
 					})
+
+		case 'TOGGLE_MOODS_INSERT_DIALOG':
+			return state.set('dialogIsOpen', !state.get('dialogIsOpen'))
 		case 'INSERT_MOOD_SUCCES':
 			return state.merge({
 						moods: [...state.get('moods'), payload.mood], // TODO rework this with immutable array method

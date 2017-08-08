@@ -33,17 +33,6 @@ const port = process.env.PORT || 3000,
       cookieExpires = 100 * 60 * 24 * 100, // 100 days
       { engine } = exphbs.create({})
 
-// development only middlewares
-if (process.env.NODE_ENV === 'development') { // TODO create dev middleware whic applues all dev specific middlewares
-  app.use(errorhandler())
-  app.use(morgan('dev')) // logger
-  // enable 'access control' to avoid CORS errors in browsersync
-  app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    next();
-  })
-}
-
 /*
   some routes return 304 if
   multiple calls to same route are made
@@ -75,6 +64,17 @@ app.engine('handlebars', engine);
 app.set('view engine', 'handlebars');
 app.set('views', path.resolve(__dirname, './public'));
 
+// development only middlewares
+if (process.env.NODE_ENV === 'development') {
+  app.use(errorhandler())
+  app.use(morgan('dev')) // logger
+  // enable 'access control' to avoid CORS errors in browsersync
+  app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+  })
+}
+
 // production only middlewares
 if (process.env.NODE_ENV === 'production') {
   app.use(morgan('dev')) // logger
@@ -97,6 +97,7 @@ app.use('/api/moods', moodsApi)
 app.use('/api/nodes', nodesApi)
 app.use('/api/decisions', decisionsApi)
 app.use('/api/externals', externalsApi)
+// ⚠️ Hook for cli! Do not remove 💀
 
 // SPA
 app.use(SSR)
