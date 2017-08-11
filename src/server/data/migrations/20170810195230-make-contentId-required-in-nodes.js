@@ -6,12 +6,12 @@ module.exports = {
   up: function (queryInterface, Sequelize) {
     // destroy nodes with contentId == null, to avoid errors
     return Node.destroy({
-      where: {
-        $or: [
-          {contentId: null},
-          {contentId: false},
-        ]
-       }
+      where: {contentId: null},
+    })
+    .then(function() {
+      return Node.destroy({
+        where: {contentId: false},
+      })
     })
     // make actual migration
     .then(function() {
