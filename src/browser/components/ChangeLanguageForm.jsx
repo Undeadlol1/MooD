@@ -18,7 +18,6 @@ import { translate } from '../containers/Translator'
 @connect(
 	({user}, ownProps) => {
 		const UserId = user.get('id')
-		console.log('UserId: ', UserId);
 		return ({UserId, ...ownProps})
 	},
     (dispatch, ownProps) => ({
