@@ -2,10 +2,14 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    return  queryInterface.addColumn('users', 'displayName', Sequelize.STRING)
+    // doing nothing intentionally
+    return
+    // return  queryInterface.addColumn('users', 'displayName', Sequelize.STRING)
   },
 
   down: function (queryInterface, Sequelize) {
-    return  queryInterface.removeColumn('users', 'displayName')
+    // doing nothing intentionally
+    return
+    // return  queryInterface.removeColumn('users', 'displayName')
   }
 };
