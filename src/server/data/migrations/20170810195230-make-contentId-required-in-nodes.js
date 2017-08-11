@@ -8,11 +8,6 @@ module.exports = {
     return Node.destroy({
       where: {contentId: null},
     })
-    .then(function() {
-      return Node.destroy({
-        where: {contentId: false},
-      })
-    })
     // make actual migration
     .then(function() {
       return queryInterface.changeColumn(
