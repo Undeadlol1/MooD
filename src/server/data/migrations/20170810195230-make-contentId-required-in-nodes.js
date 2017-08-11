@@ -1,6 +1,6 @@
 'use strict';
 
-var Node = require('../models').Node
+var { Node } = require('../models')
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
@@ -14,16 +14,19 @@ module.exports = {
        }
     })
     // make actual migration
-    .then(() => {
+    .then(function() {
       return queryInterface.changeColumn(
         'nodes',
         'contentId',
         {
           allowNull: false,
-          type: DataTypes.STRING,
+          type: Sequelize.STRING,
           unique: 'compositeIndex',
-        },
+        }
       )
+    })
+    .catch(error => {
+      throw error
     })
   },
 
@@ -33,9 +36,13 @@ module.exports = {
       'contentId',
       {
         allowNull: true,
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         unique: 'compositeIndex',
-      },
+      }
     )
+    .catch(function(error) {
+      console.error(error);
+      throw error
+    })
   }
 };
