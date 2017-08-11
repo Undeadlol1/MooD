@@ -24,6 +24,7 @@ export async function getUsersMoods(UserId, page) {
           limit: 1,
           model: Node,
           order: 'rand()',
+          required: false,
         }]
     })
     return { moods, totalPages }
