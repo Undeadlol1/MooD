@@ -10,7 +10,7 @@ import match from 'react-router/lib/match'
 import serialize from 'serialize-javascript'
 import { renderToString } from 'react-dom/server'
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
-const cache = require('express-redis-cache')();
+// const cache = require('express-redis-cache')();
 
 export default
   express.Router()
