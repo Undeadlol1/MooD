@@ -1596,6 +1596,12 @@ chai-immutable@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/chai-immutable/-/chai-immutable-1.6.0.tgz#9ec00bdd67948b13b20fcbb89cbf4af2ce6f9247"
 
+chai-properties@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/chai-properties/-/chai-properties-1.2.1.tgz#44330f3149519307c783efd1ce4d909f38994461"
+  dependencies:
+    lodash "^3.1.0"
+
 chai@>1.9.0, "chai@>=1.9.2 <4.0.0", chai@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/chai/-/chai-3.5.0.tgz#4d02637b067fe958bdbfdd3a40ec56fef7373247"
@@ -5717,7 +5723,7 @@ lodash@4.12.0:
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.12.0.tgz#2bd6dc46a040f59e686c972ed21d93dc59053258"
 
-lodash@^3.10.1:
+lodash@^3.1.0, lodash@^3.10.1:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
