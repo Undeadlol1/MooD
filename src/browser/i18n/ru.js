@@ -49,4 +49,5 @@ export default {
     i_like_it: 'мне нравится',
     skip: 'пропустить',
     dont_like_it_dont_show_again: 'мне не нравится (вы больше не увидите это видео)',
+    add_this_video: 'добавить это видео',
 }

@@ -48,4 +48,5 @@ export default {
     i_like_it: 'i like it',
     skip: 'skip',
     dont_like_it_dont_show_again: 'i don\'t like it (you will never see this again here)',
+    add_this_video: 'add this video',
 }
