@@ -114,7 +114,6 @@
     "chai-immutable": "^1.6.0",
     "chai-properties": "^1.2.1",
     "change-case": "^3.0.1",
-    "colors": "^1.1.2",
     "compression-webpack-plugin": "^0.4.0",
     "concurrently": "^3.4.0",
     "copy-webpack-plugin": "^4.0.1",
