@@ -1,28 +1,33 @@
 const fs = require('fs')
 const path = require('path')
+const fse = require('fs-extra')
 const shell = require('shelljs')
 const replace = require('replace')
 const inquirer = require('inquirer')
 const upperCaseFirst = require('change-case').upperCaseFirst
 const lowerCaseFirst = require('change-case').lowerCaseFirst
-const imageToAscii = require('image-to-ascii')
+const upperCase = require('change-case').upperCase
+const lowerCase = require('change-case').lowerCase
 
-// show cli menu with few options
-const launchText = 'launch project'
-const updateText = 'update project'
-const pageText = 'create page'
-const componentText = 'create component'
-const apiText = 'create API'
-const hook = "// ⚠️ Hook for cli! Do not remove 💀"
+// cli options
+const   launchText      = 'launch project',
+        updateText      = 'update project',
+        apiText         = 'create API',
+        pageText        = 'create page',
+        componentText   = 'create component',
+        reduxText       = 'create redux module'
 
-imageToAscii(path.resolve(__dirname, '../duck.jpeg'), (err, converted) => {
+const   hook = "// ⚠️ Hook for cli! Do not remove 💀",
+        imagePath = path.resolve(__dirname, '../ascii.txt')
+
+fs.readFile(imagePath, "utf8", (err, ascii) => {
     // show image
-    console.log(err || converted);
+    console.log(ascii);
     // show cli ui
     inquirer.prompt([{
         type: 'list',
         name: 'name',
-        choices: [launchText, componentText, pageText, updateText, apiText],
+        choices: [launchText, componentText, pageText, updateText, apiText, reduxText],
         message: 'What do you want to do?',
     }])
     // show prompt depending on users decision
@@ -57,6 +62,15 @@ imageToAscii(path.resolve(__dirname, '../duck.jpeg'), (err, converted) => {
                     .then(({path}) => createPage(pageName, path))
                 })
                 break;
+            case reduxText:
+                inquirer
+                .prompt([{
+                    name: 'name',
+                    type: 'input',
+                    message: 'module name (ex: post, message, user)?',
+                }])
+                .then(({name}) => createReeduxModule(name))
+                break;
             case updateText:
                 // shell.exec('git remote add upstream https://github.com/developer-expirience/boilerplate')
                 shell.exec('git pull upstream master --allow-unrelated-histories')
@@ -78,6 +92,51 @@ imageToAscii(path.resolve(__dirname, '../duck.jpeg'), (err, converted) => {
     });
 });
 
+function createReeduxModule(name) {
+
+    const firtUpperCase = upperCaseFirst(name)
+    const upperCaseName = upperCase(name)
+
+    const firstHook = "// ⚠️ First hook for cli! Do not remove 💀"
+    const secondHook = "// ⚠️ Second hook for cli! Do not remove 💀"
+    const thirdHook = "// ⚠️ Third hook for cli! Do not remove 💀"
+    const rootReducer = path.resolve(__dirname, '../../src/browser/redux/reducers/RootReducer.js')
+
+    copyFolderAndReplace(
+        path.resolve(__dirname, '../templates/redux'),
+        'moduleName',
+        name,
+        path.resolve(__dirname, '../../src/browser/redux/'),
+        true
+    )
+
+    addLineToFile(
+        rootReducer,
+        firstHook,
+        `import ${name}, { initialState as ${name}State } from './${name}Reducer'`
+        + '\n'
+        + firstHook
+    )
+    addLineToFile(
+        rootReducer,
+        secondHook,
+        `${name}: ${name}State,`
+        + '\n'
+        + secondHook
+    )
+    addLineToFile(
+        rootReducer,
+        thirdHook,
+        `${name},`
+        + '\n'
+        + thirdHook
+    )
+}
+
+/**
+ * create API files
+ * @param {string} name
+ */
 function createApi(name) {
     const upperCase = upperCaseFirst(name)
     const lowerCase = lowerCaseFirst(name)
@@ -116,33 +175,56 @@ function createApi(name) {
  * @param {string} replaceWhat what to replace
  * @param {string} replaceText replacement text
  * @param {string} outputPath where to put folder
+ * @param {boolean} uppercaseFileName should first letter of file name be uppercased
  */
-function copyFolderAndReplace(folderPath, replaceWhat, replaceText, outputPath) {
-    try {
-        fs.readdir(folderPath, (err, files) => {
-            if (err) throw err
-            // 1) create folder
-            fs.mkdir(`${outputPath}/${replaceText}`, err => {
-            // 2) copy + paste files from folder
-                files.forEach(file => {
-            // 3) replace text in each file and rename it
-                    fs.readFile(folderPath + '/' + file, 'utf8', function (err, data) {
-                        if (err) return console.log(err);
-                        const regex = new RegExp(replaceWhat, "g")
-                        const fileText = data.replace(regex, replaceText);
-                        const fileName = file.replace(regex, replaceText);
-                        fs.writeFile(`${outputPath}/${replaceText}/${fileName}`, fileText, 'utf8', function (err) {
-                            if (err) return console.log(err);
-                        });
+function copyFolderAndReplace(folderPath, replaceWhat, replaceText, outputPath, uppercaseFileName) {
+    return fse
+        // 1) create folder
+        .mkdir(`${outputPath}/${replaceText}`)
+        // 2) copy + paste files from folder
+        .then(() => fse.readdir(folderPath))
+        .then(files => {
+            return files.forEach(file => {
+                // 3) replace text in each file and rename it
+                return fse.readFile(folderPath + '/' + file, 'utf8')
+                    .then(data => {
+                        let fileText = data
+                        const   regex = new RegExp(replaceWhat, "g")
+                        // replcae different case variations of string
+                        const cases = [
+                            {
+                                from: replaceWhat,
+                                to: replaceText,
+                            },
+                            {
+                                from: lowerCase(replaceWhat),
+                                to: lowerCase(replaceText),
+                            },
+                            {
+                                from: upperCase(replaceWhat),
+                                to: upperCase(replaceText),
+                            },
+                            {
+                                from: upperCaseFirst(replaceWhat),
+                                to: upperCaseFirst(replaceText),
+                            },
+                            {
+                                from: lowerCaseFirst(replaceWhat),
+                                to: lowerCaseFirst(replaceText),
+                            },
+                        ]
+                        cases.forEach(({from, to}) => {
+                            return fileText = fileText.replace(new RegExp(from, "g"), to)
+                        })
+
+                        let fileName = file.replace(regex, replaceText)
+
+                        if (uppercaseFileName) fileName = upperCaseFirst(fileName)
+                        return fse.writeFile(`${outputPath}/${replaceText}/${fileName}`, fileText, 'utf8')
                     });
-                })
             })
         })
-    } catch(e) {
-        // TODO
-        console.log(e);
-        if (e.code = 'EEXIST') throw e
-    }
+        .catch(err => console.error(err))
 }
 
 function addLineToFile(filePath, regex, replaceText) {
