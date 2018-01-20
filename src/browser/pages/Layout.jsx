@@ -8,9 +8,11 @@ import NavBar from 'browser/components/NavBar'
 import { Grid } from 'react-styled-flexboxgrid'
 import Sidebar from 'browser/components/Sidebar'
 import LoginDialog from 'browser/components/LoginDialog'
+import PageLoading from 'browser/components/PageLoading'
 import LoginLogoutButton from 'browser/components/LoginLogoutButton'
-import { fetchCurrentUser, logoutCurrentUser } from 'browser/redux/actions/UserActions'
+import { logoutCurrentUser } from 'browser/redux/actions/UserActions'
 import styles from 'browser/theme'
+import { Feedback } from '../components/Feedback/Feedback';
 
 let timeout = null
 
@@ -22,9 +24,6 @@ let timeout = null
 		headerIsShown: global.get('headerIsShown'),
 	}),
 	(dispatch, ownProps) => ({
-		fetchCurrentUser() { // fetch user data on load
-			dispatch(fetchCurrentUser())
-		},
 		logout(event) {
 			event.preventDefault()
 			dispatch(logoutCurrentUser())
@@ -101,7 +100,10 @@ export default class Layout extends React.Component {
 					</main>
 					<Sidebar />
 					<LoginDialog />
+					{/* global page loading indicator */}
+					<PageLoading />
 					<ReduxToastr position="top-left" progressBar />
+					<Feedback />
 				</div>
 	}
 }

@@ -13,10 +13,16 @@ describe('<ComponentName />', () => {
   const props = {}
   const wrapper = shallow(<ComponentName {...props} />)
 
-  it('has <div>', () => {
-    const el = wrapper.find('div')
-    expect(el).to.have.length(1)
+  it('has <Row>', () => {
+    const el = wrapper.find('Styled(Row)')
+    expect(el).to.exist
     expect(el).to.have.className('ComponentName')
+  })
+
+  it('has <Col>', () => {
+    const el = wrapper.find('Styled(Col)')
+    expect(el).to.exist
+    expect(el).to.have.prop('xs', 12)
   })
 
   it('failes the test', () => {

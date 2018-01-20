@@ -1,0 +1,10 @@
+.ThreadPage {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    .ThreadPage__title {
+        text-align: center;
+    }
+    .ThreadPage__text {
+        white-space: pre;
+    }
+}

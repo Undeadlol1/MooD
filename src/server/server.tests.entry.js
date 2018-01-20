@@ -3,14 +3,15 @@ require('babel-register')();
 require('source-map-support').install();
 const chai = require('chai')
 const slugify = require('slug')
+const casual = require('casual')
 const uniqid = require('uniqid')
 const { expect } = require('chai')
 const isEqual = require('lodash/isEqual')
 const extend = require('lodash/assignIn')
 const { parseUrl } = require('shared/parsers.js')
-const getRandomDate = require('random-date-generator').getRandomDate
 const userFixtures = require('server/data/fixtures/users.js')
-const { User, Local, Mood, Node, Decision, Profile } = require('server/data/models/index.js')
+const getRandomDate = require('random-date-generator').getRandomDate
+const { User, Local, Forums, Threads, Mood, Node, Decision, Profile } = require('server/data/models/index.js')
 chai.should()
 
 // TODO move this to fixtures
@@ -26,6 +27,18 @@ const urls = [
             "https://www.youtube.com/watch?v=KrCMWS_fB4o",
             "https://www.youtube.com/watch?v=W7mNmiW9qts",
         ]
+
+// function createRandomNames(amount) {
+//     let names = []
+//     if (!amount) amount = 9
+//     for (let index = 0; index < amount; index++) {
+//         names.push(uniqid())
+
+//     }
+//     return names
+// }
+
+const randomNames = casual.array_of_words(10)
 
 /*
     this function creates random digit and
@@ -55,7 +68,9 @@ before(function(done) {
           locals = [],
           profiles = [],
           decisions = [],
-          createdUsers = []
+          createdUsers = [],
+          forums = [],
+          threads = []
 
     const localsWithHashedPassword = userFixtures.map(user => {
         // create new object to avoid object mutablity
@@ -83,6 +98,7 @@ before(function(done) {
             createdUsers.push(user)
             profiles.push({UserId, language})
             moods.push({name, UserId, slug, rating, createdAt: getRandomDate()})
+            forums.push({id: name, name, slug, UserId})
         })
         // create locals
         .then(() => Local.bulkCreate(locals))
@@ -90,6 +106,24 @@ before(function(done) {
         .then(() => Profile.bulkCreate(profiles))
         // .then(() => Profile.findAll({where: {}, raw: true}))
         // .then(profiles => console.log('profiles', profiles))
+        // create forums
+        .then(() => Forums.bulkCreate(forums))
+        .then(() => Forums.findAll({where: {}}))
+        .each(forum => {
+            randomNames.forEach(() => {
+                const name = uniqid()
+                threads.push({
+                        name,
+                        slug: slugify(name),
+                        text: casual.description,
+                        parentId: forum.id,
+                        UserId: forum.UserId,
+                    }
+                )
+            })
+        })
+        // create threads
+        .then(() => Threads.bulkCreate(threads))
         // create moods
         .then(() => Mood.bulkCreate(moods))
         .then(() => Mood.findAll({where: {}}))
@@ -126,26 +160,31 @@ before(function(done) {
         .then(() => done())
         .catch(error => {
             console.error(error)
-            // throw new Error(error)
-            throw new Error(error)
+            throw error
         })
 })
 
 // clean up db
-after(async function() {
+after(cleanUpDB)
+
+async function cleanUpDB() {
     try {
-        await User.destroy({ where: {} })
-        await Local.destroy({ where: {} })
-        await Profile.destroy({ where: {} })
-        await Mood.destroy({ where: {} })
-        await Node.destroy({ where: {} })
-        await Decision.destroy({ where: {} })
+        const all = { where: {} }
+        await User.destroy(all)
+        await Local.destroy(all)
+        await Profile.destroy(all)
+        await Mood.destroy(all)
+        await Node.destroy(all)
+        await Decision.destroy(all)
+        await Forums.destroy(all)
+        await Threads.destroy(all)
+        // ⚠️ Hook for cli! Do not remove 💀
     }
     catch(error) {
         console.log(error)
         throw new Error(error)
     }
-})
+}
 
 // TODO make proper names
 describe('fixture data setup', function() {
@@ -157,12 +196,16 @@ describe('fixture data setup', function() {
             const nodes = await Node.findAll({raw: true})
             const profiles = await Profile.findAll({raw: true})
             const decisions = await Decision.findAll({raw: true})
+            const forums = await Forums.findAll({raw: true})
+            const threads = await Threads.findAll({raw: true})
 
-            expect(users).to.have.length(10)
-            expect(locals).to.have.length(10)
-            expect(moods).to.have.length(10)
-            expect(nodes).to.have.length(100) // 10 moods * 10 nodes
-            expect(profiles).to.have.length(10)
+            expect(users).to.have.length(10, '10 users')
+            expect(locals).to.have.length(10, '10 local profiles')
+            expect(moods).to.have.length(10, '10 moods')
+            expect(nodes).to.have.length(100, '100 nodes') // 10 moods * 10 nodes
+            expect(profiles).to.have.length(10, '10 profiles')
+            expect(forums).to.have.length(10, '10 forums')
+            expect(threads).to.have.length(100, '100 threads') // 10 forums * 10 threads
             // expect(decisions).to.have.length(1000) // 10 moods * 10 nodes * 10 decisions
 
             moods.forEach(mood => {

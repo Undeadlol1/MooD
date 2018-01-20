@@ -1,22 +1,27 @@
 import nock from 'nock'
-import isArray from 'lodash/isArray'
 import thunk from 'redux-thunk'
+import generateUuid from 'uuid/v4'
 import chai, { expect } from 'chai'
+import isArray from 'lodash/isArray'
 import chaiImmutable from 'chai-immutable'
 import configureMockStore from 'redux-mock-store'
 import { createAction, createActions } from 'redux-actions'
-import { initialState } from 'browser/redux/reducers/ModuleNameReducer'
-import { updateModuleName, toggleLoginDialog, logoutCurrentModuleName, fetchCurrentModuleName, fetchModuleName, actions } from 'browser/redux/actions/ModuleNameActions'
+import { initialState } from 'browser/redux/moduleName/ModuleNameReducer'
+import { updateModuleName, insertThread, fetchModuleName, fetchModuleNames, actions } from 'browser/redux/moduleName/ModuleNameActions'
 chai.should();
 chai.use(chaiImmutable);
 
 const middlewares = [ thunk ]
 const mockStore = configureMockStore(middlewares)
-// TODO add API_PREFIX instead of API_URL?
-const { URL, API_URL } = process.env
-const authApi = '/api/auth/'
-const moduleNamesApi = '/api/moduleNames/'
-const moduleName = {moduleNamename: 'misha', id: 1}
+const { API_URL } = process.env
+const threadsApi = API_URL + 'moduleNames/'
+
+// TODO: edit this variables
+const moduleName = {
+  id: generateUuid()
+}
+const name = ""
+
 /**
  * test async action by intercepting http call
  * and cheking if expected redux actions have been called
@@ -28,9 +33,8 @@ const moduleName = {moduleNamename: 'misha', id: 1}
  * @returns
  */
 function mockRequest(url, action, param, result, method = 'get') {
-    // TODO rework this url (last character '/' was causing unmathing of url)
     // create request interceptor
-    nock('http://127.0.0.1:3000')[method](url).reply(200, moduleName)
+    nock(API_URL + 'moduleNames')[method](url).reply(200, moduleName)
     const store = mockStore()
     return store
       // call redux action
@@ -43,54 +47,12 @@ describe('ModuleNameActions', () => {
 
   afterEach(() => nock.cleanAll())
 
-
-  it('fetchCurrentModuleName calls fetchingModuleName and recieveCurrentModuleName', async () => {
+  it('fetchModuleName calls recieveModuleName', async () => {
+    const { slug } = moduleName
     const expectedActions = [
-                              actions.fetchingModuleName(),
-                              actions.recieveCurrentModuleName(moduleName)
+                              actions.recieveModuleName(moduleName)
                             ]
-    await mockRequest(authApi + 'current_moduleName', fetchCurrentModuleName, undefined, expectedActions)
+    await mockRequest('/moduleName/' + slug, fetchModuleName, slug, expectedActions)
   })
 
-  it('logoutCurrentModuleName calls removeCurrentModuleName', async () => {
-    const expectedActions = [actions.removeCurrentModuleName()]
-    await mockRequest(authApi + 'logout', logoutCurrentModuleName, undefined, expectedActions)
-  })
-
-  it('fetchModuleName calls fetchingModuleName and recieveFetchedModuleName', async () => {
-    const { moduleNamename } = moduleName
-    const expectedActions = [
-                              actions.fetchingModuleName(),
-                              actions.recieveFetchedModuleName(moduleName)
-                            ]
-    await mockRequest(moduleNamesApi + 'moduleName/' + moduleNamename, fetchModuleName, moduleNamename, expectedActions)
-  })
-
-
-  it('updateModuleName calls recieveCurrentModuleName', async () => {
-    const { moduleNamename } = moduleName
-    const expectedActions = [actions.recieveCurrentModuleName(moduleName)]
-    await mockRequest(
-      moduleNamesApi + 'moduleName/' + moduleNamename,
-      updateModuleName,
-      moduleNamename,
-      expectedActions,
-      'put'
-    )
-  })
-
-  describe('toggleLoginDialog', () => {
-    it('toggles with argument', () => {
-      const store = mockStore({moduleName: initialState})
-      const expectedActions = [actions.toggleLoginDialog(true)]
-      store.dispatch(toggleLoginDialog(true))
-      expect(store.getActions()).to.deep.equal(expectedActions)
-    })
-    it('toggles without argument', () => {
-      const store = mockStore({moduleName: initialState})
-      const expectedActions = [actions.toggleLoginDialog(true)]
-      store.dispatch(toggleLoginDialog())
-      expect(store.getActions()).to.deep.equal(expectedActions)
-    })
-  })
 })

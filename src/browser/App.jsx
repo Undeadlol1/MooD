@@ -6,9 +6,9 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin();
 
 /* DEPENDENCIES */
-import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import Router from 'react-router/lib/Router'
 import RouterContext from 'react-router/lib/RouterContext'
 import browserHistory from 'react-router/lib/browserHistory'
@@ -19,6 +19,7 @@ import routesConfig from './routes'
 import Translator from './containers/Translator'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { actions } from 'browser/redux/actions/UserActions'
+import { CookiesProvider } from 'react-cookie'
 
 /* STYLES */
 if (process.env.BROWSER) require('./styles.scss')
@@ -32,6 +33,11 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 customMuiTheme.userAgent = navigator.userAgent
 const muiTheme = getMuiTheme(customMuiTheme)
 
+// scroll to top of the page on route change
+function scrollToTop () {
+  return window.scrollTo(0, 0)
+}
+
 class App extends Component {
   // if SSR provided logged in user, put object in state
   componentWillMount() {
@@ -41,16 +47,20 @@ class App extends Component {
   }
 
   render() {
+    const cookies = process.env.SERVER ? this.props.cookies : null
     return  <MuiThemeProvider muiTheme={muiTheme}>
                 <ThemeProvider theme={BASE_CONF}>
                   <ReduxProvider store={store} key="provider">
-                    <Translator>
-                      {
-                        process.env.BROWSER
-                        ? <Router history={syncHistoryWithStore(browserHistory, store)} routes={routesConfig} />
-                        : <RouterContext {...this.props} />
-                      }
-                    </Translator>
+                    {/* universal cookies */}
+                    <CookiesProvider cookies={cookies}>
+                      <Translator>
+                        {
+                          process.env.BROWSER
+                          ? <Router history={syncHistoryWithStore(browserHistory, store)} routes={routesConfig} onUpdate={scrollToTop} />
+                          : <RouterContext {...this.props} />
+                        }
+                      </Translator>
+                    </CookiesProvider>
                   </ReduxProvider>
                 </ThemeProvider>
             </MuiThemeProvider>

@@ -13,15 +13,18 @@ import { toggleLoginDialog } from 'browser/redux/actions/UserActions'
 export class LoginDialog extends Component {
 
 	static defaultProps = {
-		loginIsOpen: false,
+		open: false,
 	}
 
 	render() {
-		const { loginIsOpen, toggleDialog } = this.props
-		const iconStyle = {paddingBottom: '1.2rem'}
-		const iconColor = 'rgb(48, 48, 48)'
+		const { open, toggleDialog } = this.props
+		const iconStyle = {
+			WebkitTextStrokeWidth: '0px',
+			WebkitTextStrokeColor: 'white',
+			color: 'rgba(255, 255, 255, 1)',
+		}
 		return <Dialog
-					open={loginIsOpen}
+					open={open}
 					className="LoginDialog"
 					onRequestClose={toggleDialog}
 					titleStyle={{ textAlign: 'center' }}
@@ -33,20 +36,18 @@ export class LoginDialog extends Component {
 								primary
 								fullWidth
 								label="vk.com"
-								style={iconStyle}
 								href="/api/auth/vkontakte"
 								className="LoginDialog__icon"
-								icon={<Icon name="vk" color={iconColor} />} />
+								icon={<Icon name="vk" style={iconStyle} />} />
 						</Col>
 						<Col xs={12} sm={6}>
 							<RaisedButton
 								primary
 								fullWidth
-								style={iconStyle}
 								label="twitter.com"
 								href="/api/auth/twitter"
 								className="LoginDialog__icon"
-								icon={<Icon name="twitter" color={iconColor} />} />
+								icon={<Icon name="twitter" style={iconStyle} />} />
 						</Col>
 					</Row>
 					<Divider />
@@ -56,7 +57,7 @@ export class LoginDialog extends Component {
 }
 
 LoginDialog.PropTypes = {
-	loginIsOpen: PropTypes.bool.isRequired,
+	open: PropTypes.bool.isRequired,
 	toggleDialog: PropTypes.func.isRequired,
 }
 
@@ -65,6 +66,6 @@ export const dispatchToProps = (dispatch, ownProps) => ({
 })
 
 export default connect(
-	({ user }) => ({ loginIsOpen: user.get('loginIsOpen') }),
+	({ user }) => ({ open: user.get('loginIsOpen') }),
 	dispatchToProps
 )(LoginDialog)

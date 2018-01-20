@@ -1,0 +1,1 @@
+export { default, getThreads } from './threadsApi'

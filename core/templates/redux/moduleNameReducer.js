@@ -1,7 +1,9 @@
 import isEmpty from 'lodash/isEmpty'
-import { Map, List } from 'immutable'
+import { Map, List, fromJS } from 'immutable'
 
-const moduleNameStructure = 	Map({
+// TODO: rework into using "fromJS" which converts better (this way many bugs in reducer can be avoided)
+
+const moduleNameStructure =  {
 							id: '',
 							url: '',
 							type: '',
@@ -10,19 +12,22 @@ const moduleNameStructure = 	Map({
 							rating: '',
 							provider: '',
 							contentId: '',
-							Decision: decisionStructure.toJS()
-						})
+						}
 
-export const initialState = Map({
+export const initialState = fromJS({
 							error: '',
-							moduleNames: List(),
+							moduleNames: {
+								values: [],
+								totalPages: 0,
+								currentPage: 0,
+							},
 							loading: false,
 							finishedLoading: true,
 							dialogIsOpen: false,
 							contentNotFound: false,
-							searchIsActive: false, // TODO do i need this?
-							searchedVideos: List(),
-							...moduleNameStructure.toJS()
+							// TODO do i need this?
+							searchIsActive: false,
+							...moduleNameStructure
 						})
 
 export default (state = initialState, {type, payload}) => {

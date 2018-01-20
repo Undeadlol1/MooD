@@ -1,7 +1,7 @@
 import selectn from 'selectn'
 import { stringify } from 'query-string'
 import { createAction, createActions } from 'redux-actions'
-import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
+import { checkStatus, parseJSON, headersAndBody } from'browser/redux/actions/actionHelpers'
 
 const moduleNamesUrl = process.env.API_URL + 'moduleNames/'
 
@@ -19,7 +19,7 @@ export const actions = createActions({
 
 /**
  * create a moduleName
- * @param {Object} payload content url
+ * @param {object} payload content url
  */
 export const insertModuleName = payload => (dispatch, getState) => {
 	return fetch(moduleNamesUrl, headersAndBody(payload))
@@ -33,19 +33,12 @@ export const insertModuleName = payload => (dispatch, getState) => {
 
 /**
  * fetch moduleName using moduleName slug
- * @param {String} slug moduleName slug (optional)
+ * @param {string} slug moduleName slug (optional)
  */
 export const fetchModuleName = slug => (dispatch, getState) => {
-	const state = getState()
-	const nodeId = state.node.id
-	const moduleNameSlug = slug || state.moduleName.get('slug')
+	const moduleNameSlug = slug || getState().moduleName.get('slug')
 
-	dispatch(actions.fetchingModuleName())
-
-	return fetch(
-		moduleNamesUrl + moduleNameSlug + '/' + nodeId,
-		{ credentials: 'same-origin' }
-	)
+	return fetch(moduleNamesUrl + 'moduleName/' + moduleNameSlug,)
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(data => {
@@ -55,24 +48,13 @@ export const fetchModuleName = slug => (dispatch, getState) => {
 }
 
 /**
- * fetch moduleNames using moduleName slug
- * @param {String} slug moduleName slug (optional)
+ * fetch moduleNames
+ * @param {number} [page=1] moduleNames page (optional)
  */
-export const fetchModuleNames = slug => (dispatch, getState) => {
-	const state = getState()
-	const nodeId = state.node.id
-	const moduleNameSlug = slug || state.moduleName.get('slug')
-
-	dispatch(actions.fetchingModuleName())
-
-	return fetch(
-		moduleNamesUrl + moduleNameSlug,
-		{ credentials: 'same-origin' }
-	)
+export const fetchModuleNames = (page=1) => (dispatch, getState) => {
+	return fetch(moduleNamesUrl + page)
 		.then(checkStatus)
 		.then(parseJSON)
-		.then(data => {
-			return dispatch(actions.recieveModuleName((data)))
-		})
+		.then(data => dispatch(actions.recieveModuleNames((data))))
 		.catch(err => console.error('fetchmoduleName failed!', err))
 }

@@ -1,15 +1,17 @@
 import 'isomorphic-fetch' // fetch polyfill
 import React from 'react'
 import express from "express"
-import themeConfig from 'browser/theme'
 import routes from 'browser/routes'
 import { Helmet } from 'react-helmet'
 import session from 'express-session'
 import { Provider } from 'react-redux'
+import Cookies from 'universal-cookie'
 import store from 'browser/redux/store'
+import themeConfig from 'browser/theme'
 import match from 'react-router/lib/match'
 import serialize from 'serialize-javascript'
 import { renderToString } from 'react-dom/server'
+import { CookiesProvider } from 'react-cookie'
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components'
 // const cache = require('express-redis-cache')();
 
@@ -56,10 +58,13 @@ export default
           // render website content
           else if (renderProps) {
             const sheet = new ServerStyleSheet()
+            const cookies = new Cookies(req.headers.cookie)
             /*
               sometimes request language and browser language are not the same
               so we use browsers language (storred in cookie) as primary preference
             */
+            // TODO:
+            // https://www.codeproject.com/Tips/1156391/How-To-Detect-Users-Locale-Right
             const cookieLocale = req.cookies.locale
             const requestLocale = req.locale.language
             const language = cookieLocale || requestLocale
@@ -74,9 +79,15 @@ export default
             // render App to string
             const markup = renderToString(
               <StyleSheetManager sheet={sheet.instance}>
-                <App user={req.user} {...renderProps}/>
+                  {/* pass down cookies to use universally */}
+                  {/* and pass down user object to prepopulate redux with user data */}
+                  <App user={req.user} cookies={cookies} {...renderProps}/>
               </StyleSheetManager>
             )
+            // get prefetched data from redux
+            const initialData = JSON.stringify(store.getState())//.replace(/</g, '\\u003c')
+            // reset redux store to make sure next request will have to load fresh data
+            store.dispatch({type: 'RESET'})
             // extract css from string
             const css = sheet.getStyleTags()
             // extract metaData for <header>
@@ -86,9 +97,6 @@ export default
               const tag = metaData[prop].toString()
               tag && headerTags.push(tag)
             }
-            // get prefetched data from redux
-            // TODO make sure to reset state afterwards
-            const initialData = JSON.stringify(store.getState())//.replace(/</g, '\\u003c')
             // send data to handlebars template
             res.render('index', { markup, css, themeConfig, headerTags, initialData })
           }

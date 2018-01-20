@@ -4,13 +4,15 @@ const fse = require('fs-extra')
 const shell = require('shelljs')
 const replace = require('replace')
 const inquirer = require('inquirer')
-const upperCaseFirst = require('change-case').upperCaseFirst
-const lowerCaseFirst = require('change-case').lowerCaseFirst
+const pluralize = require('pluralize')
 const upperCase = require('change-case').upperCase
 const lowerCase = require('change-case').lowerCase
+const upperCaseFirst = require('change-case').upperCaseFirst
+const lowerCaseFirst = require('change-case').lowerCaseFirst
 
 // cli options
-const   launchText      = 'launch project',
+const   createText      = 'create new project',
+        launchText      = 'launch project',
         updateText      = 'update project',
         apiText         = 'create API',
         pageText        = 'create page',
@@ -20,79 +22,106 @@ const   launchText      = 'launch project',
 const   hook = "// ⚠️ Hook for cli! Do not remove 💀",
         imagePath = path.resolve(__dirname, '../ascii.txt')
 
-fs.readFile(imagePath, "utf8", (err, ascii) => {
-    // show image
+fse
+// read ascii image
+.readFile(imagePath, "utf8")
+// show image and cli options
+.then(ascii => {
     console.log(ascii);
-    // show cli ui
-    inquirer.prompt([{
+    return inquirer.prompt([{
         type: 'list',
         name: 'name',
-        choices: [launchText, componentText, pageText, updateText, apiText, reduxText],
+        choices: [launchText, componentText, pageText, updateText, apiText, reduxText], // createText,
         message: 'What do you want to do?',
     }])
-    // show prompt depending on users decision
-    .then(function ({name}) {
-        switch (name) {
-            case launchText:
-                shell.exec('yarn; yarn start')
-                break;
-            case componentText:
-                inquirer
-                .prompt([{
-                    name: 'name',
-                    type: 'input',
-                    message: 'component name',
-                }])
-                .then(input => createComponent(input.name))
-                break;
-            case pageText:
-                inquirer
-                .prompt([{
-                    name: 'name',
-                    type: 'input',
-                    message: 'page file name?',
-                }])
-                .then(({name: pageName}) => {
-                    inquirer
+})
+// show prompt depending on users decision
+.then(({name}) => {
+    switch (name) {
+        case createText:
+            console.log('creating of project must be here')
+            return  inquirer
                     .prompt([{
-                        name: 'path',
+                        name: 'name',
                         type: 'input',
-                        message: 'routing path(no first slash)?',
+                        message: 'project name',
                     }])
-                    .then(({path}) => createPage(pageName, path))
-                })
-                break;
-            case reduxText:
-                inquirer
-                .prompt([{
-                    name: 'name',
-                    type: 'input',
-                    message: 'module name (ex: post, message, user)?',
-                }])
-                .then(({name}) => createReeduxModule(name))
-                break;
-            case updateText:
-                // shell.exec('git remote add upstream https://github.com/developer-expirience/boilerplate')
-                shell.exec('git pull upstream master --allow-unrelated-histories')
-                shell.exec('yarn')
-                shell.echo('😎  all done 😎')
-                break;
-            case apiText:
-                inquirer
-                .prompt([{
-                    name: 'name',
-                    type: 'input',
-                    message: 'api name (ex. "posts", "messages", "users")?',
-                }])
-                .then(({name}) => createApi(name))
-                break;
-            default:
-                break;
-        }
-    });
-});
+                    .then(({name}) => createProject(name))
+        case launchText:
+            return shell.exec('yarn; yarn start')
+        case componentText:
+            return  inquirer
+                    .prompt([{
+                        name: 'name',
+                        type: 'input',
+                        message: 'component name',
+                    }])
+                    .then(input => createComponent(input.name))
+        case pageText:
+            return  inquirer
+                    .prompt([{
+                        name: 'name',
+                        type: 'input',
+                        message: 'page file name (ex: IndexPage, UserPage)?',
+                    }])
+                    .then(({name: pageName}) => {
+                        inquirer
+                        .prompt([{
+                            name: 'path',
+                            type: 'input',
+                            message: 'routing path(no first slash)?',
+                        }])
+                        .then(({path}) => createPage(pageName, path))
+                    })
+        case reduxText:
+            return  inquirer
+                    .prompt([{
+                        name: 'name',
+                        type: 'input',
+                        message: 'module name (ex: post, message, user)?',
+                    }])
+                    .then(({name}) => createReduxModule(name))
+        case updateText:
+            shell.exec('git remote add upstream https://github.com/developer-expirience/boilerplate')
+            shell.exec('git pull upstream master --allow-unrelated-histories')
+            shell.exec('yarn')
+            shell.echo('😎  all done 😎')
+            break;
+        case apiText:
+            return  inquirer
+                    .prompt([{
+                        name: 'name',
+                        type: 'input',
+                        message: 'api name (ex. "posts", "messages", "users")?',
+                    }])
+                    .then(({name}) => createApi(name))
+        default:
+            break;
+    }
+})
+.catch(err => console.error(err))
 
-function createReeduxModule(name) {
+// TODO this is WIP
+function createProject(name) {
+    // TODO change path in future
+    shell.exec('git clone https://github.com/developer-expirience/boilerplate ' + name)
+
+    shell.exec('cd ' + name + ';') // yarn
+    // git remote remove origin
+    // git remote add upstream https://github.com/developer-expirience/boilerplate
+    replace({
+        regex: require('../../development.json').APP_NAME,
+        silent: true,
+        paths: [path.resolve(__dirname, '../../development.json')], // TODO or change every file?
+        replacement: name,
+    })
+    // yarn
+    // change DB config
+    // run sequelize migration (development and testing)
+    // start project
+}
+
+function createReduxModule(name) {
 
     const firtUpperCase = upperCaseFirst(name)
     const upperCaseName = upperCase(name)
@@ -113,26 +142,27 @@ function createReeduxModule(name) {
     addLineToFile(
         rootReducer,
         firstHook,
-        `import ${name}, { initialState as ${name}State } from './${name}Reducer'`
-        + '\n'
-        + firstHook
+        `import ${name}, { initialState as ${name}State } from 'browser/redux/${name}/${firtUpperCase}Reducer'`
+        // + '\n'
+        // + firstHook
     )
     addLineToFile(
         rootReducer,
         secondHook,
         `${name}: ${name}State,`
-        + '\n'
-        + secondHook
+        // + '\n'
+        // + secondHook
     )
     addLineToFile(
         rootReducer,
         thirdHook,
         `${name},`
-        + '\n'
-        + thirdHook
+        // + '\n'
+        // + thirdHook
     )
 }
 
+// TODO: manually create model and migration files
 /**
  * create API files
  * @param {string} name
@@ -147,25 +177,39 @@ function createApi(name) {
      * 4) create API middleware
      * 5) create test for middleware
      * 6) add line to server.js
+     * 7) add line to server.tests.js
      */
-    shell.exec(`sequelize model:create --name ${name} --attributes 'name:string'`)
-    copyFolderAndReplace(
-        path.resolve(__dirname, '../templates/controller'),
-        'controllerName',
-        upperCase + 'Controller',
-        path.resolve(__dirname, '../../src/server/data/controllers')
-    )
+    shell.exec(`sequelize model:create --name ${name} --attributes name:string`)
     copyFolderAndReplace(
         path.resolve(__dirname, '../templates/apiMiddleware'),
         'apiName',
-        lowerCase + 'Api',
-        path.resolve(__dirname, '../../src/server/middlewares')
+        lowerCase,
+        path.resolve(__dirname, '../../src/server/middlewares'),
+        false,
+        lowerCase + 'Api'
     )
+    // import and activate api in serer.js
     addLineToFile(
         path.resolve(__dirname, '../../src/server/server.js'),
         hook,
-        `app.use(${'/api/' + lowerCase}, require(${'./middlewares/' + lowerCase + 'Api'}),`
+        `app.use('/api/${lowerCase}', require('./middlewares/${lowerCase}Api').default)`
     )
+    // delete model data from db after tests are finished running
+    addLineToFile(
+        path.resolve(__dirname, '../../src/server/server.tests.entry.js'),
+        hook,
+        `await ${upperCase}.destroy(all)`
+    )
+    /*
+        controller files should be created when
+        linking functions to model is implemented properly
+    */
+    // copyFolderAndReplace(
+    //     path.resolve(__dirname, '../templates/controller'),
+    //     'controllerName',
+    //     upperCase + 'Controller',
+    //     path.resolve(__dirname, '../../src/server/data/controllers')
+    // )
     console.log('don\'t forget to edit all the files!')
 }
 
@@ -176,12 +220,13 @@ function createApi(name) {
  * @param {string} replaceText replacement text
  * @param {string} outputPath where to put folder
  * @param {boolean} uppercaseFileName should first letter of file name be uppercased
+ * @param {string} specifiFileName specify otput file name if needed
  */
-function copyFolderAndReplace(folderPath, replaceWhat, replaceText, outputPath, uppercaseFileName) {
+function copyFolderAndReplace(folderPath, replaceWhat, replaceText, outputPath, uppercaseFileName, specifiFileName) {
     return fse
         // 1) create folder
-        .mkdir(`${outputPath}/${replaceText}`)
-        // 2) copy + paste files from folder
+        .mkdir(`${outputPath}/${specifiFileName || replaceText}`)
+        // 2) copy files from folderPath
         .then(() => fse.readdir(folderPath))
         .then(files => {
             return files.forEach(file => {
@@ -189,13 +234,31 @@ function copyFolderAndReplace(folderPath, replaceWhat, replaceText, outputPath, 
                 return fse.readFile(folderPath + '/' + file, 'utf8')
                     .then(data => {
                         let fileText = data
-                        const   regex = new RegExp(replaceWhat, "g")
-                        // replcae different case variations of string
+                        const regex = new RegExp(replaceWhat, "g")
+                        // replace different variations of string
                         const cases = [
                             {
                                 from: replaceWhat,
                                 to: replaceText,
                             },
+                            // plurals and singulars
+                            {
+                                from: 'plural',
+                                to: pluralize.plural(replaceText),
+                            },
+                            {
+                                from: 'singular',
+                                to: pluralize.singular(replaceText),
+                            },
+                            {
+                                from: 'Singular',
+                                to: upperCaseFirst(pluralize.singular(replaceText)),
+                            },
+                            {
+                                from: 'Plural',
+                                to: upperCaseFirst(pluralize.plural(replaceText)),
+                            },
+                            // cases
                             {
                                 from: lowerCase(replaceWhat),
                                 to: lowerCase(replaceText),
@@ -217,10 +280,11 @@ function copyFolderAndReplace(folderPath, replaceWhat, replaceText, outputPath, 
                             return fileText = fileText.replace(new RegExp(from, "g"), to)
                         })
 
-                        let fileName = file.replace(regex, replaceText)
+                        let fileName = file.replace(regex, specifiFileName || replaceText)
 
                         if (uppercaseFileName) fileName = upperCaseFirst(fileName)
-                        return fse.writeFile(`${outputPath}/${replaceText}/${fileName}`, fileText, 'utf8')
+
+                        return fse.writeFile(`${outputPath}/${specifiFileName || replaceText}/${fileName}`, fileText, 'utf8')
                     });
             })
         })
@@ -249,11 +313,31 @@ function createPage(pageName, routePath) {
         silent: true,
         paths: [path.resolve(__dirname, '../../src/browser/routes.js')],
         // replace 'hook' text with route info, and add hook text again afterwards
-        replacement: `{ path: '${routePath}', component: require('browser/pages/${pageName}') },\n${hook}`,
+        replacement: `{
+            path: '${routePath}',
+            component: require('browser/pages/${pageName}').default },\n${hook},
+            onEnter({params}, replace, done) {
+                console.warn("DON'T FORGET TO EDIT DATA FETCHING ON NEWELY CREATED PAGE")
+                const { threadSlug } = params
+                const fetchedThread = store.getState().thread
+                // check if fetching is needed
+                if (fetchedThread.get('slug') == threadSlug) return done()
+                else {
+                  store
+                  .dispatch(fetchThread(threadSlug))
+                  .then(() => done())
+                }
+              }
+        `,
     })
     // copy+paste page template folder to 'pages' directory
     copyFolderAndReplace(templatesPath, 'PageName', pageName, folderPath)
-
+        // import component styles to main styles.scss file
+        addLineToFile(
+            path.resolve(__dirname, '../../src/browser/styles.scss'),
+            hook,
+           `@import "./pages/${pageName}/${pageName}.scss";`
+        )
 }
 
 function createComponent(componentName) {

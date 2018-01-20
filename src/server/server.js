@@ -1,3 +1,6 @@
+// missing colors in terminal was spotted on windows machines
+// this line allows to packages like "colors" and "chalk" work as intendent
+process.stdout.isTTY = true
 // this prevents babel to parse css as javascript
 import csshook from 'css-modules-require-hook/preset'
 import path from 'path'
@@ -24,10 +27,10 @@ import createLocaleMiddleware from 'express-locale';
 import RateLimiter from 'express-rate-limit'
 import exphbs from 'express-handlebars'
 
-const RedisStore = require('connect-redis')(session)
+// const RedisStore = require('connect-redis')(session)
 // const cache = require('express-redis-cache')();
 
-const port = process.env.PORT || 3000,
+const port = process.env.PORT,
       app = express(),
       publicUrl = path.resolve('./dist', 'public'), // TODO: or use server/public?
       cookieExpires = 100 * 60 * 24 * 100, // 100 days
@@ -51,7 +54,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieSession({
   name: 'session',
-  store: new RedisStore(),
+  // store: new RedisStore(),
   keys: [process.env.SESSION_KEY || 'keyboard cat'],
   maxAge: 24 * 60 * 60 * 1000 * 30 * 3 // 3 months
 }))
@@ -90,6 +93,15 @@ if (process.env.NODE_ENV === 'production') {
   // )
 }
 
+// CORS PERMISSIONS
+// (almost everything is allowed)
+app.options("/*", function(req, res, next){
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+  res.send(200);
+});
+
 // REST API
 app.use('/api/auth', authApi)
 app.use('/api/users', usersApi)
@@ -97,6 +109,9 @@ app.use('/api/moods', moodsApi)
 app.use('/api/nodes', nodesApi)
 app.use('/api/decisions', decisionsApi)
 app.use('/api/externals', externalsApi)
+app.use('/api/forums', require('./middlewares/forumsApi').default)
+app.use('/api/threads', require('./middlewares/threadsApi').default)
+app.use('/api/comments', require('./middlewares/commentsApi').default)
 // ⚠️ Hook for cli! Do not remove 💀
 
 // SPA

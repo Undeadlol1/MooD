@@ -25,18 +25,41 @@ export class Sidebar extends Component {
 					open={sidebarIsOpen}
 					onRequestChange={toggleSidebar}
 				>
+					<MenuItem onClick={toggleSidebar}><LoginLogoutButton inline /></MenuItem>
 					{
 						UserId
 						?	<div>
-								<MenuItem onClick={toggleSidebar}><LoginLogoutButton inline /></MenuItem>
-								<MenuItem>
-									<Link onClick={toggleSidebar} to={`users/${UserId}`}>{translate("profile")}</Link>
-								</MenuItem>
+								<Link
+									to={`users/${UserId}`}
+									onClick={toggleSidebar}
+									className="Sidebar__profile-link"
+								>
+									<MenuItem>{translate("profile")}</MenuItem>
+								</Link>
 							</div>
 						: 	null
 					}
-					<MenuItem><Link className="Sidebar__profile-link" onClick={toggleSidebar} to="search">{translate("search")}</Link></MenuItem>
-					{/*<MenuItem><Link onClick={toggleSidebar} to="about">{translate("about")}</Link></MenuItem>*/}
+					<Link
+						to="search"
+						onClick={toggleSidebar}
+						className="Sidebar__search-link"
+					>
+						<MenuItem>{translate("search")}</MenuItem>
+					</Link>
+					<Link
+						to="forum"
+						onClick={toggleSidebar}
+						className="Sidebar__forum-link"
+					>
+						<MenuItem>{translate("forum")}</MenuItem>
+					</Link>
+					{/* <Link
+						to="about"
+						onClick={toggleSidebar}
+						className="Sidebar__about-link"
+					>
+						<MenuItem>{translate("about")}</MenuItem>
+					</Link> */}
 				</Drawer>
 	}
 }
@@ -51,15 +74,14 @@ Sidebar.propTypes = {
 	toggleSidebar: PropTypes.func.isRequired,
 }
 
+export const stateToProps = ({ user, global }, ownProps) => ({
+	...ownProps,
+	UserId: user.get('id'),
+	sidebarIsOpen: global.get('sidebarIsOpen'),
+})
+
 export const dispatchToProps = dispatch => ({
 	toggleSidebar: () => dispatch(actions.toggleSidebar())
 })
 
-export default connect(
-	({ user, global }, ownProps) => ({
-		...ownProps,
-		UserId: user.get('id'),
-		sidebarIsOpen: global.get('sidebarIsOpen'),
-	}),
-	dispatchToProps
-)(Sidebar)
+export default connect(stateToProps, dispatchToProps)(Sidebar)
