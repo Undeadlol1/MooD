@@ -40,18 +40,15 @@ const routesConfig = {
     onEnter({params}, replace, done) {
       // check if fetching is needed
       const fetchedForums = store.getState().forum.getIn(['forums', 'values'])
-      if (fetchedForums.size) return done()
+      if (fetchedForums.size) done()
       else {
-        store
-        .dispatch(fetchForums())
+        Promise
+        .all([
+          store.dispatch(fetchMoods('new')),
+          store.dispatch(fetchMoods('random')),
+          store.dispatch(fetchMoods('popular')),
+        ])
         .then(() => done())
-        // Promise
-        // .all([
-        //   store.dispatch(fetchMoods('new')),
-        //   store.dispatch(fetchMoods('random')),
-        //   store.dispatch(fetchMoods('popular')),
-        // ])
-        // .then(() => done())
       }
     }
   },
