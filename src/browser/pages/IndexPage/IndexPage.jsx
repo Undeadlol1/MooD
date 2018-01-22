@@ -25,13 +25,8 @@ class IndexPage extends PureComponent {
 					loading={props.loading}
 				>
 					<WelcomeCard />
-					{/* <MoodsInsert /> */}
-					<b>{t('forums_list')}:</b>
-					<ForumsList />
-					{/* <b>Список тредов:</b>
-					<ThreadsList /> */}
-					<CreateForumForm />
-					{/* <MoodTabs /> */}
+					<MoodsInsert />
+					<MoodTabs />
 				</PageWrapper>
     }
 }

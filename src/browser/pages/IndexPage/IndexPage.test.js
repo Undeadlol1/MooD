@@ -24,9 +24,12 @@ describe('<IndexPage />', () => {
     expect(wrapper.find('withCookies(WelcomeCard)')).to.have.length(1);
   });
 
-  // it('has <MoodsInsert>', () => {
-  //   // TODO 'ReduxForm' does not seems right
-  //   expect(wrapper.find('ReduxForm')).to.have.length(1);
-  // });
+  it('has <MoodsInsert>', () => {
+    expect(wrapper.find('ReduxForm')).to.exist
+  });
+
+  it('has <MoodTabs>', () => {
+    expect(wrapper.find('Connect(MoodTabs)')).to.exist
+  });
 
 });
