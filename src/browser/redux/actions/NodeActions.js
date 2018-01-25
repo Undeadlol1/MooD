@@ -20,7 +20,11 @@ export const actions = createActions({
   RECIEVE_SEARCHED_VIDEOS: videos => videos,
 })
 
-// TODO comments
+/**
+ * Play next video.
+ * This function selects next object from "nodes" array
+ * or selects first if there is no more items in array
+ */
 export const nextVideo = () => (dispatch, getState) => {
 	const 	state = getState().node,
 			nodes = state.get('nodes'),
@@ -31,7 +35,12 @@ export const nextVideo = () => (dispatch, getState) => {
 			nextNode = nodes.get(position + 1)
 
 	if (nextNode) dispatch(actions.recieveNode(nextNode))
-	else dispatch(actions.recieveNode(nodes.get(0)))
+	else {
+		// if there is only one node in array make sure it merges into state
+		// and is detected by video/audio player again
+		dispatch(actions.unloadNode()) // unload
+		dispatch(actions.recieveNode(nodes.get(0))) // and load again
+	}
 }
 
 /**
