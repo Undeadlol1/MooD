@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
 import clx from 'classnames'
 import PropTypes from 'prop-types'
 import YouTube from 'react-youtube'
 import { connect } from 'react-redux'
-import { fetchNode, nextVideo } from 'browser/redux/actions/NodeActions'
+import React, { Component } from 'react'
 import { actions } from 'browser/redux/actions/GlobalActions'
+import { fetchNode, nextVideo } from 'browser/redux/actions/NodeActions'
 
 class Video extends Component {
 	// to avoid long loading of iframe on mobile devices
@@ -24,12 +24,12 @@ class Video extends Component {
 	onReady = event => {
 		// TODO this is what can help
 		{/*https://android.stackexchange.com/a/109715*/}
-		if(process.env.SERVER) return
+		if (process.env.SERVER) return
 		// this.setState({playerLoaded: true})
 		// auto play does not work on IOS and Android
 		// https://developers.google.com/youtube/iframe_api_reference#Events
-		var embedCode = event.target.getVideoEmbedCode();
-		if(this.props.autoPlay) event.target.playVideo();
+		const embedCode = event.target.getVideoEmbedCode();
+		if (this.props.autoPlay) event.target.playVideo();
 		if (document.getElementById('embed-code')) {
 			document.getElementById('embed-code').innerHTML = embedCode;
 		}
