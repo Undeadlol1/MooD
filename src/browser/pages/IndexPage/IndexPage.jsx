@@ -12,10 +12,7 @@ import MoodsInsert from 'browser/components/MoodsInsert'
 class IndexPage extends PureComponent {
     render() {
 		const { props } = this
-		return 	<PageWrapper
-					className='IndexPage'
-					loading={props.loading}
-				>
+		return 	<PageWrapper className='IndexPage'>
 					<WelcomeCard />
 					<MoodsInsert />
 					<MoodTabs />
@@ -27,7 +24,6 @@ IndexPage.propTypes = {
 	moods: PropTypes.object,
 	totalPages: PropTypes.number,
 	currentPage: PropTypes.number,
-	loading: PropTypes.bool.isRequired,
 	location: PropTypes.object.isRequired,
 }
 
@@ -37,7 +33,6 @@ export default
 connect(
 	({mood}) => ({
 		moods: mood.get('moods'),
-		loading: mood.get('loading'),
 		totalPages: mood.get('totalPages'),
 		currentPage: mood.get('currentPage'),
 	}),
