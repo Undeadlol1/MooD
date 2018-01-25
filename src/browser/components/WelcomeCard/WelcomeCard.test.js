@@ -48,8 +48,8 @@ describe('<WelcomeCard />', () => {
       const paragraphs = cardText.find('p')
       expect(cardText).to.have.length(1)
       expect(paragraphs).to.have.length(2)
-      expect(paragraphs.first().text()).to.eq(t('welcome_to_our_awesome_boilerplate'))
-      expect(paragraphs.last().text()).to.eq(t('hope_you_will_enjoy_it'))
+      expect(paragraphs.first().text()).to.eq(t('mood_is_a_content_consumption_service'))
+      expect(paragraphs.last().text()).to.eq(t('pick_your_mood_and_service_will_generate'))
     })
 
     it('has <CardActions>', () => {
