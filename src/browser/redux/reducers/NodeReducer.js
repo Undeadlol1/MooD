@@ -44,6 +44,7 @@ export default (state = initialState, {type, payload}) => {
 		// 		contentNotFound: false,
 		// 	})
 		case 'RECIEVE_NODE':
+			console.log('payload: ', payload);
 			return state
 				.merge(payload)
 				.updateIn(['nodes'], arr => {

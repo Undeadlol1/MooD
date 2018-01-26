@@ -26,6 +26,7 @@ export const actions = createActions({
  * or selects first if there is no more items in array
  */
 export const nextVideo = () => (dispatch, getState) => {
+	console.log('nextVideo is called!');
 	const 	state = getState().node,
 			nodes = state.get('nodes'),
 			currentNode = nodes.find(node => {
@@ -33,6 +34,10 @@ export const nextVideo = () => (dispatch, getState) => {
 			}),
 			position = nodes.indexOf(currentNode),
 			nextNode = nodes.get(position + 1)
+	console.log('nodes: ', nodes.toJS());
+	console.log('currentNode: ', currentNode && currentNode.toJS());
+	console.log('nextNode: ', nextNode && nextNode.toJS());
+	console.log('position: ', position);
 
 	if (nextNode) dispatch(actions.recieveNode(nextNode))
 	else {

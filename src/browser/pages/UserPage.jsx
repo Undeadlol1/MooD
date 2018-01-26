@@ -18,41 +18,44 @@ import ChangeLanguageForm from 'browser/components/ChangeLanguageForm'
 @injectIntl
 export class UserPage extends Component {
     render() {
-		const {moods, loading, image, location, UserId, displayName, isOwnPage, intl} = this.props
-		const src = `https://api.adorable.io/avatars/300/${UserId}.png`
-		const imageText = displayName + translate('things_image')
+		const { props } = this
+		const {moods, loading, image, UserId, displayName, intl} = this.props
+		const src = image || `https://api.adorable.io/avatars/300/${UserId}.png`
+		const imageText = intl.formatMessage(
+			{id: 'image_of_user_username'},
+			{username: displayName},
+		)
 		const title = intl.formatMessage(
 			{id: 'user_on_APP_NAME'},
 			{username: displayName},
 		)
 
-		console.log('title: ', title);
 		return 	<PageWrapper
+					image={src}
 					title={title}
-					// description={}
 					loading={loading}
-					location={location}
 					className='UserPage'
-					image={image || src}
 				>
 					<Row center="xs">
 						<Col xs={12}>
-							<h2 className="UserPage__username">{displayName}</h2>
+							<h2 className="UserPage__username">
+								{props.displayName}
+							</h2>
 						</Col>
 					</Row>
 					<Row center="xs">
 						<Col xs={12} className="UserPage__avatar">
 							<Avatar
+								src={src}
 								size={300}
+								alt={imageText}
 								title={imageText}
-								src={image || src}
-								alt={displayName + translate('things_image')}
 							/>
 						</Col>
 					</Row>
 					<Row>
 						<Col xs={12}>
-							{isOwnPage ? <ChangeLanguageForm /> : null}
+							{props.isOwnPage ? <ChangeLanguageForm /> : null}
 						</Col>
 					</Row>
 					{/* <Row>
