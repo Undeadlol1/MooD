@@ -12,6 +12,7 @@ export const actions = createActions({
   UNLOAD_NODE: () => null,
   REMOVE_NODE: id => id,
   TOGGLE_DIALOG: () => null,
+  ADD_NODE: node => node,
   RECIEVE_NODE: node => node,
   RECIEVE_NODES: nodes => nodes,
   UPDATE_NODE: object => object,
@@ -43,7 +44,7 @@ export const nextVideo = () => (dispatch, getState) => {
 	else {
 		// if there is only one node in array make sure it merges into state
 		// and is detected by video/audio player again
-		dispatch(actions.unloadNode()) // unload
+		// dispatch(actions.unloadNode()) // unload
 		dispatch(actions.recieveNode(nodes.get(0))) // and load again
 	}
 }
@@ -58,7 +59,8 @@ export const insertNode = payload => (dispatch, getState) => {
 		.then(parseJSON)
 		.then(function(response) {
 			dispatch(actions.toggleDialog())
-			return dispatch(actions.recieveNode(response))
+			dispatch(actions.addNode(response))
+			dispatch(actions.recieveNode(response))
 		})
 }
 

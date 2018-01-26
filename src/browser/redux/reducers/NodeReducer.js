@@ -37,24 +37,18 @@ export const initialState = Map({
 
 export default (state = initialState, {type, payload}) => {
 	switch(type) {
-		// case 'FETCHING_NODE':
-		// 	return state.merge({
-		// 		loading: true,
-		// 		finishedLoading: false,
-		// 		contentNotFound: false,
-		// 	})
-		case 'RECIEVE_NODE':
-			console.log('payload: ', payload);
-			return state
-				.merge(payload)
+		case 'ADD_NODE':
+			return  state
 				.updateIn(['nodes'], arr => {
 					return isEmpty(payload)
 						? arr
 						: arr.push(Map(payload))
 				})
+		case 'RECIEVE_NODE':
+			return state
+				.merge(payload)
 				.merge({
 					loading: false,
-					// finishedLoading: true,
 					contentNotFound: isEmpty(payload),
 				})
 		case 'RECIEVE_NODES':
@@ -63,7 +57,6 @@ export default (state = initialState, {type, payload}) => {
 					...payload[0],
 					nodes: payload,
 					loading: false,
-					// finishedLoading: true,
 					contentNotFound: isEmpty(payload),
 				})
 		case 'UPDATE_NODE':
@@ -76,7 +69,6 @@ export default (state = initialState, {type, payload}) => {
 				.merge({nodes: List()})
 				.mergeDeep({
 					loading: false,
-					// finishedLoading: false,
 					contentNotFound: false,
 				})
 		// remove node from nodes list
