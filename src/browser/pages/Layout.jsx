@@ -103,7 +103,7 @@ export default class Layout extends React.Component {
 					{/* global page loading indicator */}
 					<PageLoading />
 					<ReduxToastr position="top-left" progressBar />
-					<Feedback />
+					{/* <Feedback /> */}
 				</div>
 	}
 }
