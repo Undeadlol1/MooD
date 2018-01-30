@@ -1,3 +1,4 @@
+import find from 'lodash/find'
 import generateUuid from 'uuid/v4'
 import filter from 'lodash/filter'
 import extend from 'lodash/assignIn'
@@ -63,9 +64,19 @@ export default describe('NodesController', function() {
                 }
             }
             const nodes = await Node.findAll(selector)
-            const duplicates = filter(nodes, function (value, index, iteratee) {
-                return includes(iteratee, value, index + 1);
-            });
+            const duplicates = filter(
+                nodes,
+                (node, index) => {
+                    const x = find(nodes, {contentId: node.contentId, MoodId: node.MoodId, privider: node.provider})
+
+                    console.log('x: ', x);
+                    return x
+                }
+            )
+            console.log('duplicates: ', duplicates);
+            duplicates.forEach(async ({id}) => {
+                await Node.destroy({where: {id}})
+            })
             const newNodes = await Node.findAll(selector)
             expect(newNodes).to.have.length(2)
         })
