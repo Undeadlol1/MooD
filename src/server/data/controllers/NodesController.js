@@ -111,3 +111,16 @@ export async function findRandomNodes(MoodId) {
       return !(vote == 0 || vote === false)
   })
 }
+
+/**
+ * removes all node duplicates from each mood
+ * this means there might still be nodes with same "contentId" and "provider"
+ * but "MoodId" will be different
+ * @export
+ */
+export async function removeDuplicates() {
+    const nodes = await Node.findAll({where: {}, raw: true})
+    return _.filter(array, function (value, index, iteratee) {
+        return _.includes(iteratee, value, index + 1);
+     });
+}
