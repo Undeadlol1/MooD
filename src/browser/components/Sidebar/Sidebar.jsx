@@ -46,13 +46,13 @@ export class Sidebar extends Component {
 					>
 						<MenuItem>{translate("search")}</MenuItem>
 					</Link>
-					<Link
+					{/* <Link
 						to="forum"
 						onClick={toggleSidebar}
 						className="Sidebar__forum-link"
 					>
 						<MenuItem>{translate("forum")}</MenuItem>
-					</Link>
+					</Link> */}
 					{/* <Link
 						to="about"
 						onClick={toggleSidebar}

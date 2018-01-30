@@ -23,9 +23,9 @@ describe('<Sidebar />', () => {
   })
 
   describe('always', () => {
-    it('has 2 menu items', () => {
+    it('has 1 menu items', () => {
       const links = wrapper.find('Link')
-      expect(wrapper.find('Link')).to.have.length(2)
+      expect(wrapper.find('Link')).to.have.length(1)
       links.nodes.forEach(link => {
         expect(link.props.onClick).to.be.a('function')
       })
@@ -40,12 +40,12 @@ describe('<Sidebar />', () => {
       expect(link.props().children.props.children).to.eq(translate('search'))
     })
 
-    it('has "forum" link', () => {
-      const link = wrapper.find('.Sidebar__forum-link');
-      expect(link).to.have.length(1)
-      expect(link.props().onClick).to.be.a('function')
-      expect(link.props().children.props.children).to.eq(translate("forum"))
-    })
+    // it('has "forum" link', () => {
+    //   const link = wrapper.find('.Sidebar__forum-link');
+    //   expect(link).to.have.length(1)
+    //   expect(link.props().onClick).to.be.a('function')
+    //   expect(link.props().children.props.children).to.eq(translate("forum"))
+    // })
 
     // it('has "about" link', () => {
     //   const link = wrapper.find('.Sidebar__about-link')
@@ -67,7 +67,7 @@ describe('<Sidebar />', () => {
 
     it('has 4 menu items', () => {
       const menuItems = wrapper.find('MenuItem')
-      expect(menuItems).to.have.length(4)
+      expect(menuItems).to.have.length(3)
     })
 
     it('has <div>', () => {
