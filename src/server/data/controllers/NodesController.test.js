@@ -1,6 +1,7 @@
 import find from 'lodash/find'
 import generateUuid from 'uuid/v4'
 import filter from 'lodash/filter'
+import matches from 'lodash/matches'
 import extend from 'lodash/assignIn'
 import includes from 'lodash/includes'
 import { Node } from 'server/data/models'
@@ -34,51 +35,47 @@ const nodes = [
     extend(
         {
             UserId,
-            MoodId: firstMoodId,
+            MoodId: secondMoodId,
+        },
+        parseUrl(secondVideo)
+    ),
+    extend(
+        {
+            UserId,
+            MoodId: secondMoodId,
         },
         parseUrl(secondVideo)
     ),
 
 ]
 
+// get nodes from two moods
+const selector = {
+    where: {
+        MoodId: {
+            $or: [firstMoodId, secondMoodId]
+        }
+    }
+}
+
 export default describe('NodesController', function() {
     describe('removeDuplicates()', () => {
-        // create nodes before running tests
-        before(async () => {
-            // create two duplicates in first mood and singe node in second mood
-            await Node.bulkCreate(nodes)
-        })
+        // create nodes with duplicates before running tests
+        before(async () => await Node.bulkCreate(nodes))
         // clean up
-        after(async () => {
-            await Node.destroy({where: {MoodId: firstMoodId}})
-            await Node.destroy({where: {MoodId: secondMoodId}})
-        })
-        it('does the job', async () => {
-            // get nodes from two moods
-            const selector = {
-                raw: true,
-                where: {
-                    MoodId: {
-                        $or: [firstMoodId, secondMoodId]
-                    }
-                }
-            }
-            const nodes = await Node.findAll(selector)
-            const duplicates = filter(
-                nodes,
-                (node, index) => {
-                    const x = find(nodes, {contentId: node.contentId, MoodId: node.MoodId, privider: node.provider})
+        after(async () => await Node.destroy(selector))
 
-                    console.log('x: ', x);
-                    return x
-                }
+        it('does the job', async () => {
+            assert.lengthOf( // make sure there are nodes
+                await Node.findAll(selector), 4,
+                'there must be 4 nodes before function runs'
             )
-            console.log('duplicates: ', duplicates);
-            duplicates.forEach(async ({id}) => {
-                await Node.destroy({where: {id}})
-            })
-            const newNodes = await Node.findAll(selector)
-            expect(newNodes).to.have.length(2)
+            await removeDuplicates() // run function
+            assert.lengthOf( // validate nodes.length
+                await Node.findAll(selector), 2,
+                'there must be 2 nodes after function run'
+            )
         })
+
     })
 })

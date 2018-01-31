@@ -1,5 +1,10 @@
+import find from 'lodash/find'
+import filter from 'lodash/filter'
+import forEach from 'lodash/forEach'
+import matches from 'lodash/matches'
 import extend from 'lodash/assignIn'
-import { Node, Decision } from "../models/index"
+import includes from 'lodash/includes'
+import { Node, Decision } from "server/data/models"
 // TODO add tests! ⚠️ ✏️️
 /**
  * after migrating ratings to decimal point (in order to make them unique),
@@ -119,8 +124,21 @@ export async function findRandomNodes(MoodId) {
  * @export
  */
 export async function removeDuplicates() {
-    const nodes = await Node.findAll({where: {}, raw: true})
-    return _.filter(array, function (value, index, iteratee) {
-        return _.includes(iteratee, value, index + 1);
-     });
+    try {
+        const nodes = await Node.findAll()
+        nodes.forEach(async ({contentId, MoodId, provider}) => {
+            const where = {contentId, MoodId, provider}
+            // nodes with same contentId, provider and MoodId
+            const similarNodes = filter(nodes, matches(where))
+            // if there are duplicates
+            if (similarNodes.length > 1) {
+                // destroy nodes until only one left
+                for (let i = 0; i < similarNodes.length - 1; i++) {
+                    await Node.destroy({where: {id: similarNodes[i].id}})
+                }
+            }
+        })
+    } catch (error) {
+        throw error
+    }
 }
