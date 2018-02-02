@@ -1,6 +1,5 @@
 import Layout from './pages/Layout';
 import IndexPage from './pages/IndexPage';
-import LoginPage from './pages/LoginPage';
 import UserPage from './pages/UserPage';
 import MoodPage from './pages/MoodPage';
 import SearchPage from './pages/SearchPage';
@@ -81,7 +80,6 @@ const routesConfig = {
         }
       }
     },
-    { path: 'login', component: LoginPage },
     { path: 'search', component: SearchPage },
     { path: 'about', component: AboutPage },
     {
