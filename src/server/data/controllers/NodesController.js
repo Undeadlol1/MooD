@@ -126,7 +126,7 @@ export async function findRandomNodes(MoodId) {
 export async function removeDuplicates() {
     try {
         const nodes = await Node.findAll()
-        nodes.forEach(async ({contentId, MoodId, provider}) => {
+        await nodes.forEach(async ({contentId, MoodId, provider}) => {
             const where = {contentId, MoodId, provider}
             // nodes with same contentId, provider and MoodId
             const similarNodes = filter(nodes, matches(where))

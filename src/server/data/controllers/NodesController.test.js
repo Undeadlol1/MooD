@@ -17,6 +17,7 @@ const firstMoodId = generateUuid()
 const secondMoodId = generateUuid()
 const firstVideo = 'https://www.youtube.com/watch?v=1TB1x67Do5U'
 const secondVideo = 'https://www.youtube.com/watch?v=6CvuyaKmLnw'
+// two similar nodes in first mood and three similar in second one
 const nodes = [
     extend(
         {
@@ -46,11 +47,18 @@ const nodes = [
         },
         parseUrl(secondVideo)
     ),
-
+    extend(
+        {
+            UserId,
+            MoodId: secondMoodId,
+        },
+        parseUrl(secondVideo)
+    ),
 ]
 
 // get nodes from two moods
 const selector = {
+    raw: true,
     where: {
         MoodId: {
             $or: [firstMoodId, secondMoodId]
@@ -67,15 +75,15 @@ export default describe('NodesController', function() {
 
         it('does the job', async () => {
             assert.lengthOf( // make sure there are nodes
-                await Node.findAll(selector), 4,
-                'there must be 4 nodes before function runs'
+                await Node.findAll(selector), 5,
+                'there must be 5 nodes before function runs'
             )
             await removeDuplicates() // run function
+            const newNodes = await Node.findAll(selector)
             assert.lengthOf( // validate nodes.length
                 await Node.findAll(selector), 2,
                 'there must be 2 nodes after function run'
             )
         })
-
     })
 })
