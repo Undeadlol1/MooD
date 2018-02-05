@@ -16,9 +16,10 @@ class Video extends Component {
 
 	watchMouseMove = () => {
 		clearTimeout(this.timeout)
-		this.timeout = setTimeout(() => {
-			this.props.closeControls()
-		}, 3000)
+		this.timeout = setTimeout(
+			() => this.props.closeControls(),
+			3000
+		)
 	}
 
 	onReady = event => {
