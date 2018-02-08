@@ -4,12 +4,21 @@ import extend from 'lodash/assignIn'
 import { parseUrl } from 'shared/parsers'
 import { mustLogin } from 'server/services/permissions'
 import { Node, Mood, Decision, User } from 'server/data/models'
-import { normalizeRating } from 'server/data/controllers/NodesController'
+import { normalizeRating, removeDuplicates } from 'server/data/controllers/NodesController'
 import { updatePositionAndViews } from 'server/data/controllers/DecisionsController'
 import { findHighestRatingNode, findRandomNode, findRandomNodes } from 'server/data/controllers/NodesController'
 
 // routes
 export default Router()
+
+  .get('/removeDuplicates/', async function(req, res) {
+    try {
+      await removeDuplicates()
+    } catch (error) {
+      console.error(error);
+      res.boom.internal(error)
+    }
+  })
 
   .get('/:moodSlug/', async function(req, res) {
     const { moodSlug } = req.params
