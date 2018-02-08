@@ -13,7 +13,10 @@ export default Router()
 
   .get('/removeDuplicates/', async function(req, res) {
     try {
+      console.log('script is running!')
       await removeDuplicates()
+      console.log('scritpt is done running!')
+      res.end()
     } catch (error) {
       console.error(error);
       res.boom.internal(error)
