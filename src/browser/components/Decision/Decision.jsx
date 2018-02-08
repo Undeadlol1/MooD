@@ -21,7 +21,7 @@ export class Decision extends PureComponent {
 						name="thumbs-up"
 						title={t('i_like_it')}
 						hoverIcon='thumbs-o-up'
-						color={decisionVote ? 'rgb(0, 151, 167)' : undefined}
+						color={decisionVote && 'rgb(0, 151, 167)'}
 						onClick={vote.bind(this, true)} />
 					<Icon
 						title={t('skip')}
@@ -31,7 +31,7 @@ export class Decision extends PureComponent {
 						title={t('dont_like_it_dont_show_again')}
 						name="thumbs-down"
 						hoverIcon='thumbs-o-down'
-						color={decisionVote === false || 0 ? 'rgb(255, 64, 129)' : undefined}
+						color={(decisionVote === false || 0) && 'rgb(255, 64, 129)'}
 						onClick={vote.bind(this, false)} />
 				</div>
 	}
