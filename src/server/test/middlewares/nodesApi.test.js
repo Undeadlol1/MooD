@@ -24,7 +24,9 @@ const   user = request.agent(server),
             "https://www.youtube.com/watch?v=M3B5U1S-I4Y",
             "https://www.youtube.com/watch?v=P027oGJy2n4",
             "https://www.youtube.com/watch?v=VoA9tLkrgHY",
-        ]
+        ],
+        contentId = 'Seh57NRnAVA'
+
 
 function login() {
     return user
@@ -50,7 +52,6 @@ export default describe('/nodes API', function() {
 
     it('POST node', async function() {
         const mood = await Mood.findOne({order: 'rand()'})
-        const contentId = 'Seh57NRnAVA'
         const moodSlug = mood.slug
         function postNode(body) {
             return user
@@ -69,6 +70,21 @@ export default describe('/nodes API', function() {
                                             provider: 'youtube',
                                         })
         withoutUrlResponse.contentId = contentId
+    })
+
+    it('POST should fail if node is a duplicate', async function() {
+        const existingNode = await Node.findOne({order: 'rand()', raw: true})
+        await user
+            .post('/api/nodes')
+            .send({
+                MoodId: existingNode.MoodId,
+                provider: existingNode.provider,
+                contentId: existingNode.contentId,
+            })
+            .expect(400)
+            .then(({body}) => {
+                expect(body.message).to.eq('node already exists')
+            })
     })
 
     function getNextNode(slug, previousNodeId = "", agent = user) {

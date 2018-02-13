@@ -131,6 +131,7 @@ export default Router()
     // TODO add validations
     /*
       When user creates a node do the following:
+      0. Make validations
       1. Create Node
       2. Create a Decision for every User corresponding with this NodeId
     */
@@ -143,16 +144,27 @@ export default Router()
         // url is optional if 'provider' and 'contentId' is provided
         body.url ? parseUrl(body.url) : undefined
       )
+      // Creating nodes with same "MoodId", "provider" and "contentId" is forbidden
+      const duplicatesCount = await Node.count({
+        where: {
+          MoodId: body.MoodId,
+          provider: body.provider,
+          contentId: body.contentId
+        }
+      })
+      if (duplicatesCount > 0) return res.boom.badRequest('node already exists')
+
       const node   = await Node.create(body)
       const users  = await User.findAll()
 
+
       await users.forEach(async user => {
-            return await Decision.create({
-                      UserId: user.get('id'),
-                      NodeId: node.get('id'),
-                      MoodId: node.get('MoodId'),
-                      NodeRating: node.get('rating'),
-                    })
+        return await Decision.create({
+          UserId: user.get('id'),
+          NodeId: node.get('id'),
+          MoodId: node.get('MoodId'),
+          NodeRating: node.get('rating'),
+        })
       })
 
       res.json(node)
