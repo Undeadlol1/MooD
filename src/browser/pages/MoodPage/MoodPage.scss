@@ -39,3 +39,11 @@
 	margin-top: 70px;
 	min-height: 100vh;
 }
+
+// On extra small devices remove <Grid>'s padding
+@media (max-width: 48rem) {
+	.MoodPage.PageWrapper__Grid {
+		padding-left: 0rem !important;
+		padding-right: 0rem !important;
+	}
+}
