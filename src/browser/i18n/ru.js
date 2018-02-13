@@ -21,7 +21,7 @@ export default {
     image_url_not_required: 'Url изображения (не обязательно)',
 
     mood_is_a_content_consumption_service: 'Mood - это сервис потребления контента.',
-    pick_your_mood_and_service_will_generate: 'Выберите свое настроение и сервис сгенерирует для вас уникальный персональный плейлист.',
+    pick_your_mood_and_service_will_generate: 'Выберите свое настроение и сервис сыграет для вас музыку.',
     ok: 'OK',
     current_mood: 'Мое настроение: ',
     incorrent_password: 'неправильный пароль',
