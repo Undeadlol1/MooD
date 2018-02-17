@@ -31,7 +31,7 @@ export class Decision extends PureComponent {
 						title={t('dont_like_it_dont_show_again')}
 						name="thumbs-down"
 						hoverIcon='thumbs-o-down'
-						color={(decisionVote === false || 0) && 'rgb(255, 64, 129)'}
+						// color={(decisionVote === false || 0) && 'rgb(255, 64, 129)'}
 						onClick={vote.bind(this, false)} />
 				</div>
 	}
