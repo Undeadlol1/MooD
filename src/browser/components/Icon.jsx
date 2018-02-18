@@ -28,7 +28,6 @@ class Icon extends Component {
                                 name: this.state.currentIcon,
                                 style: extendObject({color}, iconStyles, style),
                             }
-
         return  <FontAwesome
                     {...rest}
                     {...iconOptions}

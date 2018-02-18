@@ -14,6 +14,7 @@ export const actions = createActions({
   TOGGLE_DIALOG: () => null,
   ADD_NODE: node => node,
   RECIEVE_NODE: node => node,
+  RECIEVE_NODE: node => node,
   RECIEVE_NODES: nodes => nodes,
   UPDATE_NODE: object => object,
 //   FETCHING_NODE: () => null,
@@ -137,9 +138,15 @@ export const youtubeSearch = query => (dispatch, getState) => {
 		.catch(err => console.error('youtubeSearch failed!', err))
 }
 
+// TODO: rename function to 'createDecision'
+// TODO: add 'deleteDecisions'? Or i can't really delete decisions? How do i undo the vote?
 /**
- * vote for node
+ *
+ * Vote for node.
+ * (this means create a Decisions for it)
+ * If vote value is undefined this means user decided to undo his vote
  * @param {Boolean} boolean value to set in Decision.vote
+ * @export
  */
 export const vote = boolean => (dispatch, getState) => {
 	const { node } = getState()
@@ -147,19 +154,82 @@ export const vote = boolean => (dispatch, getState) => {
 	payload.NodeId = node.get('id')
 	payload.id = node.getIn(['Decision', 'id'])
 	payload.vote = boolean
-	return fetch(decisionsUrl, headersAndBody(payload, payload.id ? 'PUT' : 'POST'))
-		.then(checkStatus)
-		.then(parseJSON)
-		.then(({vote, NodeId}) => {
-			if (vote) dispatch(actions.updateNode({Decision: {vote}}))
-			else {
-				dispatch(actions.removeNode(NodeId))
-				dispatch(nextVideo())
-			}
-		})
-		// TODO
-		.catch(error => {
-			console.error(error);
-			// dispatch(actions.voteFailure)
-		})
+	return
+	fetch(decisionsUrl, headersAndBody(payload, payload.id ? 'PUT' : 'POST'))
+	.then(checkStatus)
+	.then(parseJSON)
+	.then(({vote, NodeId}) => {
+		if (vote) dispatch(actions.updateNode({Decision: {vote}}))
+		else {
+			dispatch(actions.removeNode(NodeId))
+			dispatch(nextVideo())
+		}
+	})
+	.catch(error => console.error(error))
+}
+/**
+ * Create decision
+ * @param {Object} payload POST request body
+ * @param {string} payload.NodeId node id
+ * @param {boolean} payload.vote upvote or downvote
+ * @param {function} [callback] optional callback function
+ * @export
+ */
+export const createDecision = (payload, callback) => (dispatch, getState) => {
+	return fetch(
+		decisionsUrl,
+		headersAndBody(payload, 'POST')
+	)
+	.then(checkStatus)
+	.then(parseJSON)
+	.then((Decision) => {
+		dispatch(actions.updateNode({Decision}))
+		callback && callback(Decision)
+	})
+	.catch(error => console.error('createDecision failed', error))
+}
+/**
+ * Delete decision.
+ * @param {string} decisionId decision.id
+ * @param {function} [callback] optional callback function
+ * @export
+ */
+export const deleteDecision = (decisionId, callback) => (dispatch, getState) => {
+	return fetch(
+		decisionsUrl + decisionId,
+		headersAndBody(undefined, 'DELETE')
+	)
+	.then(checkStatus)
+	.then(() => {
+		dispatch(actions.updateNode({Decision: {}}))
+		callback && callback()
+	})
+	.catch(error => console.error('deleteDecision failed', error))
+}
+/**
+ * Update decision.
+ * @param {string} decisionId decision.id
+ * @param {Object} payload fields to update
+ * @param {boolean} payload.vote Decision.vote
+ * @param {function} [callback] optional callback function
+ * @export
+ */
+export const updateDecision = (decisionId, payload, callback) => (dispatch, getState) => {
+	// if user disliked node remove it from nodes array and play next video
+	if (payload.vote === false) {
+		const NodeId = getState().node.get('id')
+		dispatch(actions.removeNode(NodeId))
+		dispatch(nextVideo())
+	}
+	return fetch(
+		decisionsUrl + decisionId,
+		headersAndBody(payload, 'PUT')
+	)
+	.then(checkStatus)
+	.then(parseJSON)
+	.then(updatedDecision => {
+		dispatch(actions.updateNode({Decision: updatedDecision}))
+		callback && callback(updatedDecision)
+	})
+	.catch(error => console.error('updateDecision failed', error))
 }
