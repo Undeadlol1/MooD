@@ -1,6 +1,6 @@
-import { Node, Mood, Decision, User } from 'server/data/models'
-import { mustLogin } from 'server/services/permissions'
 import { Router } from 'express'
+import { mustLogin } from 'server/services/permissions'
+import { Node, Mood, Decision, User } from 'server/data/models'
 
 export default Router()
   .post('/', mustLogin, async function({user, body}, res) {
