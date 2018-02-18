@@ -40,10 +40,10 @@ export default Router()
     1. Update a Decision
     2. Update Node.rating
   */
-  .put('/', mustLogin, async ({user, body, params}, res) => {
+  .put('/:id', mustLogin, async ({user, body, params}, res) => {
     try {
       const { id: UserId } = user,
-            decision = await Decision.findById(body.id),
+            decision = await Decision.findById(params.id),
             node = await Node.findById(decision.NodeId),
             newRating = Number(node.rating) + (body.vote ? 1 : -1)
       // Update Node.rating
@@ -63,6 +63,7 @@ export default Router()
       res.boom.internal(error.message)
     }
   })
+  // FIXME: should i even delete decision? Is it going to break anything
   /*
     When user removes decision:
     1. Delete a Decision

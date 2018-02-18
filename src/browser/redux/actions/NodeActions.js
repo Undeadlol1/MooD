@@ -210,10 +210,17 @@ export const deleteDecision = (decisionId, callback) => (dispatch, getState) => 
  * Update decision.
  * @param {string} decisionId decision.id
  * @param {Object} payload fields to update
+ * @param {boolean} payload.vote Decision.vote
  * @param {function} [callback] optional callback function
  * @export
  */
 export const updateDecision = (decisionId, payload, callback) => (dispatch, getState) => {
+	// if user disliked node remove it from nodes array and play next video
+	if (payload.vote === false) {
+		const NodeId = getState().node.get('id')
+		dispatch(actions.removeNode(NodeId))
+		dispatch(nextVideo())
+	}
 	return fetch(
 		decisionsUrl + decisionId,
 		headersAndBody(payload, 'PUT')

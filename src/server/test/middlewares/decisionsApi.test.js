@@ -57,8 +57,8 @@ export default describe('/decisions API', function() {
                     node = await Node.findById(decision.NodeId),
                     agent = await loginUser(user.username, user.password)
             await agent
-                .put(apiUrl)
-                .send({id: decision.id, vote: !decision.vote})
+                .put(apiUrl + decision.id)
+                .send({vote: !decision.vote})
                 .expect(200)
                 .expect('Content-Type', /json/)
                 .then(async ({body}) => {
@@ -73,7 +73,7 @@ export default describe('/decisions API', function() {
                 })
         })
 
-        it('fails if not logged in', async () => await agent.put(apiUrl).expect(401))
+        it('fails if not logged in', async () => await agent.put(apiUrl + 'someId').expect(401))
 
     })
 
