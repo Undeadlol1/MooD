@@ -16,22 +16,25 @@ export class Decision extends PureComponent {
 	}
 	render() {
 		const { decisionVote, className, vote, nextVideo, ...rest } = this.props
+		// sequelize returns 0 or 1 for booleans
+		const isUpvote = decisionVote === (true || 1)
+		const isDownvote = decisionVote === (false || 0)
 		return 	<div className={'Decision ' + className}>
 					<Icon
 						name="thumbs-up"
 						title={t('i_like_it')}
 						hoverIcon='thumbs-o-up'
-						color={decisionVote && 'rgb(0, 151, 167)'}
+						color={isUpvote ? 'rgb(0, 151, 167)' : 'white'}
 						onClick={vote.bind(this, true)} />
 					<Icon
 						title={t('skip')}
 						onClick={nextVideo}
 						name="step-forward" />
 					<Icon
-						title={t('dont_like_it_dont_show_again')}
 						name="thumbs-down"
 						hoverIcon='thumbs-o-down'
-						color={(decisionVote === false || 0) && 'rgb(255, 64, 129)'}
+						title={t('dont_like_it_dont_show_again')}
+						color={isDownvote ? 'rgb(255, 64, 129)' : 'white'}
 						onClick={vote.bind(this, false)} />
 				</div>
 	}
