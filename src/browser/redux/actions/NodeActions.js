@@ -10,6 +10,7 @@ const externalsUrl = API_URL + 'externals/search/'
 
 export const actions = createActions({
   UNLOAD_NODE: () => null,
+  UNLOAD_NODES: () => null,
   REMOVE_NODE: id => id,
   TOGGLE_DIALOG: () => null,
   ADD_NODE: node => node,
@@ -17,6 +18,7 @@ export const actions = createActions({
   RECIEVE_NODE: node => node,
   RECIEVE_NODES: nodes => nodes,
   UPDATE_NODE: object => object,
+  UPDATE_DECISION: decision => decision,
 //   FETCHING_NODE: () => null,
   FETCHING_ERROR: reason => reason,
   RECIEVE_SEARCHED_VIDEOS: videos => videos,
@@ -208,6 +210,7 @@ export const deleteDecision = (decisionId, callback) => (dispatch, getState) => 
 }
 /**
  * Update decision.
+ * Also updates 'node.Decision' in 'nodes' array.
  * @param {string} decisionId decision.id
  * @param {Object} payload fields to update
  * @param {boolean} payload.vote Decision.vote
@@ -218,6 +221,8 @@ export const updateDecision = (decisionId, payload, callback) => (dispatch, getS
 	// if user disliked node remove it from nodes array and play next video
 	if (payload.vote === false) {
 		const NodeId = getState().node.get('id')
+		// TODO: check if removeing of node is needed
+		// NOTE: do we uload node in "nextVideo" function and in reducer?
 		dispatch(actions.removeNode(NodeId))
 		dispatch(nextVideo())
 	}

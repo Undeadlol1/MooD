@@ -9,11 +9,11 @@ import { initialState } from 'browser/redux/reducers/NodeReducer'
 import {
   vote,
   actions,
+  nextVideo,
   createDecision,
   deleteDecision,
   updateDecision,
 } from 'browser/redux/actions/NodeActions'
-import { nextVideo } from './NodeActions';
 chai.should()
 chai.use(chaiImmutable)
 
