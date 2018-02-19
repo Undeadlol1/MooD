@@ -18,8 +18,8 @@ import {
 /**
  * Controls component for Video section.
  * Controls have upvote, downvote and skip video buttons.
- * Skip video just plays next one in array.
- * Upvote/downvote makes request to decisions api with appropriate data.
+ * Skip video just plays next node one in array.
+ * Upvote/downvote makes request to decisions api with appropriate values.
  * @export
  * @class Decision
  * @extends {Component}
