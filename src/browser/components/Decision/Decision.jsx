@@ -2,23 +2,36 @@ import selectn from 'selectn'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
+import React, { Component } from 'react'
 import Icon from 'browser/components/Icon'
-import React, { PureComponent } from 'react'
 import { translate as t } from 'browser/containers/Translator'
+import { createDecision } from '../../redux/actions/NodeActions'
 import {
 	vote,
-	fetchNode,
 	nextVideo,
-	// createDecision,
 	updateDecision,
 	removeDecision,
 } from 'browser/redux/actions/NodeActions'
-import { createDecision } from '../../redux/actions/NodeActions'
-// TODO change name to 'controls'?
-export class Decision extends PureComponent {
+
+// TODO: change name to 'controls'?
+
+/**
+ * Controls component for Video section.
+ * Controls have upvote, downvote and skip video buttons.
+ * Skip video just plays next node one in array.
+ * Upvote/downvote makes request to decisions api with appropriate values.
+ * @export
+ * @class Decision
+ * @extends {Component}
+ */
+export class Decision extends Component {
 	static propTypes = {
 		decision: PropTypes.object,
-		decisionVote: PropTypes.number,
+		// sometimes api responses return booleans or numbers
+		decisionVote: PropTypes.oneOfType([
+			PropTypes.bool,
+			PropTypes.number,
+		]),
 		vote: PropTypes.func.isRequired,
 		nextVideo: PropTypes.func.isRequired,
 	}

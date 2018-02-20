@@ -46,7 +46,9 @@ export default (state = initialState, {type, payload}) => {
 				})
 		case 'RECIEVE_NODE':
 			return state
-				.merge(payload)
+				// unload current node just incase
+				.mergeDeep(nodeStructure)
+				.mergeDeep(payload)
 				.merge({
 					loading: false,
 					contentNotFound: isEmpty(payload),
@@ -59,14 +61,24 @@ export default (state = initialState, {type, payload}) => {
 					loading: false,
 					contentNotFound: isEmpty(payload),
 				})
+		/**
+		 * Update properties of current node and update node in 'nodes' array
+		 */
 		case 'UPDATE_NODE':
-			return state.mergeDeep(payload)
+			// find node's index in nodes array to update further
+			const nodeIndex = state.get('nodes').findIndex(i => i.id == payload.id)
+			// if node in array was not found do not try to update it
+			if (nodeIndex == -1) return state.mergeDeep(payload)
+			else return state
+				.mergeDeep(payload)
+				.mergeDeepIn(['nodes', nodeIndex], payload)
 		case 'TOGGLE_DIALOG':
 			return state.set('dialogIsOpen', !state.get('dialogIsOpen'))
+		case 'UNLOAD_NODES':
+			return state.set({nodes: []})
 		case 'UNLOAD_NODE':
 			return state
 				.merge(nodeStructure)
-				.merge({nodes: List()})
 				.mergeDeep({
 					loading: false,
 					contentNotFound: false,
