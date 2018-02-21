@@ -1,11 +1,12 @@
 .YoutubeVideos {
 	.YoutubeVideos__item {
-		padding-bottom: 1rem;
+		// margin: 1rem 0;
 		.Video {
 			height: initial;
 		}
 		.YoutubeVideos__add-button {
-			padding-bottom: 1rem;
+			// margin-bottom: 1rem;
+			margin: 1rem 0;
 		}
 	}
 }
