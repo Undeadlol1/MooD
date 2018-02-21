@@ -116,7 +116,6 @@ export async function findRandomNodes(MoodId) {
       return !(vote == 0 || vote === false)
   })
 }
-
 /**
  * removes all node duplicates from each mood
  * this means there might still be nodes with same "contentId" and "provider"
@@ -139,6 +138,33 @@ export async function removeDuplicates() {
             }
         })
     } catch (error) {
+        throw error
+    }
+}
+/**
+ * Resets Node.rating and Decision.NodeRating.
+ * NOTE: there is not proper tests for this function!
+ * @export
+ */
+export async function resetRatings() {
+    /**
+    * To reset node.rating we need to:
+    * 1) Change rating to 0 + random numbers in every node to make it unique (see: logic.md).
+    * 2) Change decision.NodeRating to same number
+    * 3) Change every decision.vote to null
+    */
+    try {
+        await Node
+        .findAll({where: {}})
+        .each(async node => {
+            // 0. + timestamp + random integer between 1 and 10k
+            const newRating = `0.${Date.now()}${Math.floor(Math.random() * (10000 - 1) + 10000)}`
+            await node.update({rating: newRating})
+            await Decision.update({NodeRaing: newRating}, {where: {NodeId: node.id}})
+        })
+        return await Decision.update({vote: null}, {where: {}})
+    }
+    catch (error) {
         throw error
     }
 }

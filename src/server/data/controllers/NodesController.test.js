@@ -4,13 +4,15 @@ import filter from 'lodash/filter'
 import matches from 'lodash/matches'
 import extend from 'lodash/assignIn'
 import includes from 'lodash/includes'
-import { Node } from 'server/data/models'
+import { Node, Decision } from 'server/data/models'
 import { parseUrl } from 'shared/parsers'
 import chai, { assert, expect } from 'chai'
 import {
-    removeDuplicates
+    resetRatings,
+    removeDuplicates,
 } from 'server/data/controllers/NodesController'
 chai.should()
+chai.use(require('chai-properties'))
 
 const UserId = 12345
 const firstMoodId = generateUuid()
@@ -86,4 +88,23 @@ export default describe('NodesController', function() {
             )
         })
     })
+
+    // it('resetRatings()', async () => {
+    //     // run function
+    //     await resetRatings()
+    //     // test
+    //     await Node
+    //         .findAll()
+    //         .each(node => {
+    //             expect(node.rating).to.be.below(1)
+    //             expect(node.rating).to.have.length.above(10)
+    //         })
+    //     await Decision
+    //         .findAll()
+    //         .each(decision => {
+    //             expect(decision.vote).to.be.null
+    //             expect(decision.NodeRating).to.be.below(1)
+    //             expect(decision.NodeRating).to.have.length.above(10)
+    //         })
+    // })
 })
