@@ -13,27 +13,29 @@ import FloatingActionButton from 'material-ui/FloatingActionButton'
 
 class NodesInsert extends Component {
     render() {
+        // hide component if necessary
+        if (this.props.hidden) return null
         const { props } = this
-        const { handleSubmit, toggleDialog, dialogIsOpen } = this.props
+        const { handleSubmit, toggleDialog } = this.props
         const isDisabled = props.asyncValidating == 'url' || props.submitting
 
         const actions = [
                             <FlatButton
                                 primary={false}
-                                onTouchTap={toggleDialog}
                                 label={t("cancel")}
                                 disabled={isDisabled}
+                                onTouchTap={props.toggleDialog}
                             />
                         ]
         // TODO this 'handlesubmit' just bugs me out
         // TODO this is where it comes from
         // Failed prop type: The prop `onSubmit` is marked as required in `Form`
-        return  <Form onSubmit={handleSubmit(props.insertNode)} className="NodesInsert">
+        return  <Form onSubmit={props.handleSubmit(props.insertNode)} className="NodesInsert">
 
                     {/* BUTTON */}
                     <FloatingActionButton
                         secondary={true}
-                        onClick={toggleDialog}
+                        onClick={props.toggleDialog}
                     >
                         {
                             props.open
@@ -48,7 +50,7 @@ class NodesInsert extends Component {
                         open={false}
                         title={t("add_something")}
                         autoScrollBodyContent={true}
-                        onRequestClose={toggleDialog}
+                        onRequestClose={props.toggleDialog}
                     >
                         <Grid className="NodesInsert__Grid">
                             <YoutubeSearch />
@@ -61,6 +63,7 @@ class NodesInsert extends Component {
 
 NodesInsert.propTypes = {
     open: PropTypes.bool,
+    hidden: PropTypes.bool,
     dialogIsOpen: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     toggleDialog: PropTypes.func.isRequired,
