@@ -54,6 +54,7 @@ export class MoodPage extends Component {
 						?	<Video className='MoodPage__video'>
 								<NavBar className='NavBar--sticky' />
 								{!contentNotFound && <Decision className='MoodPage__decision' />}
+								<NodesInsert open={dialogIsOpen} moodSlug={params.moodSlug} /> {/* TODO rework passing of moodSlug */}
 								<ShareButton />
 							</Video>
 						: null
@@ -64,11 +65,12 @@ export class MoodPage extends Component {
 								<NavBar className='NavBar--sticky' />
 								<Grid fluid>
 									<YoutubeSearch />
+									{/* this a closing button */}
+									<NodesInsert open={dialogIsOpen} moodSlug={params.moodSlug} /> {/* TODO rework passing of moodSlug */}
 								</Grid>
 							</div>
 						: null
 					}
-					<NodesInsert open={dialogIsOpen} moodSlug={params.moodSlug} /> {/* TODO rework passing of moodSlug */}
 				</PageWrapper>
 	}
 }
