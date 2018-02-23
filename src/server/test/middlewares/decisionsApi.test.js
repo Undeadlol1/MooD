@@ -32,15 +32,29 @@ export default describe('/decisions API', function() {
             .expect(200)
             .expect('Content-Type', /json/)
             .then(async ({body}) => {
-                expect(body.vote).eq(true)
+                const decision = body
+                expect(decision.vote).eq(true)
                 // TODO: check this
                 // FIXME: check this
                 Number(node.rating) > 0
-                ? expect(body.NodeRating).above(node.rating)
-                : expect(body.NodeRating).below(node.rating)
+                ? expect(decision.NodeRating).above(node.rating)
+                : expect(decision.NodeRating).below(node.rating)
                 // make sure node.rating is updated
                 const updatedNode = await Node.findById(node.id)
-                expect(updatedNode.rating == body.NodeRating)
+                assert.equal(
+                    updatedNode.rating, decision.NodeRating,
+                    'node.rating and decision.NodeRating must be equal'
+                )
+                assert.notEqual(
+                    node.rating, updatedNode.rating,
+                    'node.rating must change'
+                )
+                // test how much rating have changed
+                // to prevent wrong calculation
+                assert(
+                    updatedNode.rating - decision.NodeRating < 2,
+                    'updated node rating is too high'
+                )
             })
         })
 
@@ -53,30 +67,44 @@ export default describe('/decisions API', function() {
             const   UserId = await Local
                             .findOne({where: {username: user.username} })
                             .then(local => local.UserId),
-                    decision = await Decision.findOne({where: {UserId}}),
-                    node = await Node.findById(decision.NodeId),
+                    oldDecision = await Decision.findOne({where: {UserId}}),
+                    node = await Node.findById(oldDecision.NodeId),
                     agent = await loginUser(user.username, user.password)
             await agent
-                .put(apiUrl + decision.id)
-                .send({vote: !decision.vote})
+                .put(apiUrl + oldDecision.id)
+                .send({vote: !oldDecision.vote})
                 .expect(200)
                 .expect('Content-Type', /json/)
                 .then(async ({body}) => {
-                    expect(body.vote).eq(!decision.vote)
+                    const decision = body
+                    expect(decision.vote).eq(!oldDecision.vote)
                     // TODO check this
                     Number(node.rating) > 0
-                    ? expect(body.NodeRating).below(node.rating)
-                    : expect(body.NodeRating).abowe(node.rating)
+                    ? expect(decision.NodeRating).below(node.rating)
+                    : expect(decision.NodeRating).abowe(node.rating)
                     // make sure node.rating is updated
                     const updatedNode = await Node.findById(node.id)
-                    expect(updatedNode.rating == body.NodeRating)
+                    assert.equal(
+                        updatedNode.rating, decision.NodeRating,
+                        'node.rating and decision.NodeRating must be equal'
+                    )
+                    assert.notEqual(
+                        node.rating, updatedNode.rating,
+                        'node.rating must change'
+                    )
+                    // test how much rating have changed
+                    // to prevent wrong calculation
+                    assert(
+                        updatedNode.rating - decision.NodeRating < 2,
+                        'updated node rating is too high'
+                    )
                 })
         })
 
         it('fails if not logged in', async () => await agent.put(apiUrl + 'someId').expect(401))
 
     })
-
+    // FIXME: precise rating calculation tests
     describe('DELETE', async function() {
         let decisionId
         let nodeId

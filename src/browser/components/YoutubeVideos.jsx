@@ -67,15 +67,6 @@ class YoutubeVideos extends Component {
 					const titleStyle = {fontSize: '16px', lineHeight: 'inherit'}
 					const isDuplicate = state.duplicateVideos.includes(videoId)
 					return	<Col className="YoutubeVideos__item" xs={12} sm={6} key={videoId}>
-								<center>
-									<RaisedButton
-										primary={true}
-										label={translate('add_this_video')}
-										className="YoutubeVideos__add-button"
-										disabled={state.validating || isDuplicate}
-										onClick={this.handleClick.bind(this, videoId)}
-									/>
-								</center>
 								<Video
 									width="100%"
 									height="350px"
@@ -87,6 +78,15 @@ class YoutubeVideos extends Component {
 									? <h1>{state.error}</h1>
 									: null
 								}
+								<center>
+									<RaisedButton
+										primary={true}
+										label={translate('add_this_video')}
+										className="YoutubeVideos__add-button"
+										disabled={state.validating || isDuplicate}
+										onClick={this.handleClick.bind(this, videoId)}
+									/>
+								</center>
 
 								{/* <Card onClick={submitVideo.bind(this, videoId, MoodId)}>
 									<CardMedia overlay={<CardTitle titleStyle={titleStyle} title={title} />}>

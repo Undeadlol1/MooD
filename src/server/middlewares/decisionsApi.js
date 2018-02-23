@@ -24,7 +24,7 @@ export default Router()
         NodeRating: newRating,
       })
       // 2. Update Node.rating
-      await node.increment(
+      await node.update(
         { rating: newRating },
         { where: { id: NodeId } }
       )
@@ -47,7 +47,7 @@ export default Router()
             node = await Node.findById(decision.NodeId),
             newRating = Number(node.rating) + (body.vote ? 1 : -1)
       // Update Node.rating
-      await node.increment(
+      await node.update(
         { rating: newRating },
         { where: { id: node.id } }
       )

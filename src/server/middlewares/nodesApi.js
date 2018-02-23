@@ -4,19 +4,17 @@ import extend from 'lodash/assignIn'
 import { parseUrl } from 'shared/parsers'
 import { mustLogin } from 'server/services/permissions'
 import { Node, Mood, Decision, User } from 'server/data/models'
-import { normalizeRating, removeDuplicates } from 'server/data/controllers/NodesController'
 import { updatePositionAndViews } from 'server/data/controllers/DecisionsController'
-import { findHighestRatingNode, findRandomNode, findRandomNodes } from 'server/data/controllers/NodesController'
+import { normalizeRating, removeDuplicates } from 'server/data/controllers/NodesController'
+import { findHighestRatingNode, findRandomNode, findRandomNodes, resetRatings } from 'server/data/controllers/NodesController'
 
 // routes
 export default Router()
 
-  .get('/removeDuplicates/', async function(req, res) {
+  .get('/reset', async function(req, res) {
+    const { moodSlug } = req.params
     try {
-      console.log('script is running!')
-      await removeDuplicates()
-      console.log('scritpt is done running!')
-      res.end()
+      await resetRatings().then(() => res.end())
     } catch (error) {
       console.error(error);
       res.boom.internal(error)
