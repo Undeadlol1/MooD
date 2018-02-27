@@ -2,17 +2,19 @@ import slugify from 'slug'
 import { Router } from 'express'
 import generateUuid from 'uuid/v4'
 import { Threads, User } from 'server/data/models'
+import validations from './threadsApi.validations'
 import { createPagination } from '../../services/utils'
 import { mustLogin } from 'server/services/permissions'
+import { handleValidationErrors } from '../../services/errors'
 import { matchedData, sanitize } from 'express-validator/filter'
 import { check, validationResult, checkSchema } from 'express-validator/check'
-
 const limit = 12
 
 /**
- *
+ * Get paginated threads by parentId
  * @param {String} parentId parent UUID
  * @param {Number} [currentPage=1] page number
+ * @export
  */
 export async function getThreads(parentId, currentPage=1) {
   return await createPagination({
@@ -23,28 +25,14 @@ export async function getThreads(parentId, currentPage=1) {
   })
 }
 
-const handleValidationErrors = (req, res, next) => {
-  // Get the validation result whenever you want; see the Validation Result API for all options!
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.mapped() })
-  }
-  else next()
-}
-
 export default Router()
-  /**
-   * get single thread
-   */
+  /*
+    Get single thread by slug.
+  */
   .get('/thread/:slug',
     // validations
-    checkSchema({
-      slug: {
-        trim: true,
-        exists: true,
-        errorMessage: 'Is required', // FIXME: tests
-      }
-    }),
+    validations.getOne,
+    // handle validation errors
     handleValidationErrors,
     async (req, res) => {
       try {
@@ -59,24 +47,17 @@ export default Router()
         res.status(500).end(error)
       }
   })
-  // get all threads
+  /*
+    Get threads by parentId.
+    Response with paginated results.
+  */
   .get('/:parentId/:page?',
     // sanitising
     sanitize(['parentId', 'page']).trim(),
     // validations
-    checkSchema({
-      parentId: {
-        exists: true,
-        errorMessage: 'Is required', // FIXME: tests
-      },
-      // FIXME: tests
-      page: {
-        isInt: true,
-        toInt: true, // is this working?ß
-        optional: true,
-        errorMessage: 'Is required',
-      }
-    }),
+    validations.get,
+    // handle validation errors
+    handleValidationErrors,
     async (req, res) => {
       try {
         const params = matchedData(req)
@@ -90,36 +71,19 @@ export default Router()
         res.status(500).end(error)
       }
   })
-  // Update thread.
+  /*
+    Update thread.
+  */
   .put('/:threadsId',
+    // permissions
     mustLogin,
-    // FIXME: tests
-    // FIXME: updatable fields
-    // FIXME: make sure no other field is updated
+    // sanitising
     sanitize(['threadsId', 'text']).trim(),
-    checkSchema({
-      // Params validation.
-      threadsId: {
-        trim: true,
-        exists: true,
-        isUUID: true,
-        errorMessage: 'Is required',
-        // TODO: tests
-        // errorMessage: ''
-      },
-      // Body validation.
-      // Every other field in body will be ignored.
-      text: {
-        trim: true,
-        exists: true,
-        errorMessage: 'Is required',
-        isLength: {
-          options: { min: 5 },
-          errorMessage: 'Text should be atleast 5 characters long',
-        }
-      },
-    }),
+    // validations
+    validations.put,
+    // handle validation errors
     handleValidationErrors,
+    // handle route
     async (req, res) => {
       try {
         // TODO: validated data
@@ -141,42 +105,18 @@ export default Router()
       }
   })
   /*
-    Creeate thread.
+    Create thread.
   */
-  //  FIXME: add tests which dissalow creating of
   .post('/',
     // permissions
     mustLogin,
     // sanitising
     sanitize(['parentId', 'name', 'text']).trim(),
     // validations
-    checkSchema({
-      parentId: {
-        exists: true,
-        errorMessage: 'Parent id is required',
-        isUUID: {
-          errorMessage: 'Parent id is not valid UUID',
-        },
-      },
-      name: {
-        exists: true,
-        errorMessage: 'Name is required',
-        isLength: {
-          options: { min: 5, max: 100 },
-          errorMessage: 'Name must be between 5 and 100 characters long',
-        },
-      },
-      text: {
-        exists: true,
-        errorMessage: 'Text is required',
-        isLength: {
-          options: { min: 5 },
-          errorMessage: 'Text should be atleast 5 characters long',
-        }
-      },
-    }),
+    validations.post,
     // handle errors
     handleValidationErrors,
+    // handle route
     async (req, res) => {
       try {
         const payload = matchedData(req)
