@@ -1,6 +1,7 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Node = sequelize.define('Node', {
+      // TODO: this must be deleted in the future
       url: {
         allowNull: false,
         type: DataTypes.STRING

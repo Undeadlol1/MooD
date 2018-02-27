@@ -2,10 +2,12 @@ import { Router } from "express"
 import sequelize from "sequelize"
 import extend from 'lodash/assignIn'
 import { parseUrl } from 'shared/parsers'
+import validations from './nodesApi.validations'
+import { matchedData } from 'express-validator/filter'
 import { mustLogin } from 'server/services/permissions'
+import { handleValidationErrors } from '../../services/errors'
 import { Node, Mood, Decision, User } from 'server/data/models'
 import { updatePositionAndViews } from 'server/data/controllers/DecisionsController'
-// import {  } from '../services';
 import {
   resetRatings,
   findRandomNode,
@@ -22,7 +24,7 @@ export default Router()
     const { moodSlug } = req.params
     try {
       await resetRatings().then(() => res.end())
-    } catch (error) {
+    } catch (error) {''
       console.error(error);
       res.boom.internal(error)
     }
@@ -131,8 +133,18 @@ export default Router()
       res.boom.internal(error)
     }
   })
-
-  .post('/', mustLogin, async function({user, body}, res) {
+  /*
+    Create node.
+  */
+  .post('/',
+    // permissions
+    mustLogin,
+    // validations
+    validations.post,
+    // handle validation errors
+    handleValidationErrors,
+    // handle route
+    async function(req, res) {
     // TODO add validations
     /*
       When user creates a node do the following:
@@ -141,14 +153,15 @@ export default Router()
       2. Create a Decision for every User corresponding with this NodeId
     */
     try {
-      const MoodId = body.MoodId || await Mood.findIdBySlug(body.moodSlug)
-      const url = body.url || 'https://www.youtube.com/watch?v=' + body.contentId
-      extend(
-        body,
-        { url, MoodId, UserId: user.id },
-        // url is optional if 'provider' and 'contentId' is provided
-        body.url ? parseUrl(body.url) : undefined
-      )
+      const body = matchedData(req)
+      console.log('body: ', body);
+      // const MoodId = body.MoodId
+      // extend(
+      //   body,
+      //   { url, MoodId, UserId: user.id },
+      //   // url is optional if 'provider' and 'contentId' is provided
+      //   body.url ? parseUrl(body.url) : undefined
+      // )
       // Creating nodes with same "MoodId", "provider" and "contentId" is forbidden
       const duplicatesCount = await Node.count({
         where: {

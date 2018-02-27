@@ -7,7 +7,7 @@ import slugify from 'slug'
 import uniq from 'lodash/uniq'
 import forEach from 'lodash/forEach'
 import users from '../../data/fixtures/users'
-import { loginUser } from './authApi.test'
+import { loginUser } from '../../test/middlewares/authApi.test'
 import { stringify } from 'query-string'
 chai.use(require('chai-datetime'));
 chai.should();
@@ -53,19 +53,23 @@ export default describe('/nodes API', function() {
 
     it('POST node', async function() {
         const mood = await Mood.findOne({order: 'rand()'})
-        const moodSlug = mood.slug
-        function postNode(body) {
+        const MoodId = mood.id
+        function postNode(payload) {
+            console.log('payload: ', payload);
             return agent
                     .post('/api/nodes')
-                    .send(body)
+                    .send(payload)
+                    // .expect(200)
                     .expect('Content-Type', /json/)
-                    .expect(200)
-                    .then(res => res.body)
+                    .then(res => {
+                        console.log(res.body);
+                        res.body
+                    })
         }
-        const withUrlResponse = await postNode({moodSlug, url})
+        const withUrlResponse = await postNode({MoodId, url})
         withUrlResponse.url.should.be.equal(url)
         const withoutUrlResponse = await postNode({
-                                            moodSlug,
+                                            MoodId,
                                             contentId,
                                             type: 'video',
                                             provider: 'youtube',
@@ -264,15 +268,17 @@ export default describe('/nodes API', function() {
                 // FIXME: what about nulls?
                 // NOTE: this might help http://sequelize.readthedocs.io/en/v3/docs/models-definition/#validations
                 // {property: 'name', value: null, error: 'Name is required'},
-                {property: 'name', value: undefined, error: 'Name is required'},
-                {property: 'name', value: '', error: 'Name must be between 5 and 100 characters long'},
-                {property: 'name', value: ' ', error: 'Name must be between 5 and 100 characters long'},
+                {property: 'MoodId', value: undefined, error: 'Name is required'},
+                {property: 'MoodId', value: '', error: 'Name must be between 5 and 100 characters long'},
+                {property: 'MoodId', value: ' ', error: 'Name must be between 5 and 100 characters long'},
                 {property: 'text', value: undefined, error: 'Text is required'},
                 {property: 'text', value: '', error: 'Text should be atleast 5 characters long'},
                 {property: 'text', value: ' ', error: 'Text should be atleast 5 characters long'},
                 {property: 'parentId', value: undefined, error: 'Parent id is required'},
                 {property: 'parentId', value: '', error: 'Parent id is not valid UUID'},
-                {property: 'parentId', value: ' ', error: 'Parent id is not valid UUID'}
+                {property: 'parentId', value: ' ', error: 'Parent id is not valid UUID'},
+                // TODO:
+                // {property: 'type', value: ' ', error: 'Parent id is not valid UUID'}
             ],
             ({property, value, error}) => {
                 it(`${property} not validated`, async () => {
@@ -292,6 +298,5 @@ export default describe('/nodes API', function() {
             }
         )
     })
-
 
 })
