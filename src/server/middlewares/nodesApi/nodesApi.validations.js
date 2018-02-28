@@ -46,6 +46,8 @@ export default {
     //         }
     //     },
     // }),
+    // FIXME: this validations are a mess
+    // NOTE: node can be created with just url
     post: checkSchema({
         MoodId: {
             trim: true,
@@ -57,8 +59,9 @@ export default {
             },
         },
         contentId: {
+            optional: true,
             trim: true,
-            exists: true,
+            // exists: true,
             errorMessage: 'Is required',
             isLength: {
                 options: { min: 5, max: 100 },
@@ -66,9 +69,13 @@ export default {
             },
         },
         provider: {
+            optional: true,
             trim: true,
-            exists: true,
-            isIn: ['youtube'],
+            // exists: true,
+            isIn: {
+                options: ['youtube'],
+                errorMessage: 'Unsupported provider'
+            },
             // errorMessage: 'Is required',
             // isLength: {
             //     options: { min: 5, max: 100 },
@@ -76,10 +83,23 @@ export default {
             // }
         },
         type: {
+            optional: true,
             trim: true,
-            exists: true,
-            isIn: ['video'],
+            // exists: true,
+            isIn: {
+                options: ['video'],
+                errorMessage: 'Unsupported type'
+            },
             // errorMessage: 'Is required',
+        },
+        url: {
+            trim: true,
+            exists: {
+                errorMessage: 'Is required',
+            },
+            isURL: {
+                errorMessage: 'Is not valid url'
+            },
         }
     }),
 

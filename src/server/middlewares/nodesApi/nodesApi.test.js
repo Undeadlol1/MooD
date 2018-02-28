@@ -62,18 +62,19 @@ export default describe('/nodes API', function() {
                     // .expect(200)
                     .expect('Content-Type', /json/)
                     .then(res => {
-                        console.log(res.body);
-                        res.body
+                        console.log('res.body', res.body);
+                        return res.body
                     })
         }
         const withUrlResponse = await postNode({MoodId, url})
         withUrlResponse.url.should.be.equal(url)
         const withoutUrlResponse = await postNode({
-                                            MoodId,
-                                            contentId,
-                                            type: 'video',
-                                            provider: 'youtube',
-                                        })
+            MoodId,
+            contentId,
+            type: 'video',
+            provider: 'youtube',
+        })
+        // what the fuck is this??
         withoutUrlResponse.contentId = contentId
     })
 

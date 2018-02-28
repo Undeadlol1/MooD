@@ -153,15 +153,17 @@ export default Router()
       2. Create a Decision for every User corresponding with this NodeId
     */
     try {
+      const UserId = req.user.id
       const body = matchedData(req)
       console.log('body: ', body);
+      console.log('body.url: ', body.url);
       // const MoodId = body.MoodId
-      // extend(
-      //   body,
-      //   { url, MoodId, UserId: user.id },
-      //   // url is optional if 'provider' and 'contentId' is provided
-      //   body.url ? parseUrl(body.url) : undefined
-      // )
+      extend(
+        body,
+        { UserId },
+        // url is optional if 'provider' and 'contentId' is provided
+        body.url ? parseUrl(body.url) : undefined
+      )
       // Creating nodes with same "MoodId", "provider" and "contentId" is forbidden
       const duplicatesCount = await Node.count({
         where: {
