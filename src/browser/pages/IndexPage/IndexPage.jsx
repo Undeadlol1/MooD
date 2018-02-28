@@ -12,7 +12,6 @@ class IndexPage extends Component {
     render() {
 		const { props } = this
 		return 	<PageWrapper className='IndexPage'>
-					<h1>THIS IS A TEST</h1>
 					<WelcomeCard />
 					<MoodsInsert />
 					<MoodTabs />
