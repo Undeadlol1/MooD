@@ -5,6 +5,7 @@ import server from '../../server'
 import { Mood, User, Node, Decision } from '../../data/models'
 import slugify from 'slug'
 import uniq from 'lodash/uniq'
+import forEach from 'lodash/forEach'
 import users from '../../data/fixtures/users'
 import { loginUser } from './authApi.test'
 import { stringify } from 'query-string'
@@ -12,7 +13,7 @@ chai.use(require('chai-datetime'));
 chai.should();
 
 // TODO check this constants
-const   user = request.agent(server),
+const   agent = request.agent(server),
         username = users[0].username,
         password = users[0].password,
         moodName = "random name",
@@ -29,7 +30,7 @@ const   user = request.agent(server),
 
 
 function login() {
-    return user
+    return agent
         .post('/api/auth/login')
         .send({ username, password })
         .expect(200)
@@ -54,7 +55,7 @@ export default describe('/nodes API', function() {
         const mood = await Mood.findOne({order: 'rand()'})
         const moodSlug = mood.slug
         function postNode(body) {
-            return user
+            return agent
                     .post('/api/nodes')
                     .send(body)
                     .expect('Content-Type', /json/)
@@ -74,7 +75,7 @@ export default describe('/nodes API', function() {
 
     it('POST should fail if node is a duplicate', async function() {
         const existingNode = await Node.findOne({order: 'rand()', raw: true})
-        await user
+        await agent
             .post('/api/nodes')
             .send({
                 MoodId: existingNode.MoodId,
@@ -210,5 +211,87 @@ export default describe('/nodes API', function() {
     //     // expect(updatedDecision.lastViewAt).to.be.beforeTime(currentDate) // TODO is this true?
     //     // expect(updatedDecision.position > 0).to.be.true
     // })
+
+
+    /*
+        FAILURE TESTS
+    */
+    // describe('fails to PUT if', () => {
+    //     it('id was not provided', async () => await agent.put('/api/threads').expect(404))
+    //     it('user is not logged in', async () => await agent.put('/api/threads/id').expect(401))
+    //     it('user is diffrent', async () => {
+    //         const thread = await Threads.findOne({where: {parentId: forumId}})
+    //         const user = await loginUser(users[1].username, users[1].password)
+    //         await user.put('/api/threads/' + thread.id).send({name, text}).expect(403)
+    //     })
+    //     it('thread does not exist', async () => {
+    //         const user = await loginUser(username, password)
+    //         await user
+    //             .put('/api/threads/' + generateUuid()) // <- proper but non existing document ID
+    //             .send({name, text}) // proper payload
+    //             .expect(204) // 'No Content' status code
+    //     })
+    //     // Run PUT requests with different values and make sure there is a proper error message for it.
+    //     forEach(
+    //         [
+    //             // FIXME: what about nulls?
+    //             // {property: 'name', value: null, error: 'Name is required'},
+    //             {property: 'text', value: undefined, error: 'Is required'},
+    //             {property: 'text', value: '', error: 'Text should be atleast 5 characters long'},
+    //             {property: 'text', value: ' ', error: 'Text should be atleast 5 characters long'},
+    //         ],
+    //         ({property, value, error}) => {
+    //             it(`${property} not validated`, async () => {
+    //                 const user = await loginUser(username, password)
+    //                 await user
+    //                 .put('/api/threads/' + generateUuid())
+    //                 .send({[property]: value})
+    //                 .expect(422)
+    //                 .expect('Content-Type', /json/)
+    //                 .then(({body}) => expect(body.errors[property].msg).to.eq(error))
+    //                 .catch(error => {throw error})
+    //             })
+    //         }
+    //     )
+    // })
+
+    describe('fails to POST if', () => {
+        // Only logged in users can create threads.
+        it('if user is logged in', async () => await agent.post('/api/nodes').expect(401))
+        // Run POST requests with different values and make sure there is a proper error message for it.
+        forEach(
+            [
+                // FIXME: what about nulls?
+                // NOTE: this might help http://sequelize.readthedocs.io/en/v3/docs/models-definition/#validations
+                // {property: 'name', value: null, error: 'Name is required'},
+                {property: 'name', value: undefined, error: 'Name is required'},
+                {property: 'name', value: '', error: 'Name must be between 5 and 100 characters long'},
+                {property: 'name', value: ' ', error: 'Name must be between 5 and 100 characters long'},
+                {property: 'text', value: undefined, error: 'Text is required'},
+                {property: 'text', value: '', error: 'Text should be atleast 5 characters long'},
+                {property: 'text', value: ' ', error: 'Text should be atleast 5 characters long'},
+                {property: 'parentId', value: undefined, error: 'Parent id is required'},
+                {property: 'parentId', value: '', error: 'Parent id is not valid UUID'},
+                {property: 'parentId', value: ' ', error: 'Parent id is not valid UUID'}
+            ],
+            ({property, value, error}) => {
+                it(`${property} not validated`, async () => {
+                    console.log('property: ', property);
+                    const user = await loginUser(username, password)
+                    await user
+                    .post('/api/threads')
+                    .send({[property]: value})
+                    .expect(422)
+                    .expect('Content-Type', /json/)
+                    .then(({body}) => {
+                        console.log('response!');
+                        expect(body.errors[property].msg).to.eq(error)
+                    })
+                    .catch(error => {throw error})
+                })
+            }
+        )
+    })
+
 
 })

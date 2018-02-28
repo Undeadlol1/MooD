@@ -5,8 +5,15 @@ import { parseUrl } from 'shared/parsers'
 import { mustLogin } from 'server/services/permissions'
 import { Node, Mood, Decision, User } from 'server/data/models'
 import { updatePositionAndViews } from 'server/data/controllers/DecisionsController'
-import { normalizeRating, removeDuplicates } from 'server/data/controllers/NodesController'
-import { findHighestRatingNode, findRandomNode, findRandomNodes, resetRatings } from 'server/data/controllers/NodesController'
+// import {  } from '../services';
+import {
+  resetRatings,
+  findRandomNode,
+  findRandomNodes,
+  normalizeRating,
+  removeDuplicates,
+  findHighestRatingNode,
+} from 'server/data/controllers/NodesController'
 
 // routes
 export default Router()
