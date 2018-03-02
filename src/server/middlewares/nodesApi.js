@@ -2,10 +2,9 @@ import { Router } from "express"
 import sequelize from "sequelize"
 import extend from 'lodash/assignIn'
 import { parseUrl } from 'shared/parsers'
-import { mustLogin } from 'server/services/permissions'
+import { mustLogin, isAdmin } from 'server/services/permissions'
 import { Node, Mood, Decision, User } from 'server/data/models'
 import { updatePositionAndViews } from 'server/data/controllers/DecisionsController'
-// import {  } from '../services';
 import {
   resetRatings,
   findRandomNode,
@@ -17,9 +16,8 @@ import {
 
 // routes
 export default Router()
-
-  .get('/reset', async function(req, res) {
-    const { moodSlug } = req.params
+  // reset node ratings
+  .get('/reset', mustLogin, isAdmin, async function(req, res) {
     try {
       await resetRatings().then(() => res.end())
     } catch (error) {
@@ -27,10 +25,19 @@ export default Router()
       res.boom.internal(error)
     }
   })
+  // Remove identical nodes. See: "removeDuplicates()" comments
+  .get('/remove_duplicates', mustLogin, isAdmin, async function(req, res) {
+    try {
+      await removeDuplicates().then(() => res.end())
+    } catch (error) {
+      console.error(error);
+      res.boom.internal(error)
+    }
+  })
 
   .get('/:moodSlug/', async function(req, res) {
-    const { moodSlug } = req.params
     try {
+      const { moodSlug } = req.params
       // validate params
       if (!moodSlug) return res.status(400).end('mood slug is required')
       // const MoodId = await Mood.findIdBySlug(moodSlug)

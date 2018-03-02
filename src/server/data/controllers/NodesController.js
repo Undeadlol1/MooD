@@ -142,7 +142,7 @@ export async function removeDuplicates() {
             }
         })
         // destroy duplicates
-        await Node.destroy({
+        return await Node.destroy({
             where: {id: idsToDelete}
         })
     } catch (error) {
