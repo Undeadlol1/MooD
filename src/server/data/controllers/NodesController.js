@@ -117,25 +117,33 @@ export async function findRandomNodes(MoodId) {
   })
 }
 /**
- * removes all node duplicates from each mood
- * this means there might still be nodes with same "contentId" and "provider"
- * but "MoodId" will be different
+ * This function must find nodes with same
+ * 'MoodId', 'contentId', 'provider' and 'type' fields.
+ * It will delete all of the except one.
  * @export
  */
 export async function removeDuplicates() {
     try {
-        const nodes = await Node.findAll()
-        await nodes.forEach(async ({contentId, MoodId, provider}) => {
+        // prepare array for ids to delete
+        const idsToDelete = []
+        const allNodes = await Node.findAll({raw: true})
+        // find duplicates and push their id's into array
+        allNodes.forEach(({contentId, MoodId, provider}) => {
             const where = {contentId, MoodId, provider}
             // nodes with same contentId, provider and MoodId
-            const similarNodes = filter(nodes, matches(where))
+            const similarNodes = filter(allNodes, matches(where))
             // if there are duplicates
             if (similarNodes.length > 1) {
                 // destroy nodes until only one left
                 for (let i = 0; i < similarNodes.length - 1; i++) {
-                    await Node.destroy({where: {id: similarNodes[i].id}})
+                    // await Node.destroy({where: {id: similarNodes[i].id}})
+                    idsToDelete.push(similarNodes[i].id)
                 }
             }
+        })
+        // destroy duplicates
+        await Node.destroy({
+            where: {id: idsToDelete}
         })
     } catch (error) {
         throw error
