@@ -101,11 +101,23 @@ export async function findRandomNodes(MoodId) {
   const nodes = await Node.findAll({
     raw: true,
     nest: true,
+    limit: 100,
     where: {MoodId},
     order: 'rand()',
-    limit: 100,
-    include: [Decision],
+    include: [{
+        model: Decision,
+        required: false,
+        // TODO: should i use "where" here since there always are decisions anyway?
+    }],
   })
+    //   Copypasted for references
+    // include: [{
+    //     model: Project,
+    //     through: {
+    //         attributes: ['createdAt', 'startedAt', 'finishedAt'],
+    //         where: { completed: true }
+    //     }
+    // }]
   /*
     remove downvoted by user nodes
     (i could not make sequelize to filter data by children values,
