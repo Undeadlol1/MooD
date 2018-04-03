@@ -5,12 +5,12 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import Icon from 'browser/components/Icon'
 import { translate as t } from 'browser/containers/Translator'
-import { createDecision } from 'browser/redux/actions/NodeActions'
 import {
 	vote,
 	nextVideo,
 	updateDecision,
 	removeDecision,
+	createDecision,
 } from 'browser/redux/actions/NodeActions'
 
 // TODO: change name to 'controls'?
