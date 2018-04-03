@@ -1,7 +1,6 @@
-// @ts-check
-import { createAction } from 'redux-actions'
-import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
 import { toastr } from 'react-redux-toastr'
+import { createAction, createActions } from 'redux-actions'
+import { checkStatus, parseJSON, headersAndBody } from'./actionHelpers'
 
 const moodsUrl = String(process.env.API_URL) + 'moods/'
 

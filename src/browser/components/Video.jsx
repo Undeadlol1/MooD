@@ -59,13 +59,12 @@ class Video extends Component {
 				}
 
 		return 	<section
-					// && !state.playerLoaded
 					hidden={props.loading}
-					className={clx("Video", className)}
 					// TODO add comments about iframe!!!
+					onMouseOver={props.openControls}
 					onMouseMove={this.watchMouseMove}
 					onMouseLeave={props.closeControls}
-					onMouseOver={props.openControls}
+					className={clx("Video", className)}
 				>
 					{contentId && <YouTube
 						opts={opts}
