@@ -19,6 +19,7 @@
     "node": ">=6.9"
   },
   "dependencies": {
+    "assert-plus": "^1.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-polyfill": "^6.23.0",
     "babel-runtime": "^6.23.0",
@@ -32,6 +33,7 @@
     "cookie-session": "^2.0.0-beta.1",
     "cookies-js": "^1.2.3",
     "css-modules-require-hook": "^4.0.6",
+    "decimal.js": "^10.0.0",
     "draft-js": "^0.10.1",
     "errorhandler": "^1.5.0",
     "es6-promise": "^4.1.0",

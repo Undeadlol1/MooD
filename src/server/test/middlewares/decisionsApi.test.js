@@ -16,8 +16,23 @@ const   vote = true,
         NodeId = 1111111,
         apiUrl = '/api/decisions/',
         agent = request.agent(server)
-
-async function makePostRequest(body) {
+/**
+ *
+ * @param {object} body request body
+ * @param {object} nodeBody body of created node
+ */
+async function makePostRequest(body, nodeBody={}) {
+    // Create node for testing.
+    const node = await Node.create({
+        id: NodeId,
+        MoodId: 12345,
+        rating: '12.02223', // This is important.
+        provider: 'youtube',
+        UserId: generateUuid(),
+        contentId: 'm2uTFF_3MaA',
+        url: 'https://www.youtube.com/watch?v=m2uTFF_3MaA',
+        ...nodeBody,
+    })
     // Make logged in request.
     const loggedIn = await loginUser(user.username, user.password)
     return await
@@ -48,20 +63,12 @@ export default describe('/decisions API', function() {
          *    NOTE: this is a mess a must be reworked in the future.
          */
         it('creates decision', async function() {
-            console.warn('MAKE TESTS FOR NEGATIVE DECISIONS.');
-            console.warn('MAKE MIGRATIONS FOR DECISION.RATING.');
-            // Create node for testing.
-            await Node.create({
-                id: NodeId,
-                MoodId: 12345,
-                rating: '12.02223', // This is important.
-                provider: 'youtube',
-                UserId: generateUuid(),
-                contentId: 'm2uTFF_3MaA',
-                url: 'https://www.youtube.com/watch?v=m2uTFF_3MaA',
-            })
+            console.warn('DONT FORGET TO FIX RATINGS')
             // Make request.
-            const decision = await makePostRequest({vote, NodeId})
+            const decision = await makePostRequest(
+                { vote, NodeId }, // Request body.
+                { rating: '12.02223' } // Node body.
+            )
             // Verify results.
             const updatedNode = await Node.findById(NodeId)
             // Hardcoded values are used to make sure that
@@ -119,9 +126,9 @@ export default describe('/decisions API', function() {
     })
     // FIXME: precise rating calculation tests
     describe('DELETE', async function() {
-        let decisionId
         let nodeId
         let oldRating
+        let decisionId
 
         it('has document before request is made', async () => {
             const   UserId = await Local

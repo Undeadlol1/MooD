@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import Decimal from 'decimal.js'
 import { mustLogin } from 'server/services/permissions'
 import { Node, Mood, Decision, User } from 'server/data/models'
 
@@ -13,7 +14,9 @@ export default Router()
       const { id: UserId } = user,
             { NodeId, vote } = body,
             node = await Node.findById(NodeId),
-            newRating = Number(node.rating) + (vote ? 1 : - 1)
+            oldRating = new  Decimal(node.rating),
+            // Increment or decrement by 1.
+            newRating = oldRating[vote ? 'plus' : 'minus'](1).toString()
 
       // 1. Create a Decision
       const decision = await Decision.create({
@@ -45,7 +48,9 @@ export default Router()
       const { id: UserId } = user,
             decision = await Decision.findById(params.id),
             node = await Node.findById(decision.NodeId),
-            newRating = Number(node.rating) + (body.vote ? 1 : -1)
+            oldRating = new Decimal(node.rating),
+            // Increment or decrement by 1.
+            newRating = oldRating[body.vote ? 'plus' : 'minus'](1).toString()
       // Update Node.rating
       await node.update(
         { rating: newRating },
@@ -73,7 +78,7 @@ export default Router()
     try {
       const decision = await Decision.findById(params.id),
             node = await Node.findById(decision.NodeId),
-            newRating = Number(node.rating) - 1
+            newRating = Decimal(node.rating).minus(1).toString()
       // document was not found
       if (!decision) return res.status(204).end()
       // user must be documents owner to delete it
