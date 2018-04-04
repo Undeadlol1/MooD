@@ -1,13 +1,16 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Node = sequelize.define('Node', {
+      // TODO: add id property with type UUID
       url: {
         allowNull: false,
         type: DataTypes.STRING
       },
       provider: {
+        // TODO: change this this ENUM and add validation tests
+        // allowNull: false,
         type: DataTypes.STRING,
-        unique: 'compositeIndex'
+        unique: 'compositeIndex',
       },
       contentId: {
         allowNull: false,
