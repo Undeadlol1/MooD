@@ -28,7 +28,7 @@ export default Router()
         { rating: newRating },
         { where: { id: NodeId } }
       )
-      // send response
+      // 3. send response
       res.json(decision)
     } catch (error) {
       console.error(error)

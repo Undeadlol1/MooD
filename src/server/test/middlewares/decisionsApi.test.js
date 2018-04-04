@@ -1,8 +1,8 @@
-import 'babel-polyfill'
 import slugify from 'slug'
 import uniq from 'lodash/uniq'
 import request from 'supertest'
 import server from 'server/server'
+import generateUuid from 'uuid/v4'
 import { stringify } from 'query-string'
 import { loginUser } from './authApi.test'
 import users from 'server/data/fixtures/users'
@@ -11,51 +11,64 @@ import { Mood, User, Local, Node, Decision } from 'server/data/models'
 chai.use(require('chai-datetime'))
 chai.should()
 
-const   agent = request.agent(server),
-        apiUrl = '/api/decisions/',
+const   vote = true,
         user = users[0],
-        vote = true
+        NodeId = 1111111,
+        apiUrl = '/api/decisions/',
+        agent = request.agent(server)
 
-export default describe('/decisions API', function() {
-    // Kill supertest server in watch mode to avoid errors
-    before(() => server.close())
-
-    describe('POST', async function() {
-
-        it('creates decision', async function() {
-            const node = await Node.findOne({order: 'rand()'})
-            const loggedIn = await loginUser(user.username, user.password)
-            await
-            loggedIn
+async function makePostRequest(body) {
+    // Make logged in request.
+    const loggedIn = await loginUser(user.username, user.password)
+    return await
+        loggedIn
             .post(apiUrl)
-            .send({vote, NodeId: node.id})
+            .send(body)
+            // Verify response headers.
             .expect(200)
             .expect('Content-Type', /json/)
-            .then(async ({body}) => {
-                const decision = body
-                expect(decision.vote).eq(true)
-                // TODO: check this
-                // FIXME: check this
-                Number(node.rating) > 0
-                ? expect(decision.NodeRating).above(node.rating)
-                : expect(decision.NodeRating).below(node.rating)
-                // make sure node.rating is updated
-                const updatedNode = await Node.findById(node.id)
-                assert.equal(
-                    updatedNode.rating, decision.NodeRating,
-                    'node.rating and decision.NodeRating must be equal'
-                )
-                assert.notEqual(
-                    node.rating, updatedNode.rating,
-                    'node.rating must change'
-                )
-                // test how much rating have changed
-                // to prevent wrong calculation
-                assert(
-                    updatedNode.rating - decision.NodeRating < 2,
-                    'updated node rating is too high'
-                )
+            // Verify results.
+            .then(req => req.body)
+}
+
+export default describe('/decisions API', function() {
+    // Kill supertest server in watch mode to avoid errors.
+    before(() => server.close())
+    // Clean up tables.
+    after(async () => await Node.destroy({where: {id: NodeId}}))
+
+    describe('POST', async function() {
+        /**
+         * Upon creating decision API must:
+         * 1) Update Decision.vote value
+         * 2) Increment or decrement Node.rating based on vote.
+         *    If vote = true, increment by one,
+         *    If false, decrement by one.
+         * 3) Update Deceision.NodeRating the same way.
+         *    NOTE: this is a mess a must be reworked in the future.
+         */
+        it('creates decision', async function() {
+            console.warn('MAKE TESTS FOR NEGATIVE DECISIONS.');
+            console.warn('MAKE MIGRATIONS FOR DECISION.RATING.');
+            // Create node for testing.
+            await Node.create({
+                id: NodeId,
+                MoodId: 12345,
+                rating: '12.02223', // This is important.
+                provider: 'youtube',
+                UserId: generateUuid(),
+                contentId: 'm2uTFF_3MaA',
+                url: 'https://www.youtube.com/watch?v=m2uTFF_3MaA',
             })
+            // Make request.
+            const decision = await makePostRequest({vote, NodeId})
+            // Verify results.
+            const updatedNode = await Node.findById(NodeId)
+            // Hardcoded values are used to make sure that
+            // javascript's decimal calculation system did not mess anything up.
+            assert(updatedNode.rating == '13.02223')
+            // node.rating and decision.NodeRating must be equal.
+            assert.equal(updatedNode.rating, decision.NodeRating)
         })
 
         it('fails if not logged in', async () => await agent.post(apiUrl).expect(401))
