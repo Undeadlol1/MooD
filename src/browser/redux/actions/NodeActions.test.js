@@ -33,13 +33,17 @@ const decision = {
   vote: true,
   NodeId: 'someId'
 }
-const nodes = [node, node, node]
+const nodes = [
+  {id: 1},
+  {id: 2},
+  {id: 3},
+]
 
 describe('NodeActions', () => {
 
   afterEach(() => nock.cleanAll())
   /**
-   * FIXME: add commits before commiting.
+   * FIXME: add comment before commiting.
    */
   describe('nextVideo()', () => {
     /**
@@ -59,15 +63,15 @@ describe('NodeActions', () => {
       expect(updatedState.nodes).to.have.length(3)
     })
 
-    // it('chooses first one if there are no more', () => {
-    //   // TODO
-    //   const store = mockStore()
+    it('chooses first one if there are no more', () => {
+      // TODO
+      const store = mockStore({ nodes })
 
-    // })
+    })
 
-    // it('fetches videos if needed', () => { // FIXME: is this correct name for test
+    it('fetches videos if needed', () => { // FIXME: is this correct name for test
 
-    // })
+    })
   })
 
   it('createDecision calls updateNode and callback', async () => {
