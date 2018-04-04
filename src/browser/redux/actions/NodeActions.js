@@ -19,11 +19,9 @@ export const actions = createActions({
   RECIEVE_NODES: nodes => nodes,
   UPDATE_NODE: object => object,
   UPDATE_DECISION: decision => decision,
-//   FETCHING_NODE: () => null,
   FETCHING_ERROR: reason => reason,
   RECIEVE_SEARCHED_VIDEOS: videos => videos,
 })
-
 /**
  * Play next video.
  * This function selects next object from "nodes" array
@@ -43,15 +41,14 @@ export const nextVideo = () => (dispatch, getState) => {
 	console.log('nextNode: ', nextNode && nextNode.toJS());
 	console.log('position: ', position);
 
-	if (nextNode) dispatch(actions.recieveNode(nextNode))
+	if (nextNode) return dispatch(actions.recieveNode(nextNode))
 	else {
 		// if there is only one node in array make sure it merges into state
 		// and is detected by video/audio player again
 		// dispatch(actions.unloadNode()) // unload
-		dispatch(actions.recieveNode(nodes.get(0))) // and load again
+		return dispatch(actions.recieveNode(nodes.get(0))) // and load again
 	}
 }
-
 /**
  * create a node
  * @param {Object} payload content url
@@ -66,7 +63,6 @@ export const insertNode = payload => (dispatch, getState) => {
 			dispatch(actions.recieveNode(response))
 		})
 }
-
 /**
  * fetch nodes using mood slug
  * @param {String} slug mood slug (optional)
@@ -75,8 +71,6 @@ export const fetchNodes = slug => (dispatch, getState) => {
 	const state = getState()
 	const nodeId = state.node.id
 	const moodSlug = slug || state.mood.get('slug')
-
-	// dispatch(actions.fetchingNode())
 
 	return fetch(
 		nodesUrl + moodSlug,
@@ -94,7 +88,6 @@ export const fetchNodes = slug => (dispatch, getState) => {
 		})
 		.catch(err => console.error('fetchNode failed!', err))
 }
-
 /**
  * fetch node using mood slug
  * @param {String} slug mood slug (optional)
@@ -103,8 +96,6 @@ export const fetchNode = slug => (dispatch, getState) => {
 	const state = getState()
 	const nodeId = state.node.id
 	const moodSlug = slug || state.mood.get('slug')
-
-	// dispatch(actions.fetchingNode())
 
 	return fetch(
 		nodesUrl + moodSlug + '/' + nodeId,
@@ -122,7 +113,6 @@ export const fetchNode = slug => (dispatch, getState) => {
 		})
 		.catch(err => console.error('fetchNode failed!', err))
 }
-
 /**
  * search youtube videos by string
  * @param {String} query

@@ -14,28 +14,79 @@ import {
   deleteDecision,
   updateDecision,
 } from 'browser/redux/actions/NodeActions'
+import { fromJS } from 'immutable';
 chai.should()
 chai.use(chaiImmutable)
 
-const middlewares = [ thunk ]
-const mockStore = configureMockStore(middlewares)
-// TODO add API_PREFIX instead of API_URL?
+/**
+ * Create mocked store with state
+ * @param {Object} [state={}] value of getState().node
+ */
+function mockStore(state={}) {
+  return configureMockStore([thunk])({node: fromJS(state)})
+}
 const { URL, API_URL } = process.env
+// TODO: add proper node fixtures
 const node = {name: 'misha', id: 1}
 const decision = {
   id: 1,
   vote: true,
   NodeId: 'someId'
 }
-const nodes = {
-  totalPages: 1,
-  currentPage: 1,
-  values: [node, node],
-}
+const nodes = [node, node, node]
 
 describe('NodeActions', () => {
 
   afterEach(() => nock.cleanAll())
+  /**
+   * FIXME: add commits before commiting.
+   */
+  describe('nextVideo()', () => {
+    /**
+     * Each time function is called, next video in array must be selected.
+     * Example - if there are only 3 videos in array they must appear like so:
+     * 1 2 3 1 2 3 1 and so on.
+     */
+    it('cycles through videos properly', () => {
+      // TODO:
+      // const expectedEactions =
+      const store = mockStore({
+        nodes,
+      })
+      store.dispatch(nextVideo())
+      const updatedState = store.getState().node.toJS()
+      // Make sure length has not changed.
+      expect(updatedState.nodes).to.have.length(3)
+    })
+
+    // it('chooses first one if there are no more', () => {
+    //   // TODO
+    //   const store = mockStore()
+
+    // })
+
+    // it('fetches videos if needed', () => { // FIXME: is this correct name for test
+
+    // })
+  })
+
+  it('createDecision calls updateNode and callback', async () => {
+    const callback = spy()
+    const store = mockStore()
+    const expectedActions = [actions.updateNode({ Decision: decision })]
+    // intercept request
+    nock(API_URL).post('/decisions/', decision).reply(200, decision)
+    return store
+      // call redux action
+      .dispatch(createDecision(decision, callback))
+      // compare called actions with expected result
+      .then(() => {
+        expect(store.getActions()).to.deep.equal(expectedActions)
+        // make sure callback is called
+        assert(callback.calledOnce, 'callback not called')
+        assert(callback.calledWith(decision), 'callback not called with proper params')
+      })
+  })
 
   it('createDecision calls updateNode and callback', async () => {
     const callback = spy()
