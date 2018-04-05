@@ -37,6 +37,8 @@ export const initialState = Map({
 
 export default (state = initialState, {type, payload}) => {
 	switch(type) {
+		case 'NEXT_VIDEO':
+			return state
 		case 'ADD_NODE':
 			return  state
 				.updateIn(['nodes'], arr => {

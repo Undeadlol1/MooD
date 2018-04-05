@@ -1,6 +1,6 @@
-import chai, { expect } from 'chai'
-import { Map, List, fromJS } from 'immutable'
 import chaiImmutable from 'chai-immutable'
+import chai, { expect, assert } from 'chai'
+import { Map, List, fromJS } from 'immutable'
 import { actions } from 'browser/redux/actions/NodeActions'
 import reducer, { initialState } from 'browser/redux/reducers/NodeReducer'
 chai.should()
@@ -97,5 +97,32 @@ describe('node reducer', () => {
     })
     expect(newState).to.deep.eq(expectedState)
   })
-
+  /**
+   * If there is no currently selected node,
+   * action must select first one in "nodes" array.
+   */
+  it('should handle "NEXT_VIDEO" action on initial state', () => {
+    const newState = reducer(
+      // Initial state with defined "nodes" property.
+      initialState.merge({nodes}),
+      actions.nextVideo()
+    ).toJS()
+    // There must be 3 nodes.
+    expect(newState.nodes).to.have.length(3)
+    // First one in array must be currently selected.
+    expect(newState.id).to.eq(1)
+  })
+  /**
+   */
+  // it('should handle "NEXT_VIDEO" action on initial state', () => {
+  //   const newState = reducer(
+  //     // Initial state with defined "nodes" property.
+  //     initialState.merge({nodes}),
+  //     actions.nextVideo()
+  //   ).toJS()
+  //   // There must be 3 nodes.
+  //   expect(newState.nodes).to.have.length(3)
+  //   // First one in array must be currently selected.
+  //   expect(newState.id).to.eq(1)
+  // })
 })

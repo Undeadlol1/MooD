@@ -1,5 +1,6 @@
 import nock from 'nock'
 import { spy } from 'sinon'
+import last from 'lodash/last'
 import thunk from 'redux-thunk'
 import extendObject from 'lodash/assignIn'
 import chaiImmutable from 'chai-immutable'
@@ -53,36 +54,42 @@ describe('NodeActions', () => {
      * 1 2 3 1 2 3 1 and so on.
      */
     it('cycles through videos properly', () => {
-      console.warn('TEST HERE ONLY IF ACTIONS ARE CALLED IN ACTION CREATOR');
-      // FIXME: add proper commetns about test flow
-      // // TODO:
+      // console.warn('TEST HERE ONLY IF ACTIONS ARE CALLED IN ACTION CREATOR');
+      // // FIXME: add proper commetns about test flow
       // // const expectedActions = [nextVideo()]
-      // const store = mockStore({
-      //   nodes,
-      //   id: 1,
-      // })
+      // const actualSequence = []
+      // const store = mockStore({nodes, id: 1})
       // const expectedSequence = [1, 2, 3, 4, 1]
-      // function calculateSequence() {
-      //   const actualSequence = []
-      //   for (let index = 0; index < nodes.length + 1; index++) {
-      //     store.dispatch(nextVideo())
-      //     const state = store.getState().node
-      //     actualSequence.push(state.get('id'))
-      //   }
-      //   console.log('store.getActions(): ', store.getActions());
-      //   return actualSequence
+      // for (let index = 0; index < nodes.length + 1; index++) {
+      //   store.dispatch(nextVideo())
+      //   const state = store.getState().node
+      //   actualSequence.push(state.get('id'))
       // }
-      // const calculatedSequence = calculateSequence()
-      // // expect(expectedSequence).to.deep.eq(calculatedSequence)
-      // const updatedState = store.getState().node.toJS()
+      // // Verify results.
+      // expect(expectedSequence).to.deep.eq(actualSequence)
       // // Make sure length has not changed.
-      // // expect(updatedState.nodes).to.have.length(3)
+      // assert.lengthOf(
+      //   store.getState().node.toJS().nodes,
+      //   3,
+      //   'nodes.length must not change'
+      // )
     })
-
+    /**
+     * If user is watching last video in array,
+     * sequence must start from the begining.
+     * This means that if currently active node is the last one in "nodes" array
+     * next one must be the first.
+     */
     it('chooses first one if there are no more', () => {
-      // TODO
-      const store = mockStore({ nodes })
-
+      // Create store.
+      // Currently active node is the last one of "nodes" array.
+      const store = mockStore({...last(nodes).id, nodes})
+      // Call action.
+      store.dispatch(nextVideo())
+      // Verify results.
+      const actualActions = store.getActions()
+      const expectedActions = [actions.recieveNode(fromJS(nodes[0]))]
+      expect(actualActions).to.deep.equal(expectedActions)
     })
 
     it('fetches videos if needed', () => { // FIXME: is this correct name for test

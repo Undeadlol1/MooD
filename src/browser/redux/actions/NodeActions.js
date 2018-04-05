@@ -13,6 +13,7 @@ export const actions = createActions({
   UNLOAD_NODES: () => null,
   REMOVE_NODE: id => id,
   TOGGLE_DIALOG: () => null,
+  NEXT_VIDEO: () => null,
   ADD_NODE: node => node,
   RECIEVE_NODE: node => node,
   RECIEVE_NODE: node => node,
@@ -26,6 +27,7 @@ export const actions = createActions({
  * Play next video.
  * This function selects next object from "nodes" array
  * or selects first if there is no more items in array
+ * @export
  */
 export const nextVideo = () => (dispatch, getState) => {
 	// console.log('nextVideo is called!');
@@ -129,7 +131,6 @@ export const youtubeSearch = query => (dispatch, getState) => {
 		})
 		.catch(err => console.error('youtubeSearch failed!', err))
 }
-
 // TODO: rename function to 'createDecision'
 // TODO: add 'deleteDecisions'? Or i can't really delete decisions? How do i undo the vote?
 /**
