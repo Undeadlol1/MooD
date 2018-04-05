@@ -27,6 +27,7 @@ describe('node reducer', () => {
   ]
 
   it('should have initial state', () => {
+    console.warn('TEST NEXT VIDEO LOGIC HERE');
     expect(reducer(undefined, {})).to.equal(initialState)
   })
 
