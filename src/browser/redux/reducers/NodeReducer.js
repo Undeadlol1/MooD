@@ -12,7 +12,7 @@ const decisionStructure = Map({
 							})
 
 const nodeStructure = 	Map({
-							id: '',
+							id: null,
 							url: '',
 							type: '',
 							UserId: '',
@@ -38,7 +38,30 @@ export const initialState = Map({
 export default (state = initialState, {type, payload}) => {
 	switch(type) {
 		case 'NEXT_VIDEO':
-			return state
+			// Do nothing if there are no nodes to operate on.
+			if (state.get('nodes').size == 0) return state
+			const 	nodes = state.get('nodes'),
+					currentNodeId = state.get('id'),
+					firstNode = state.getIn(['nodes', 0]),
+					lastNode = state.get('nodes').last(),
+					isLastNode = lastNode.get('id') == currentNodeId
+			// If there is no current node, select first one from "nodes" array.
+			// Do the same if current node is the last one the array.
+			if (!currentNodeId || isLastNode) {
+				return state
+					// Normalise node values just incase.
+					.mergeDeep(nodeStructure)
+					.mergeDeep(firstNode)
+			}
+			// Else find make next node in the array the active one.
+			else {
+				const	position = nodes.findIndex(node => node.get('id') == currentNodeId),
+						nextNode = nodes.get(position + 1)
+				return state
+					// Normalise node values just incase.
+					.mergeDeep(nodeStructure)
+					.mergeDeep(nextNode)
+			}
 		case 'ADD_NODE':
 			return  state
 				.updateIn(['nodes'], arr => {

@@ -1,3 +1,4 @@
+import last from 'lodash/last'
 import chaiImmutable from 'chai-immutable'
 import chai, { expect, assert } from 'chai'
 import { Map, List, fromJS } from 'immutable'
@@ -27,7 +28,6 @@ describe('node reducer', () => {
   ]
 
   it('should have initial state', () => {
-    console.warn('TEST NEXT VIDEO LOGIC HERE');
     expect(reducer(undefined, {})).to.equal(initialState)
   })
 
@@ -98,31 +98,79 @@ describe('node reducer', () => {
     expect(newState).to.deep.eq(expectedState)
   })
   /**
-   * If there is no currently selected node,
-   * action must select first one in "nodes" array.
+   * This is a action which picks appropriate node from 'nodes' array.
    */
-  it('should handle "NEXT_VIDEO" action on initial state', () => {
-    const newState = reducer(
+  describe('"NEXT_VIDEO"', () => {
+    /**
+     * Creates reducer and calls "nextVideo" on it.
+     * This function helps reduces boilerplate in all of next tests.
+     * @param {object} payload values to merge into initial state.
+     * @returns {object} mutable state
+     */
+    function callNextVideo(payload) {
+      const newState = reducer(
+        initialState.mergeDeep(payload),
+        actions.nextVideo()
+      )
+      // Make sure nodes amount has not changed.
+      if (payload) {
+        expect(newState.get('nodes').size).to.eq(3)
+      }
+      return newState.toJS()
+    }
+    /**
+     * If there is no currently selected node,
+     * action must select first one in "nodes" array.
+     */
+    it('should select first node on initial state', () => {
       // Initial state with defined "nodes" property.
-      initialState.merge({nodes}),
-      actions.nextVideo()
-    ).toJS()
-    // There must be 3 nodes.
-    expect(newState.nodes).to.have.length(3)
-    // First one in array must be currently selected.
-    expect(newState.id).to.eq(1)
+      const newState = callNextVideo({nodes})
+      // There must be 3 nodes.
+      expect(newState.nodes).to.have.length(3)
+      // First one in array must be currently selected.
+      expect(newState.id).to.eq(1)
+    })
+    /**
+     * If current active node is the last one in the array
+     * the first one must be selected.
+     * Ie sequence must start from the beginning.
+     */
+    it('should select first node if there is no next one', () => {
+      // State with defined "nodes" and last node as selected one.
+      const newState = callNextVideo({nodes, ...last(nodes)})
+      // There must be 3 nodes.
+      expect(newState.nodes).to.have.length(3)
+      // First one in array must be currently selected.
+      expect(newState.id).to.eq(1)
+    })
+    /**
+     * If current active node is the last one in the array
+     * the first one must be selected.
+     * Ie sequence must start from the beginning.
+     */
+    it('should select first node if there is no next one', () => {
+      // State with defined "nodes" and last node as selected one.
+      const newState = callNextVideo({nodes, ...last(nodes)})
+      // There must be 3 nodes.
+      expect(newState.nodes).to.have.length(3)
+      // First one in array must be currently selected.
+      expect(newState.id).to.eq(1)
+    })
+    /**
+     *
+     */
+    it('should select first node if there is no next one', () => {
+      const newState = callNextVideo({nodes, ...nodes[0]})
+      // First one in array must be currently selected.
+      expect(newState.id).to.eq(2)
+    })
+    /**
+     * Self explanatory
+     */
+    it('does nothing if there are no nodes', () => {
+      const newState = callNextVideo()
+      expect(newState.nodes).to.have.length(0)
+      expect(newState.id).to.be.null
+    })
   })
-  /**
-   */
-  // it('should handle "NEXT_VIDEO" action on initial state', () => {
-  //   const newState = reducer(
-  //     // Initial state with defined "nodes" property.
-  //     initialState.merge({nodes}),
-  //     actions.nextVideo()
-  //   ).toJS()
-  //   // There must be 3 nodes.
-  //   expect(newState.nodes).to.have.length(3)
-  //   // First one in array must be currently selected.
-  //   expect(newState.id).to.eq(1)
-  // })
 })
