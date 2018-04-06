@@ -64,9 +64,10 @@ export class Decision extends Component {
 export default connect(
 	// state to props
 	({ node }, ownProps) => {
+		const decision = node.get('Decision')
 		return {
 			NodeId: node.get('id'),
-			decision: node.get('Decision').toJS(),
+			decision: decision && decision.toJS(),
 			decisionVote: node.getIn(['Decision', 'vote']),
 			...ownProps
 		}
