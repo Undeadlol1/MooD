@@ -1,16 +1,16 @@
 import 'babel-polyfill'
-import chai, { should, expect, assert } from 'chai'
-import request from 'supertest'
-import server from '../../server'
-import { Mood, User, Node, Decision } from '../../data/models'
 import slugify from 'slug'
 import uniq from 'lodash/uniq'
+import request from 'supertest'
+import server from '../../server'
 import forEach from 'lodash/forEach'
-import users from '../../data/fixtures/users'
-import { loginUser } from './authApi.test'
 import { stringify } from 'query-string'
-chai.use(require('chai-datetime'));
-chai.should();
+import { loginUser } from './authApi.test'
+import users from '../../data/fixtures/users'
+import chai, { should, expect, assert } from 'chai'
+import { Mood, User, Node, Decision } from '../../data/models'
+chai.use(require('chai-datetime'))
+chai.should()
 
 // TODO check this constants
 const   agent = request.agent(server),
@@ -37,19 +37,10 @@ function login() {
 }
 
 export default describe('/nodes API', function() {
-
-    before(async function() {
-        // TODO add logout? to test proper user login?
-        // Kill supertest server in watch mode to avoid errors
-        server.close()
-        // login user
-        // await login()
-    })
-
+    // Kill supertest server in watch mode to avoid errors
+    before(() => server.close())
     // clean up
-    after(function() {
-        server.close()
-    })
+    after(() => server.close())
 
     it('POST node', async function() {
         const mood = await Mood.findOne({order: 'rand()'})
@@ -90,6 +81,24 @@ export default describe('/nodes API', function() {
             })
     })
 
+    it('GET nodes', async () => {
+        const mood = await Mood.findOne({ order: 'rand()' })
+        const moodSlug = mood.slug
+        const user = await loginUser(username, password)
+        await user
+            .get(`/api/nodes/${moodSlug}`)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then(({body}) => {
+                // There must be 10 nodes.
+                expect(body).to.have.length(10)
+                body.forEach(node => {
+                    expect(node.MoodId).to.eql(String(mood.id))
+                })
+
+            })
+    })
+
     function getNextNode(slug, previousNodeId = "", agent = user) {
         return agent
             .get(`/api/nodes/${slug}/${previousNodeId}`)
@@ -111,22 +120,23 @@ export default describe('/nodes API', function() {
             return nodeIds
     }
 
-    describe('GET /:moodSlug/:nodeId?', function() {
-        // it('GET single node', async function() {
-        //     const mood = await Mood.findOne({order: 'rand()'})
-        //     const node = await getNextNode(mood.slug)
-        //     node.url.should.be.string
-        // })
+    // describe('GET /:moodSlug', function() {
+    //     it('GET single node', async function() {
+    //         const user = await loginUser(username, password)
+    //         const mood = await Mood.findOne({order: 'rand()'})
+    //         const node = await getNextNode(mood.slug, node)
+    //         node.url.should.be.string
+    //     })
 
-        // it('should fail without proper moodSlug', async function() {
-        //     await user
-        //             .get('/api/nodes/' + 'this_not_exists')
-        //             .expect(404)
-        //             .then(res => {
-        //                 assert(res.error.text == 'mood not found')
-        //             })
-        // })
-    })
+    //     it('should fail without proper moodSlug', async function() {
+    //         await agent
+    //                 .get('/api/nodes/' + 'this_not_exists')
+    //                 .expect(404)
+    //                 .then(res => {
+    //                     assert(res.error.text == 'mood not found')
+    //                 })
+    //     })
+    // })
 
 
     // it('nodes cycle properly for unlogged user', async function() {
