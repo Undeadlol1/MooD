@@ -31,25 +31,24 @@ export const actions = createActions({
  */
 export const nextVideo = () => (dispatch, getState) => {
 	// console.log('nextVideo is called!');
-	const 	state = getState().node,
-			nodes = state.get('nodes'),
-			currentNode = nodes.find(node => {
-				return node.get('id') == state.get('id')
-			}),
-			position = nodes.indexOf(currentNode),
-			nextNode = nodes.get(position + 1)
-	// console.log('nodes: ', nodes.toJS());
-	// console.log('currentNode: ', currentNode && currentNode.toJS());
-	// console.log('nextNode: ', nextNode && nextNode.toJS());
-	// console.log('position: ', position);
+	// const 	state = getState().node,
+	// 		nodes = state.get('nodes'),
+	// 		currentNode = nodes.find(node => {
+	// 			return node.get('id') == state.get('id')
+	// 		}),
+	// 		position = nodes.indexOf(currentNode),
+	// 		nextNode = nodes.get(position + 1)
+	// console.log('nodes: ', getState().node.get('nodes').toJS());
 
-	if (nextNode) return dispatch(actions.recieveNode(nextNode))
-	else {
-		// if there is only one node in array make sure it merges into state
-		// and is detected by video/audio player again
-		// dispatch(actions.unloadNode()) // unload
-		return dispatch(actions.recieveNode(nodes.get(0))) // and load again
-	}
+	return dispatch(actions.nextVideo())
+
+	// if (nextNode) return dispatch(actions.recieveNode(nextNode))
+	// else {
+	// 	// if there is only one node in array make sure it merges into state
+	// 	// and is detected by video/audio player again
+	// 	// dispatch(actions.unloadNode()) // unload
+	// 	return dispatch(actions.recieveNode(nodes.get(0))) // and load again
+	// }
 }
 /**
  * create a node
@@ -81,6 +80,7 @@ export const fetchNodes = slug => (dispatch, getState) => {
 		.then(checkStatus)
 		.then(parseJSON)
 		.then(data => {
+			console.log('data: ', data);
 			/*
 				unload node before assigning new one because
 				mutability does not load youtube video if node is the same

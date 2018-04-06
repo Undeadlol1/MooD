@@ -44,57 +44,70 @@ const nodes = [
 describe('NodeActions', () => {
 
   afterEach(() => nock.cleanAll())
-  /**
-   * FIXME: add comment before commiting.
-   */
-  describe('nextVideo()', () => {
-    /**
-     * Each time function is called, next video in array must be selected.
-     * Example - if there are only 3 videos in array they must appear like so:
-     * 1 2 3 1 2 3 1 and so on.
-     */
-    it('cycles through videos properly', () => {
-      // console.warn('TEST HERE ONLY IF ACTIONS ARE CALLED IN ACTION CREATOR');
-      // // FIXME: add proper commetns about test flow
-      // // const expectedActions = [nextVideo()]
-      // const actualSequence = []
-      // const store = mockStore({nodes, id: 1})
-      // const expectedSequence = [1, 2, 3, 4, 1]
-      // for (let index = 0; index < nodes.length + 1; index++) {
-      //   store.dispatch(nextVideo())
-      //   const state = store.getState().node
-      //   actualSequence.push(state.get('id'))
-      // }
-      // // Verify results.
-      // expect(expectedSequence).to.deep.eq(actualSequence)
-      // // Make sure length has not changed.
-      // assert.lengthOf(
-      //   store.getState().node.toJS().nodes,
-      //   3,
-      //   'nodes.length must not change'
-      // )
-    })
-    /**
-     * If user is watching last video in array,
-     * sequence must start from the begining.
-     * This means that if currently active node is the last one in "nodes" array
-     * next one must be the first.
-     */
-    it('chooses first one if there are no more', () => {
-      // Create store.
-      // Currently active node is the last one of "nodes" array.
-      const store = mockStore({...last(nodes).id, nodes})
-      // Call action.
-      store.dispatch(nextVideo())
-      // Verify results.
-      const actualActions = store.getActions()
-      const expectedActions = [actions.recieveNode(fromJS(nodes[0]))]
-      expect(actualActions).to.deep.equal(expectedActions)
-    })
+  //
+  // ──────────────────────────────────────────────────────────────────────────────────────────────── I ──────────
+  //   :::::: W I P   T H I S   M E S S   I S   I N T E N T I O N A L : :  :   :    :     :        :          :
+  // ──────────────────────────────────────────────────────────────────────────────────────────────────────────
+  //
 
-    it('fetches videos if needed', () => { // FIXME: is this correct name for test
-      // TODO
-    })
+
+  // /**
+  //  * FIXME: add comment before commiting.
+  //  */
+  // describe('nextVideo()', () => {
+  //   /**
+  //    * Each time function is called, next video in array must be selected.
+  //    * Example - if there are only 3 videos in array they must appear like so:
+  //    * 1 2 3 1 2 3 1 and so on.
+  //    */
+  //   it('cycles through videos properly', () => {
+  //     // console.warn('TEST HERE ONLY IF ACTIONS ARE CALLED IN ACTION CREATOR');
+  //     // // FIXME: add proper commetns about test flow
+  //     // // const expectedActions = [nextVideo()]
+  //     // const actualSequence = []
+  //     // const store = mockStore({nodes, id: 1})
+  //     // const expectedSequence = [1, 2, 3, 4, 1]
+  //     // for (let index = 0; index < nodes.length + 1; index++) {
+  //     //   store.dispatch(nextVideo())
+  //     //   const state = store.getState().node
+  //     //   actualSequence.push(state.get('id'))
+  //     // }
+  //     // // Verify results.
+  //     // expect(expectedSequence).to.deep.eq(actualSequence)
+  //     // // Make sure length has not changed.
+  //     // assert.lengthOf(
+  //     //   store.getState().node.toJS().nodes,
+  //     //   3,
+  //     //   'nodes.length must not change'
+  //     // )
+  //   })
+  //   /**
+  //    * If user is watching last video in array,
+  //    * sequence must start from the begining.
+  //    * This means that if currently active node is the last one in "nodes" array
+  //    * next one must be the first.
+  //    */
+  //   it('chooses first one if there are no more', () => {
+  //     // Create store.
+  //     // Currently active node is the last one of "nodes" array.
+  //     const store = mockStore({...last(nodes).id, nodes})
+  //     // Call action.
+  //     store.dispatch(nextVideo())
+  //     // Verify results.
+  //     const actualActions = store.getActions()
+  //     const expectedActions = [actions.recieveNode(fromJS(nodes[0]))]
+  //     expect(actualActions).to.deep.equal(expectedActions)
+  //   })
+
+  //   it('fetches videos if needed', () => { // FIXME: is this correct name for test
+  //     // TODO
+  //   })
+  // })
+
+  it('nextVideo calls actions.nextVideo', async () => {
+    const store = mockStore()
+    store.dispatch(nextVideo())
+    expect(store.getActions()).to.deep.equal([actions.nextVideo()])
   })
 
   it('createDecision calls updateNode and callback', async () => {
