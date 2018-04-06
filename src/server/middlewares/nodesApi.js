@@ -16,7 +16,9 @@ import {
 
 // routes
 export default Router()
-  // reset node ratings
+  /**
+   * Reset node ratings.
+   */
   .get('/reset', mustLogin, isAdmin, async function(req, res) {
     try {
       await resetRatings().then(() => res.end())
@@ -25,7 +27,9 @@ export default Router()
       res.boom.internal(error)
     }
   })
-  // Remove identical nodes. See: "removeDuplicates()" comments
+  /**
+   * Remove identical nodes. See: "removeDuplicates()" comments.
+   */
   .get('/remove_duplicates', mustLogin, isAdmin, async function(req, res) {
     try {
       await removeDuplicates().then(() => res.end())
@@ -34,7 +38,9 @@ export default Router()
       res.boom.internal(error)
     }
   })
-
+  /**
+   * Get nodes by mood.slug.
+   */
   .get('/:moodSlug/', async function(req, res) {
     try {
       const { moodSlug } = req.params
@@ -52,8 +58,9 @@ export default Router()
       res.boom.internal(error)
     }
   })
-
-  // get node for async validation in node adding form
+  /**
+   * Get node for async validation in node adding form.
+   */
   .get('/validate/:MoodId/:contentId', async function(req, res) {
     const { params } = req
     try {
