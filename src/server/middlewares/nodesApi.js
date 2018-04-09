@@ -2,8 +2,9 @@ import { Router } from "express"
 import sequelize from "sequelize"
 import extend from 'lodash/assignIn'
 import { parseUrl } from 'shared/parsers'
-import { mustLogin, isAdmin } from 'server/services/permissions'
+import asyncHandler from 'express-async-handler'
 import { Node, Mood, Decision, User } from 'server/data/models'
+import { mustLogin, isAdmin } from 'server/services/permissions'
 import { updatePositionAndViews } from 'server/data/controllers/DecisionsController'
 import {
   resetRatings,
@@ -19,64 +20,89 @@ export default Router()
   /**
    * Reset node ratings.
    */
-  .get('/reset', mustLogin, isAdmin, async function(req, res) {
-    try {
-      await resetRatings().then(() => res.end())
-    } catch (error) {
-      console.error(error);
-      res.boom.internal(error)
-    }
-  })
+  .get('/reset', mustLogin, isAdmin, asyncHandler(
+      async (req, res) => await resetRatings() && res.end()
+  ))
   /**
    * Remove identical nodes. See: "removeDuplicates()" comments.
    */
-  .get('/remove_duplicates', mustLogin, isAdmin, async function(req, res) {
-    try {
-      await removeDuplicates().then(() => res.end())
-    } catch (error) {
-      console.error(error);
-      res.boom.internal(error)
-    }
-  })
+  .get('/remove_duplicates', mustLogin, isAdmin, asyncHandler(
+    async (req, res) => await removeDuplicates() && res.end()
+  ))
   /**
    * Get nodes by mood.slug.
+   * NOTE: currently response contains only random nodes.
    */
-  .get('/:moodSlug/', async function(req, res) {
-    try {
+  .get('/:moodSlug/', asyncHandler(async (req, res) => {
       const { moodSlug } = req.params
       // validate params
       if (!moodSlug) return res.status(400).end('mood slug is required')
-      // const MoodId = await Mood.findIdBySlug(moodSlug)
-      Mood
-      .findIdBySlug(moodSlug)
-      // find nodes
-      .then(MoodId => findRandomNodes(MoodId))
-      // respond
-      .then(nodes => res.json(nodes || []))
-    } catch (error) {
-      console.error(error);
-      res.boom.internal(error)
-    }
-  })
+      // Find random nodes by MoodId.
+      const MoodId  = await Mood.findIdBySlug(moodSlug),
+            nodes   = await findRandomNodes(MoodId)
+      res.json(nodes || [])
+  }))
   /**
    * Get node for async validation in node adding form.
    */
-  .get('/validate/:MoodId/:contentId', async function(req, res) {
-    const { params } = req
-    try {
-      // validate params
-      if (!params.MoodId) return res.status(400).end('mood id is required')
-      if (!params.contentId) return res.status(400).end('content id is required')
-      // find node
-      Node.findOne({where: params})
-      // respond
-      .then(node => res.json(node || {}))
-    } catch (error) {
-      console.error(error);
-      res.boom.internal(error)
-    }
-  })
+  .get('/validate/:MoodId/:contentId', asyncHandler(async function(req, res) {
+    const where = req.params
+    // validate params
+    if (!where.MoodId) return res.status(400).end('mood id is required')
+    if (!where.contentId) return res.status(400).end('content id is required')
+    // find node and respond
+    res.json(
+      await Node.findOne({where}) || {}
+    )
+  }))
+  /**
+   * Create a node.
+   */
+  .post('/', mustLogin, asyncHandler(async ({ user, body }, res) => {
+    // TODO add validations
+    /*
+      When user creates a node do the following:
+      0. Make validations
+      1. Create Node
+      2. Create a Decision for every User corresponding with this NodeId
+    */
+    const MoodId = body.MoodId || await Mood.findIdBySlug(body.moodSlug)
+    const url = body.url || 'https://www.youtube.com/watch?v=' + body.contentId
+    extend(
+      body,
+      { url, MoodId, UserId: user.id },
+      // url is optional if 'provider' and 'contentId' is provided
+      body.url ? parseUrl(body.url) : undefined
+    )
+    // Creating nodes with same "MoodId", "provider" and "contentId" is forbidden
+    const duplicatesCount = await Node.count({
+      where: {
+        MoodId: body.MoodId,
+        provider: body.provider,
+        contentId: body.contentId
+      }
+    })
+    if (duplicatesCount > 0) return res.boom.badRequest('node already exists')
 
+    const node = await Node.create(body)
+    const users = await User.findAll()
+
+
+    await users.forEach(async user => {
+      return await Decision.create({
+        UserId: user.get('id'),
+        NodeId: node.get('id'),
+        MoodId: node.get('MoodId'),
+        NodeRating: node.get('rating'),
+      })
+    })
+
+    res.json(node)
+  }))
+  /**
+   * This must be removed in the future.
+   * It is kept here for future implementation and rework of logic.
+   */
   .get('/deprecated/:moodSlug/:nodeId?', async function({ params, user }, res) {
     /*
       If user is NOT logged in:
@@ -140,53 +166,6 @@ export default Router()
       if (!response) response = await findRandomNode(MoodId)
       // close request
       res.json(response)
-    } catch (error) {
-      console.error(error);
-      res.boom.internal(error)
-    }
-  })
-
-  .post('/', mustLogin, async function({user, body}, res) {
-    // TODO add validations
-    /*
-      When user creates a node do the following:
-      0. Make validations
-      1. Create Node
-      2. Create a Decision for every User corresponding with this NodeId
-    */
-    try {
-      const MoodId = body.MoodId || await Mood.findIdBySlug(body.moodSlug)
-      const url = body.url || 'https://www.youtube.com/watch?v=' + body.contentId
-      extend(
-        body,
-        { url, MoodId, UserId: user.id },
-        // url is optional if 'provider' and 'contentId' is provided
-        body.url ? parseUrl(body.url) : undefined
-      )
-      // Creating nodes with same "MoodId", "provider" and "contentId" is forbidden
-      const duplicatesCount = await Node.count({
-        where: {
-          MoodId: body.MoodId,
-          provider: body.provider,
-          contentId: body.contentId
-        }
-      })
-      if (duplicatesCount > 0) return res.boom.badRequest('node already exists')
-
-      const node   = await Node.create(body)
-      const users  = await User.findAll()
-
-
-      await users.forEach(async user => {
-        return await Decision.create({
-          UserId: user.get('id'),
-          NodeId: node.get('id'),
-          MoodId: node.get('MoodId'),
-          NodeRating: node.get('rating'),
-        })
-      })
-
-      res.json(node)
     } catch (error) {
       console.error(error);
       res.boom.internal(error)
