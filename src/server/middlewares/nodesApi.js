@@ -21,13 +21,13 @@ export default Router()
    * Reset node ratings.
    */
   .get('/reset', mustLogin, isAdmin, asyncHandler(
-      async (req, res) => await resetRatings() && res.end()
+      (req, res) => resetRatings().then(() => res.end())
   ))
   /**
    * Remove identical nodes. See: "removeDuplicates()" comments.
    */
   .get('/remove_duplicates', mustLogin, isAdmin, asyncHandler(
-    async (req, res) => await removeDuplicates() && res.end()
+    (req, res) => removeDuplicates().then(() => res.end())
   ))
   /**
    * Get nodes by mood.slug.
