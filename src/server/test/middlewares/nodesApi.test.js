@@ -8,7 +8,7 @@ import { stringify } from 'query-string'
 import { loginUser } from './authApi.test'
 import users from '../../data/fixtures/users'
 import chai, { should, expect, assert } from 'chai'
-import { Mood, User, Node, Decision } from '../../data/models'
+import { Mood, User, Node, Decision, sequelize } from '../../data/models'
 chai.use(require('chai-datetime'))
 chai.should()
 
@@ -43,7 +43,8 @@ export default describe('/nodes API', function() {
     after(() => server.close())
 
     it('POST node', async function() {
-        const mood = await Mood.findOne({order: 'rand()'})
+        const mood = await Mood.findOne({order: sequelize.random()})
+        const contentId = 'Seh57NRnAVA'
         const moodSlug = mood.slug
         const user = await loginUser(username, password)
         function postNode(body) {
@@ -66,7 +67,7 @@ export default describe('/nodes API', function() {
     })
 
     it('POST should fail if node is a duplicate', async function() {
-        const existingNode = await Node.findOne({order: 'rand()', raw: true})
+        const existingNode = await Node.findOne({order: sequelize.random(), raw: true})
         const user = await loginUser(username, password)
         await user
             .post('/api/nodes')
@@ -82,7 +83,7 @@ export default describe('/nodes API', function() {
     })
 
     it('GET nodes', async () => {
-        const mood = await Mood.findOne({ order: 'rand()' })
+        const mood = await Mood.findOne({ order: sequelize.random() })
         const moodSlug = mood.slug
         const user = await loginUser(username, password)
         await user
@@ -120,23 +121,22 @@ export default describe('/nodes API', function() {
             return nodeIds
     }
 
-    // describe('GET /:moodSlug', function() {
-    //     it('GET single node', async function() {
-    //         const user = await loginUser(username, password)
-    //         const mood = await Mood.findOne({order: 'rand()'})
-    //         const node = await getNextNode(mood.slug, node)
-    //         node.url.should.be.string
-    //     })
+    describe('GET /:moodSlug/:nodeId?', function() {
+        // it('GET single node', async function() {
+        //     const mood = await Mood.findOne({order: sequelize.random()})
+        //     const node = await getNextNode(mood.slug)
+        //     node.url.should.be.string
+        // })
 
-    //     it('should fail without proper moodSlug', async function() {
-    //         await agent
-    //                 .get('/api/nodes/' + 'this_not_exists')
-    //                 .expect(404)
-    //                 .then(res => {
-    //                     assert(res.error.text == 'mood not found')
-    //                 })
-    //     })
-    // })
+        // it('should fail without proper moodSlug', async function() {
+        //     await user
+        //             .get('/api/nodes/' + 'this_not_exists')
+        //             .expect(404)
+        //             .then(res => {
+        //                 assert(res.error.text == 'mood not found')
+        //             })
+        // })
+    })
 
 
     // it('nodes cycle properly for unlogged user', async function() {
@@ -159,7 +159,7 @@ export default describe('/nodes API', function() {
     //     try {
     //         const agent = await login()
 
-    //         const mood = await Mood.findOne({order: 'rand()'})
+    //         const mood = await Mood.findOne({order: sequelize.random()})
     //         const node = await getNextNode(mood.slug)
     //         const nodeIds = await cycleThroughNodes(mood.slug, undefined, agent)
 
@@ -177,17 +177,17 @@ export default describe('/nodes API', function() {
     //             await user.get(route).expect(404)
     //         })
     //         it('fails without "contentId"', async function() {
-    //             const mood = await Mood.findOne({order: 'rand()'})
+    //             const mood = await Mood.findOne({order: sequelize.random()})
     //             await user.get(route + mood.id).expect(404)
     //         })
     //         it('fails with "contentId" but no "MoodId', async function() {
-    //             const node = await Node.findOne({order: 'rand()'})
+    //             const node = await Node.findOne({order: sequelize.random()})
     //             await user.get(route + "/" + node.id).expect(500)
     //         })
     //         it('gets response properly', async function() {
-    //             const mood = await Mood.findOne({order: 'rand()'})
+    //             const mood = await Mood.findOne({order: sequelize.random()})
     //             const node = await Node.findOne({
-    //                                 order: 'rand()',
+    //                                 order: sequelize.random(),
     //                                 where: {MoodId: mood.id}})
     //             await user
     //                     .get(`${route}${mood.id}/${node.contentId}`)
@@ -210,7 +210,7 @@ export default describe('/nodes API', function() {
     //     await login()
 
     //     const currentDate = new Date()
-    //     const mood = await Mood.findOne({order: 'rand()'})
+    //     const mood = await Mood.findOne({order: sequelize.random()})
     //     const firstNode = await getNextNode(mood.slug)
 
     //     // this is needed to make a change to firstNode

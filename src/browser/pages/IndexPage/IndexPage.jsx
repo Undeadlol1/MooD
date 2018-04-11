@@ -1,4 +1,5 @@
 // dependencies
+import logger from 'debug-logger'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
