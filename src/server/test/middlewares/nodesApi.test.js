@@ -18,53 +18,91 @@ const   agent = request.agent(server),
         password = users[0].password,
         moodName = "random name",
         moodSlug = slugify(moodName),
-        url = "https://www.youtube.com/watch?v=hDH7D8_31X8",
         urls = [
             "https://www.youtube.com/watch?v=nBwHtgQH2EQ",
             "https://www.youtube.com/watch?v=l5-gja10qkw",
             "https://www.youtube.com/watch?v=M3B5U1S-I4Y",
             "https://www.youtube.com/watch?v=P027oGJy2n4",
             "https://www.youtube.com/watch?v=VoA9tLkrgHY",
-        ],
-        contentId = 'Seh57NRnAVA'
+        ]
 
-
-function login() {
-    return agent
-        .post('/api/auth/login')
-        .send({ username, password })
+/**
+ * Simple function to make POST request.
+ * @param {Object} body request body
+ * @returns {Object} response body
+ */
+async function postNode(body) {
+    const user = await loginUser(username, password)
+    return await user
+        .post('/api/nodes')
+        .send(body)
         .expect(200)
+        .expect('Content-Type', /json/)
+        .then(res => res.body)
 }
 
 export default describe('/nodes API', function() {
     // Kill supertest server in watch mode to avoid errors
     before(() => server.close())
-    // clean up
+    // Clean up
     after(() => server.close())
-
-    it('POST node', async function() {
+    /**
+     * Node is allowed to be created by providing content url
+     * (for example: https://www.youtube.com/watch?v=Ye-frzA7N0E)
+     * or object with "provider", "contentId" and "type" properties.
+     */
+    it('POST node with url', async function() {
         const mood = await Mood.findOne({order: 'rand()'})
         const moodSlug = mood.slug
-        const user = await loginUser(username, password)
-        function postNode(body) {
-            return user
-                    .post('/api/nodes')
-                    .send(body)
-                    .expect('Content-Type', /json/)
-                    .expect(200)
-                    .then(res => res.body)
+        const contentId = 'hDH7D8_31X8'
+        const url = 'https://www.youtube.com/watch?v=' + contentId
+        const parsedUrl = {
+            contentId,
+            type: 'video',
+            provider: 'youtube',
         }
+        // Make requests.
         const withUrlResponse = await postNode({moodSlug, url})
-        withUrlResponse.url.should.be.equal(url)
-        const withoutUrlResponse = await postNode({
-                                            moodSlug,
-                                            contentId,
-                                            type: 'video',
-                                            provider: 'youtube',
-                                        })
-        withoutUrlResponse.contentId = contentId
+        // Verify results.
+        expect(withUrlResponse).to.include({
+            url,
+            ...parsedUrl,
+            MoodId: mood.id,
+            // TODO: UserId verification.
+        })
     })
-
+    /**
+     * See previous test's comment.
+     */
+    it('POST node with parsed url', async function () {
+        const mood = await Mood.findOne({ order: 'rand()' })
+        const moodSlug = mood.slug
+        const contentId = 'BGBM5vWiBLo'
+        const url = 'https://www.youtube.com/watch?v=' + contentId
+        const parsedUrl = {
+            contentId,
+            type: 'video',
+            provider: 'youtube',
+        }
+        // Make request.
+        const withoutUrlResponse = await postNode({ moodSlug, ...parsedUrl })
+        // Verify results.
+        expect(withoutUrlResponse).to.include({
+            url,
+            ...parsedUrl,
+            MoodId: mood.id,
+            // TODO: UserId verification.
+        })
+    })
+    // TODO: verify if mood exists.
+    // TODO: proper validations for both cases.
+    // TODO: test to allow duplicates in differnet moods.
+    /**
+     * If node with certain url already exist, request must be rejected.
+     * No node duplicates allowed in a mood.
+     * Same goes "provider", "contentId" and "type" fields.
+     * Because "url" property is usually parsed down to this fields.
+     */
     it('POST should fail if node is a duplicate', async function() {
         const existingNode = await Node.findOne({order: 'rand()', raw: true})
         const user = await loginUser(username, password)
