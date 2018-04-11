@@ -46,77 +46,80 @@ export default describe('/nodes API', function() {
     before(() => server.close())
     // Clean up
     after(() => server.close())
-    /**
-     * Node is allowed to be created by providing content url
-     * (for example: https://www.youtube.com/watch?v=Ye-frzA7N0E)
-     * or object with "provider", "contentId" and "type" properties.
-     */
-    it('POST node with url', async function() {
-        const mood = await Mood.findOne({order: sequelize.random()})
-        const moodSlug = mood.slug
-        const contentId = 'hDH7D8_31X8'
-        const url = 'https://www.youtube.com/watch?v=' + contentId
-        const parsedUrl = {
-            contentId,
-            type: 'video',
-            provider: 'youtube',
-        }
-        // Make requests.
-        const withUrlResponse = await postNode({moodSlug, url})
-        // Verify results.
-        expect(withUrlResponse).to.include({
-            url,
-            ...parsedUrl,
-            MoodId: mood.id,
-            // TODO: UserId verification.
-        })
-    })
-    /**
-     * See previous test's comment.
-     */
-    it('POST node with parsed url', async function () {
-        const mood = await Mood.findOne({ order: sequelize.random() })
-        const moodSlug = mood.slug
-        const contentId = 'BGBM5vWiBLo'
-        const url = 'https://www.youtube.com/watch?v=' + contentId
-        const parsedUrl = {
-            contentId,
-            type: 'video',
-            provider: 'youtube',
-        }
-        // Make request.
-        const withoutUrlResponse = await postNode({ moodSlug, ...parsedUrl })
-        // Verify results.
-        expect(withoutUrlResponse).to.include({
-            url,
-            ...parsedUrl,
-            MoodId: mood.id,
-            // TODO: UserId verification.
-        })
-    })
-    // TODO: verify if mood exists.
-    // TODO: proper validations for both cases.
-    // TODO: test to allow duplicates in differnet moods.
-    /**
-     * If node with certain url already exist, request must be rejected.
-     * No node duplicates allowed in a mood.
-     * Same goes "provider", "contentId" and "type" fields.
-     * Because "url" property is usually parsed down to this fields.
-     */
-    it('POST should fail if node is a duplicate', async function() {
-        const existingNode = await Node.findOne({order: sequelize.random(), raw: true})
-        const user = await loginUser(username, password)
-        await user
-            .post('/api/nodes')
-            .send({
-                MoodId: existingNode.MoodId,
-                provider: existingNode.provider,
-                contentId: existingNode.contentId,
+
+    describe('POST', () => {
+        /**
+         * Node is allowed to be created by providing content url
+         * (for example: https://www.youtube.com/watch?v=Ye-frzA7N0E)
+         * or object with "provider", "contentId" and "type" properties.
+         */
+        it('should succeed with url', async function () {
+            const mood = await Mood.findOne({ order: sequelize.random() })
+            const moodSlug = mood.slug
+            const contentId = 'hDH7D8_31X8'
+            const url = 'https://www.youtube.com/watch?v=' + contentId
+            const parsedUrl = {
+                contentId,
+                type: 'video',
+                provider: 'youtube',
+            }
+            // Make requests.
+            const withUrlResponse = await postNode({ moodSlug, url })
+            // Verify results.
+            expect(withUrlResponse).to.include({
+                url,
+                ...parsedUrl,
+                MoodId: mood.id,
+                // TODO: UserId verification.
             })
-            .expect(400)
-            .then(({body}) => {
-                expect(body.message).to.eq('node already exists')
+        })
+        /**
+         * See previous test's comment.
+         */
+        it('should succeed node with parsed url', async function () {
+            const mood = await Mood.findOne({ order: sequelize.random() })
+            const moodSlug = mood.slug
+            const contentId = 'BGBM5vWiBLo'
+            const url = 'https://www.youtube.com/watch?v=' + contentId
+            const parsedUrl = {
+                contentId,
+                type: 'video',
+                provider: 'youtube',
+            }
+            // Make request.
+            const withoutUrlResponse = await postNode({ moodSlug, ...parsedUrl })
+            // Verify results.
+            expect(withoutUrlResponse).to.include({
+                url,
+                ...parsedUrl,
+                MoodId: mood.id,
+                // TODO: UserId verification.
             })
+        })
+        // TODO: verify if mood exists.
+        // TODO: proper validations for both cases.
+        // TODO: test to allow duplicates in differnet moods.
+        /**
+         * If node with certain url already exist, request must be rejected.
+         * No node duplicates allowed in a mood.
+         * Same goes "provider", "contentId" and "type" fields.
+         * Because "url" property is usually parsed down to this fields.
+         */
+        it('should fail if node is a duplicate', async function () {
+            const existingNode = await Node.findOne({ order: sequelize.random(), raw: true })
+            const user = await loginUser(username, password)
+            await user
+                .post('/api/nodes')
+                .send({
+                    MoodId: existingNode.MoodId,
+                    provider: existingNode.provider,
+                    contentId: existingNode.contentId,
+                })
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.message).to.eq('node already exists')
+                })
+        })
     })
 
     it('GET nodes', async () => {
