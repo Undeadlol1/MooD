@@ -9,6 +9,8 @@ var WebpackShellPlugin = require('webpack-shell-plugin')
 var appVariables = require('../config.js')
 var commonConfig = require('./common.config.js')
 
+const isWatch = hasFlag('w') || hasFlag('watch')
+
 const serverVariables = extend({
     BROWSER: false,
     isBrowser: false,
@@ -47,8 +49,8 @@ var clientConfig = merge(commonConfig, {
             // else just run tests and exit
             // TODO: use this for cli arguments
             // https://www.npmjs.com/package/command-line-args
-            onBuildEnd: hasFlag('w') || hasFlag('watch')
-                        ? "mocha dist/*.test.js --opts ./mocha.opts"
+            onBuildEnd: isWatch
+                        ? "mocha dist/*.test.js --watch --opts ./mocha.opts"
                         : "mocha dist/*.test.js"
         }),
     ],

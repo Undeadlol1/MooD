@@ -11,6 +11,7 @@ var isDevelopment = process.env.NODE_ENV === "development"
 var isProduction = process.env.NODE_ENV === "production"
 var hasFlag = require('has-flag');
 
+const isWatch = hasFlag('w') || hasFlag('watch')
 var extractSass = new ExtractTextPlugin({
     filename: "styles.css",
     disable: isDevelopment, // TODO
@@ -39,7 +40,7 @@ var baseConfig = {
     // https://webpack.js.org/configuration/devtool/
     devtool: isProduction ? 'hidden-source-map' : 'eval',
     // command line arguments (ie: yarn test -watch)
-    watch: hasFlag('w') || hasFlag('watch'),
+    watch: isWatch,
     watchOptions: {
         ignored: /node_modules/,
         aggregateTimeout: 300,
