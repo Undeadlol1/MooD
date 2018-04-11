@@ -51,7 +51,7 @@ var clientConfig = merge(commonConfig, {
             // https://www.npmjs.com/package/command-line-args
             onBuildEnd: isWatch
                         ? "mocha dist/*.test.js --watch --opts ./mocha.opts"
-                        : "mocha dist/*.test.js"
+                        : "mocha dist/*.test.js --exit"
         }),
     ],
     // nodeExternals required for client because some modules throw errors otherwise
