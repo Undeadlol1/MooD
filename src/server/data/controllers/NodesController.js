@@ -1,10 +1,8 @@
-import find from 'lodash/find'
+import { Op } from 'sequelize'
 import filter from 'lodash/filter'
-import forEach from 'lodash/forEach'
 import matches from 'lodash/matches'
 import extend from 'lodash/assignIn'
-import includes from 'lodash/includes'
-import { Node, Decision } from "server/data/models"
+import { Node, Decision, sequelize } from "../models/index"
 // TODO add tests! ⚠️ ✏️️
 /**
  * after migrating ratings to decimal point (in order to make them unique),
@@ -44,7 +42,7 @@ export async function findHighestRatingNode(MoodId, UserId, afterRating) {
         // UserId && {UserId},
         afterRating && {
             rating: {
-                $lt: afterRating
+                [Op.lt]: afterRating,
             }
         },
     )
@@ -81,7 +79,7 @@ export async function findHighestPositionNode(UserId, MoodId, beforePosition) {
             beforePosition
             ?   {
                     position: {
-                        $gt: beforePosition
+                        [Op.gt]: beforePosition,
                     }
                 }
             : undefined
@@ -93,7 +91,7 @@ export async function findHighestPositionNode(UserId, MoodId, beforePosition) {
 export async function findRandomNode(MoodId) {
   return await Node.findOne({
     where: {MoodId},
-    order: 'rand()',
+    order: sequelize.random(),
   })
 }
 
@@ -103,12 +101,12 @@ export async function findRandomNodes(MoodId) {
     nest: true,
     limit: 100,
     where: {MoodId},
-    order: 'rand()',
     include: [{
         model: Decision,
         required: false,
         // TODO: should i use "where" here since there always are decisions anyway?
     }],
+    order: sequelize.random(),
   })
     //   Copypasted for references
     // include: [{
